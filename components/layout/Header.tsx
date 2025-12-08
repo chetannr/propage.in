@@ -26,8 +26,8 @@ export default function Header() {
             <Link href="/portfolio" className="text-gray-700 hover:text-gray-900 transition-colors">
               Portfolio
             </Link>
-            <Link href="/documentation" className="text-gray-700 hover:text-gray-900 transition-colors">
-              Documentation
+            <Link href="/our-approach" className="text-gray-700 hover:text-gray-900 transition-colors">
+              Our Approach
             </Link>
             <Link href="/process" className="text-gray-700 hover:text-gray-900 transition-colors">
               Process
@@ -94,11 +94,11 @@ export default function Header() {
               Portfolio
             </Link>
             <Link
-              href="/documentation"
+              href="/our-approach"
               className="block px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Documentation
+              Our Approach
             </Link>
             <Link
               href="/process"

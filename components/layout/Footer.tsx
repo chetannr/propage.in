@@ -48,8 +48,8 @@ export default function Footer() {
             <h4 className="text-sm font-semibold text-gray-900 mb-4">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/documentation" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  Documentation
+                <Link href="/our-approach" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Our Approach
                 </Link>
               </li>
               <li>

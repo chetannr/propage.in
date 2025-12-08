@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Design Principles | Documentation',
+  title: 'Design Principles | Our Approach',
   description: 'Our approach to minimal, elegant design. Inspired by masters of simplicity and purpose.',
 }
 
@@ -11,10 +11,10 @@ export default function DesignPrinciplesPage() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-4xl mx-auto">
         <Link 
-          href="/documentation" 
+          href="/our-approach" 
           className="text-gray-600 hover:text-gray-900 transition-colors mb-8 inline-block"
         >
-          ← Back to Documentation
+          ← Back to Our Approach
         </Link>
 
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">

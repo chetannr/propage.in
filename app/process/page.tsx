@@ -20,7 +20,7 @@ export default function ProcessPage() {
         'Content audit',
         'Design direction review',
         'Repository setup',
-        'Project documentation',
+        'Project setup documentation',
       ],
     },
     {
