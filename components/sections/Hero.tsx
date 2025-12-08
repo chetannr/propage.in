@@ -25,9 +25,6 @@ export default function Hero() {
             View Our Work
           </Link>
         </div>
-        <p className="mt-12 text-sm text-gray-500">
-          Goal: 2000 websites in 2 years
-        </p>
       </div>
     </section>
   )

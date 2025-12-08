@@ -98,8 +98,12 @@ npm run build
    ```
 
 2. **Configure DNS:**
-   - Add CNAME record pointing to `[username].github.io`
-   - Or add A records (GitHub Pages IPs)
+   - For apex domain (`propage.in`): Add 4 A records pointing to:
+     - `185.199.108.153`
+     - `185.199.109.153`
+     - `185.199.110.153`
+     - `185.199.111.153`
+   - For www subdomain (`www.propage.in`): Add CNAME record pointing to `chetannr.github.io`
 
 3. **Add CNAME file:**
    - Create `public/CNAME` with content: `propage.in`
@@ -183,3 +187,4 @@ If you get 404 errors, ensure:
 
 **Ready to deploy!** Push to GitHub and enable GitHub Pages.
 
+##Old IP in DNS: 13.248.243.5, 

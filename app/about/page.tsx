@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Husband & wife team creating 2000 websites in 2 years. Following design principles from masters, delivering quality and speed.',
+  description: 'Husband & wife team creating minimal, elegant websites. Following design principles from masters, delivering quality and speed.',
   openGraph: {
     title: 'About Us | ProPage.in',
-    description: 'Husband & wife team creating 2000 websites in 2 years. Following design principles from masters, delivering quality and speed.',
+    description: 'Husband & wife team creating minimal, elegant websites. Following design principles from masters, delivering quality and speed.',
     type: 'website',
   },
 }
@@ -23,8 +23,7 @@ export default function AboutPage() {
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Story</h2>
             <p className="text-gray-700 mb-4">
               We are a husband & wife team passionate about creating minimal, elegant websites. 
-              Our mission is to build 2000 websites in 2 years, each one a masterpiece of design 
-              and functionality.
+              Each website we build is a masterpiece of design and functionality.
             </p>
             <p className="text-gray-700">
               We believe in quality over quantity, but we also believe in efficiency. Our proven 
@@ -35,12 +34,13 @@ export default function AboutPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-700 mb-4">
-              <strong>2000 websites in 2 years.</strong> Ambitious? Yes. Achievable? Absolutely.
+              We&apos;re not just building websites—we&apos;re creating digital experiences that are 
+              minimal, elegant, and purposeful.
             </p>
             <p className="text-gray-700">
-              We&apos;re not just building websites—we&apos;re creating digital experiences that are 
-              minimal, elegant, and purposeful. Every website follows our rigorous standards 
-              for quality, performance, accessibility, and SEO.
+              Every website follows our rigorous standards for quality, performance, accessibility, 
+              and SEO. We combine proven processes with design principles from the masters to deliver 
+              exceptional results.
             </p>
           </section>
 
