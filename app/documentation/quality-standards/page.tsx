@@ -21,7 +21,7 @@ export default function QualityStandardsPage() {
           Quality Standards
         </h1>
         <p className="text-xl text-gray-600 mb-12">
-          Every website we create meets these standards. Quality isn&apos;t optional—it&apos;s guaranteed.
+          Every website we create meets these standards. Quality isn&apos;t optional:it&apos;s guaranteed.
         </p>
 
         <div className="prose prose-lg max-w-none">
@@ -58,12 +58,12 @@ export default function QualityStandardsPage() {
             </p>
             
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li><strong>Meta Tags</strong>—Title tags, descriptions, Open Graph tags for social sharing</li>
-              <li><strong>Structured Data</strong>—Schema.org markup so search engines understand your content</li>
-              <li><strong>Sitemap</strong>—XML sitemap for search engine crawling</li>
-              <li><strong>Semantic HTML</strong>—Proper HTML structure for better understanding</li>
-              <li><strong>Mobile-Friendly</strong>—Responsive design that works on all devices</li>
-              <li><strong>Fast Loading</strong>—Performance directly impacts search rankings</li>
+              <li><strong>Meta Tags</strong>:Title tags, descriptions, Open Graph tags for social sharing</li>
+              <li><strong>Structured Data</strong>:Schema.org markup so search engines understand your content</li>
+              <li><strong>Sitemap</strong>:XML sitemap for search engine crawling</li>
+              <li><strong>Semantic HTML</strong>:Proper HTML structure for better understanding</li>
+              <li><strong>Mobile-Friendly</strong>:Responsive design that works on all devices</li>
+              <li><strong>Fast Loading</strong>:Performance directly impacts search rankings</li>
             </ul>
           </section>
 
@@ -89,7 +89,7 @@ export default function QualityStandardsPage() {
             </div>
 
             <p className="text-gray-700">
-              Accessibility isn&apos;t just the right thing to do—it&apos;s also good for business. 
+              Accessibility isn&apos;t just the right thing to do:it&apos;s also good for business. 
               Accessible websites reach more people and often rank better in search results.
             </p>
           </section>
@@ -100,10 +100,10 @@ export default function QualityStandardsPage() {
               Your website works perfectly everywhere:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li><strong>Browsers</strong>—Chrome, Firefox, Safari, Edge</li>
-              <li><strong>Mobile</strong>—iOS Safari, Chrome Mobile</li>
-              <li><strong>Tablets</strong>—iPad, Android tablets</li>
-              <li><strong>Desktop</strong>—All screen sizes from 1920px down to 320px</li>
+              <li><strong>Browsers</strong>:Chrome, Firefox, Safari, Edge</li>
+              <li><strong>Mobile</strong>:iOS Safari, Chrome Mobile</li>
+              <li><strong>Tablets</strong>:iPad, Android tablets</li>
+              <li><strong>Desktop</strong>:All screen sizes from 1920px down to 320px</li>
             </ul>
           </section>
 

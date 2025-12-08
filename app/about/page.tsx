@@ -34,7 +34,7 @@ export default function AboutPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-700 mb-4">
-              We&apos;re not just building websites—we&apos;re creating digital experiences that are 
+              We&apos;re not just building websites:we&apos;re creating digital experiences that are 
               minimal, elegant, and purposeful.
             </p>
             <p className="text-gray-700">

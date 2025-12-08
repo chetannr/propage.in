@@ -91,11 +91,11 @@ export default function ProcessPage() {
               Every website must pass these quality standards before deployment:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li><strong>Lighthouse 90+</strong>—Performance, accessibility, best practices, SEO</li>
-              <li><strong>WCAG 2.1 AA</strong>—Accessibility compliance for all users</li>
-              <li><strong>Complete SEO</strong>—Meta tags, structured data, sitemap</li>
-              <li><strong>Cross-browser</strong>—Works on all modern browsers</li>
-              <li><strong>Responsive</strong>—Perfect on mobile, tablet, and desktop</li>
+              <li><strong>Lighthouse 90+</strong>:Performance, accessibility, best practices, SEO</li>
+              <li><strong>WCAG 2.1 AA</strong>:Accessibility compliance for all users</li>
+              <li><strong>Complete SEO</strong>:Meta tags, structured data, sitemap</li>
+              <li><strong>Cross-browser</strong>:Works on all modern browsers</li>
+              <li><strong>Responsive</strong>:Perfect on mobile, tablet, and desktop</li>
             </ul>
           </section>
 
@@ -108,7 +108,7 @@ export default function ProcessPage() {
               <li>Daily updates on progress</li>
               <li>Clear communication about decisions</li>
               <li>Opportunities for feedback at key stages</li>
-              <li>Transparent process—you know what&apos;s happening</li>
+              <li>Transparent process:you know what&apos;s happening</li>
             </ul>
           </section>
 

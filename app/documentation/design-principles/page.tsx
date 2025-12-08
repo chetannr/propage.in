@@ -28,7 +28,7 @@ export default function DesignPrinciplesPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">The Philosophy</h2>
             <p className="text-gray-700 mb-4">
-              We believe in <strong>minimal elegance</strong>—design that is clear, purposeful, and confident. 
+              We believe in <strong>minimal elegance</strong>:design that is clear, purposeful, and confident. 
               Every element must serve a function. Every color, font, and spacing decision has a reason.
             </p>
             <p className="text-gray-700">
@@ -69,7 +69,7 @@ export default function DesignPrinciplesPage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">4. Industrial Elegance</h3>
                 <p className="text-gray-700">
                   Precision meets beauty. We combine mathematical spacing systems with emotional warmth. 
-                  Industrial doesn&apos;t mean cold—it means clear, purposeful, and human.
+                  Industrial doesn&apos;t mean cold:it means clear, purposeful, and human.
                 </p>
               </div>
             </div>
@@ -123,11 +123,11 @@ export default function DesignPrinciplesPage() {
               When we design your website, we focus on:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li><strong>Clarity</strong>—Users understand immediately what you do</li>
-              <li><strong>Purpose</strong>—Every element guides users toward their goal</li>
-              <li><strong>Elegance</strong>—Beautiful through simplicity, not decoration</li>
-              <li><strong>Confidence</strong>—Professional, trustworthy, not desperate</li>
-              <li><strong>Performance</strong>—Fast, efficient, accessible to everyone</li>
+              <li><strong>Clarity</strong>:Users understand immediately what you do</li>
+              <li><strong>Purpose</strong>:Every element guides users toward their goal</li>
+              <li><strong>Elegance</strong>:Beautiful through simplicity, not decoration</li>
+              <li><strong>Confidence</strong>:Professional, trustworthy, not desperate</li>
+              <li><strong>Performance</strong>:Fast, efficient, accessible to everyone</li>
             </ul>
           </section>
         </div>
