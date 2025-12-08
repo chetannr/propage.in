@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'Website creation service packages and pricing. Contact us for a custom quote.',
+  description: 'Website creation service packages and pricing. Get started with a custom solution for your project.',
   openGraph: {
     title: 'Pricing | ProPage.in',
-    description: 'Website creation service packages and pricing. Contact us for a custom quote.',
+    description: 'Website creation service packages and pricing. Get started with a custom solution for your project.',
     type: 'website',
   },
 }
@@ -38,13 +38,13 @@ export default function PricingPage() {
 
         <div className="text-center">
           <p className="text-lg text-gray-700 mb-6">
-            Contact us for a custom quote tailored to your project.
+            Ready to start your project? Share your vision and we'll create a custom solution.
           </p>
           <a
             href="/contact"
             className="inline-block px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors text-lg font-medium"
           >
-            Get a Quote
+            Get Started
           </a>
         </div>
       </div>

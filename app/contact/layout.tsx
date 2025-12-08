@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Contact',
-  description: 'Get in touch to start your website project. We respond within 24 hours.',
+  title: 'Get Started | ProPage.in',
+  description: 'Share your vision with us. Let\'s create a minimal, elegant website that tells your story.',
   openGraph: {
-    title: 'Contact | ProPage.in',
-    description: 'Get in touch to start your website project. We respond within 24 hours.',
+    title: 'Get Started | ProPage.in',
+    description: 'Share your vision with us. Let\'s create a minimal, elegant website that tells your story.',
     type: 'website',
   },
 }
