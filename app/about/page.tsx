@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Husband & wife team creating minimal, elegant websites. Following design principles from masters, delivering quality and speed.',
+  description: 'We create minimal, elegant websites. Following design principles from masters, delivering quality and speed.',
   openGraph: {
     title: 'About Us | ProPage.in',
-    description: 'Husband & wife team creating minimal, elegant websites. Following design principles from masters, delivering quality and speed.',
+    description: 'We create minimal, elegant websites. Following design principles from masters, delivering quality and speed.',
     type: 'website',
   },
 }
@@ -22,7 +22,7 @@ export default function AboutPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Story</h2>
             <p className="text-gray-700 mb-4">
-              We are a husband & wife team passionate about creating minimal, elegant websites. 
+              We are passionate about creating minimal, elegant websites. 
               Each website we build is a masterpiece of design and functionality.
             </p>
             <p className="text-gray-700">

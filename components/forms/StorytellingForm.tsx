@@ -85,7 +85,7 @@ interface Step {
 const steps: Step[] = [
   {
     title: 'The Beginning',
-    subtitle: 'Let&apos;s start with who you are',
+    subtitle: 'Let\'s start with who you are',
     number: 1,
     total: 8,
   },
@@ -238,8 +238,8 @@ export default function StorytellingForm() {
             </h2>
             <p className="text-lg text-gray-600">
               {currentStep === 0 && 'Every great website starts with understanding who you are.'}
-              {currentStep === 1 && 'Help us understand what you&apos;re building and why it matters.'}
-              {currentStep === 2 && 'Your business has a unique story. Let&apos;s capture it.'}
+              {currentStep === 1 && 'Help us understand what you\'re building and why it matters.'}
+              {currentStep === 2 && 'Your business has a unique story. Let\'s capture it.'}
               {currentStep === 3 && 'Content is the heart of your website. What do you have ready?'}
               {currentStep === 4 && 'Design should reflect your brand. Share your vision.'}
               {currentStep === 5 && 'Tell us what functionality your website needs.'}
