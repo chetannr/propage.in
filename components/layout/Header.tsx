@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -11,8 +12,15 @@ export default function Header() {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="text-xl font-semibold text-gray-900 hover:text-gray-700 transition-colors">
-            ProPage.in
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image
+              src="/propage-logo.png"
+              alt="ProPage.in"
+              width={120}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -35,7 +43,7 @@ export default function Header() {
             <Link href="/pricing" className="text-gray-700 hover:text-gray-900 transition-colors">
               Pricing
             </Link>
-            <Link href="/contact" className="px-4 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors">
+            <Link href="/contact" className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors">
               Get Started
             </Link>
           </div>
@@ -116,7 +124,7 @@ export default function Header() {
             </Link>
             <Link
               href="/contact"
-              className="block px-4 py-2 mx-4 bg-gray-900 text-white rounded-full text-center hover:bg-gray-800 transition-colors"
+              className="block px-4 py-2 mx-4 bg-primary-500 text-white rounded-full text-center hover:bg-primary-600 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Get Started

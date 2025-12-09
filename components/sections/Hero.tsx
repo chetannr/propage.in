@@ -14,7 +14,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/contact"
-            className="px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors text-lg font-medium"
+            className="px-8 py-4 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-lg font-medium"
           >
             Get Started
           </Link>

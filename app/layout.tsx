@@ -11,6 +11,11 @@ export const metadata: Metadata = {
     template: '%s | ProPage.in',
   },
   description: 'We create minimal, elegant websites in 7 days. Quality guaranteed (Lighthouse 90+), full SEO & accessibility. Fast delivery, exceptional results.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  referrer: 'strict-origin-when-cross-origin',
   openGraph: {
     title: 'ProPage.in | Minimal, Elegant Websites in 7 Days',
     description: 'We create minimal, elegant websites in 7 days. Quality guaranteed (Lighthouse 90+), full SEO & accessibility.',
@@ -42,6 +47,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preload" href="/propage-logo.png" as="image" />
+        <link rel="icon" type="image/png" href="/propage-favicon.png" />
+        <link rel="icon" type="image/svg+xml" href="/LogoIcon16x16.svg" />
+        <link rel="apple-touch-icon" href="/LogoIcon512x512.svg" />
+        <link rel="icon" type="image/svg+xml" sizes="512x512" href="/LogoIcon512x512.svg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

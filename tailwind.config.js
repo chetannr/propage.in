@@ -16,6 +16,19 @@ module.exports = {
           500: '#737373',
           900: '#171717',
         },
+        // Brand color - single accent color
+        primary: {
+          50: '#f5f3f7',
+          100: '#e9e3ed',
+          200: '#d3c7db',
+          300: '#bda5c9',
+          400: '#8f6fa5',
+          500: '#6C4971',
+          600: '#5a3d5e',
+          700: '#48314b',
+          800: '#362538',
+          900: '#241925',
+        },
       },
       fontFamily: {
         // System fonts first

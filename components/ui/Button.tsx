@@ -18,10 +18,10 @@ export default function Button({
   type = 'button',
   className = '',
 }: ButtonProps) {
-  const baseClasses = 'px-6 py-3 rounded-full font-medium transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900'
+  const baseClasses = 'px-6 py-3 rounded-full font-medium transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500'
   
   const variantClasses = {
-    primary: 'bg-gray-900 text-white hover:bg-gray-800',
+    primary: 'bg-primary-500 text-white hover:bg-primary-600',
     secondary: 'border-2 border-gray-900 text-gray-900 hover:bg-gray-50',
   }
 

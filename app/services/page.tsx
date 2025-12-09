@@ -70,7 +70,7 @@ export default function ServicesPage() {
           </p>
           <Link
             href="/process"
-            className="inline-block px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors text-lg font-medium"
+            className="inline-block px-8 py-4 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-lg font-medium"
           >
             View Our 7-Day Process
           </Link>

@@ -162,7 +162,6 @@ export default function StorytellingForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // TODO: Implement form submission
-    console.log('Form submitted:', formData)
     setSubmitted(true)
   }
 
@@ -753,14 +752,14 @@ export default function StorytellingForm() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-8 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all font-medium"
+                  className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium"
                 >
                   Continue →
                 </button>
               ) : (
                 <button
                   type="submit"
-                  className="px-8 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all font-medium"
+                  className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium"
                 >
                   Submit Your Story
                 </button>

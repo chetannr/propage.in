@@ -4,6 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true, // Required for static export
   },
+  compress: true, // Enable gzip compression
+  poweredByHeader: false, // Remove X-Powered-By header for security
   // If deploying to GitHub Pages subdirectory:
   // basePath: '/propage.in',
   // trailingSlash: true,
