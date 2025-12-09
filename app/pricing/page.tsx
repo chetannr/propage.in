@@ -38,7 +38,7 @@ export default function PricingPage() {
 
         <div className="text-center">
           <p className="text-lg text-gray-700 mb-6">
-            Ready to start your project? Share your vision and we'll create a custom solution.
+            Ready to start your project? Share your vision and we&apos;ll create a custom solution.
           </p>
           <a
             href="/contact"
