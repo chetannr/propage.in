@@ -20,7 +20,7 @@ function SubmissionsContent() {
       <div className="mb-6">
         <Link
           href="/admin"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
         >
           ← Back to Dashboard
         </Link>
