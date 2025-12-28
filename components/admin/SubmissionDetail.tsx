@@ -65,6 +65,22 @@ export default function SubmissionDetail({ submissionId }: SubmissionDetailProps
     return value
   }
 
+  const downloadAsJSON = () => {
+    if (!submission) return
+
+    const jsonData = JSON.stringify(submission, null, 2)
+    const blob = new Blob([jsonData], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    const fileName = `submission-${submission.id}-${submission.name?.replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'data'}.json`
+    link.download = fileName
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -110,6 +126,15 @@ export default function SubmissionDetail({ submissionId }: SubmissionDetailProps
           </svg>
           Back to Submissions
         </Link>
+        <button
+          onClick={downloadAsJSON}
+          className="inline-flex items-center px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
+        >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Download JSON
+        </button>
       </div>
 
       <div className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-8">

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <style>
+      .grid-line { stroke: #e5e7eb; stroke-width: 0.5; }
+      .letter { stroke: #111827; stroke-width: 3.5; fill: none; stroke-linecap: square; stroke-linejoin: miter; }
+      .golden-guide { stroke: #fbbf24; stroke-width: 0.5; stroke-dasharray: 2,2; opacity: 0.3; }
+      @media (prefers-color-scheme: dark) {
+        .letter { stroke: #f9fafb; }
+        .grid-line { stroke: #374151; }
+        .golden-guide { stroke: #f59e0b; }
+      }
+    </style>
+  </defs>
+  
+  <!-- Golden Ratio System: φ = 1.618 -->
+  <!-- Letter height: 80 units -->
+  <!-- Semicircle radius: 24.72 units -->
+  <!-- Golden ratio extension: 40 units total width (24.72 * 1.618) -->
+  
+  <!-- Golden Ratio Reference Guides -->
+  <g id="golden-guides" opacity="0.25">
+    <line class="golden-guide" x1="49.44" y1="0" x2="49.44" y2="120"/>
+    <line class="golden-guide" x1="80" y1="0" x2="80" y2="120"/>
+    <line class="golden-guide" x1="0" y1="49.44" x2="120" y2="49.44"/>
+    <line class="golden-guide" x1="0" y1="80" x2="120" y2="80"/>
+  </g>
+  
+  <!-- Precision Grid -->
+  <g id="grid" opacity="0.1">
+    <g>
+      <line class="grid-line" x1="0" y1="0" x2="0" y2="120"/>
+      <line class="grid-line" x1="10" y1="0" x2="10" y2="120"/>
+      <line class="grid-line" x1="20" y1="0" x2="20" y2="120"/>
+      <line class="grid-line" x1="30" y1="0" x2="30" y2="120"/>
+      <line class="grid-line" x1="40" y1="0" x2="40" y2="120"/>
+      <line class="grid-line" x1="50" y1="0" x2="50" y2="120"/>
+      <line class="grid-line" x1="60" y1="0" x2="60" y2="120"/>
+      <line class="grid-line" x1="70" y1="0" x2="70" y2="120"/>
+      <line class="grid-line" x1="80" y1="0" x2="80" y2="120"/>
+    </g>
+    <g>
+      <line class="grid-line" x1="0" y1="0" x2="120" y2="0"/>
+      <line class="grid-line" x1="0" y1="10" x2="120" y2="10"/>
+      <line class="grid-line" x1="0" y1="20" x2="120" y2="20"/>
+      <line class="grid-line" x1="0" y1="30" x2="120" y2="30"/>
+      <line class="grid-line" x1="0" y1="40" x2="120" y2="40"/>
+      <line class="grid-line" x1="0" y1="50" x2="120" y2="50"/>
+      <line class="grid-line" x1="0" y1="60" x2="120" y2="60"/>
+      <line class="grid-line" x1="0" y1="70" x2="120" y2="70"/>
+      <line class="grid-line" x1="0" y1="80" x2="120" y2="80"/>
+    </g>
+  </g>
+  
+  <!-- Letter P - Clean Construction -->
+  <g id="letter-p" transform="translate(20, 20)">
+    <!-- Vertical stem (full height) -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    
+    <!-- Semicircle: starting from stem (0,0), curving outward to form rounded top -->
+    <!-- Semicircle center at (24.72, 24.72), radius 24.72 -->
+    <!-- Arc from stem (0,0) connecting to the semicircle -->
+    <path class="letter" d="M 0 0 A 24.72 24.72 0 0 1 49.44 24.72"/>
+    
+    <!-- Continue semicircle from rightmost point down -->
+    <path class="letter" d="M 49.44 24.72 A 24.72 24.72 0 0 1 24.72 49.44"/>
+    
+    <!-- Line from semicircle end back to stem (middle bar) -->
+    <line class="letter" x1="24.72" y1="49.44" x2="0" y2="49.44"/>
+    
+    <!-- Golden ratio extension: extend from the top of the arc horizontally -->
+    <!-- The arc reaches its topmost point, extend from there -->
+    <line class="letter" x1="49.44" y1="0" x2="40" y2="0"/>
+    
+    <!-- Vertical line down from extension end -->
+    <line class="letter" x1="40" y1="0" x2="40" y2="49.44"/>
+    
+    <!-- Horizontal line connecting extension to middle bar -->
+    <line class="letter" x1="40" y1="49.44" x2="0" y2="49.44"/>
+  </g>
+</svg>

@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 120" width="780" height="120">
+  <defs>
+    <style>
+      .grid-line { stroke: #e5e7eb; stroke-width: 0.5; }
+      .letter { stroke: #111827; stroke-width: 3.5; fill: none; stroke-linecap: square; stroke-linejoin: miter; }
+      .golden-guide { stroke: #fbbf24; stroke-width: 0.5; stroke-dasharray: 2,2; opacity: 0.3; }
+      @media (prefers-color-scheme: dark) {
+        .letter { stroke: #f9fafb; }
+        .grid-line { stroke: #374151; }
+        .golden-guide { stroke: #f59e0b; }
+      }
+    </style>
+  </defs>
+  
+  <!-- Golden Ratio System: φ = 1.618033988749895 -->
+  <!-- Letter height: 80 units (base measure) -->
+  <!-- Letter width: 80 / 1.618 ≈ 49.44 units (golden rectangle width) -->
+  <!-- Letter spacing: 49.44 / 1.618 ≈ 30.56 units (golden ratio spacing) -->
+  <!-- Starting position: 20 units from left, 20 units from top -->
+  
+  <!-- Golden Ratio Reference Guides -->
+  <g id="golden-guides" opacity="0.25">
+    <!-- Key golden ratio divisions -->
+    <line class="golden-guide" x1="49.44" y1="0" x2="49.44" y2="120"/>
+    <line class="golden-guide" x1="80" y1="0" x2="80" y2="120"/>
+    <line class="golden-guide" x1="129.44" y1="0" x2="129.44" y2="120"/>
+    <line class="golden-guide" x1="0" y1="49.44" x2="780" y2="49.44"/>
+    <line class="golden-guide" x1="0" y1="80" x2="780" y2="80"/>
+  </g>
+  
+  <!-- Precision Grid (10-unit increments) -->
+  <g id="grid" opacity="0.1">
+    <!-- Vertical lines -->
+    <g>
+      <line class="grid-line" x1="0" y1="0" x2="0" y2="120"/>
+      <line class="grid-line" x1="10" y1="0" x2="10" y2="120"/>
+      <line class="grid-line" x1="20" y1="0" x2="20" y2="120"/>
+      <line class="grid-line" x1="30" y1="0" x2="30" y2="120"/>
+      <line class="grid-line" x1="40" y1="0" x2="40" y2="120"/>
+      <line class="grid-line" x1="50" y1="0" x2="50" y2="120"/>
+      <line class="grid-line" x1="60" y1="0" x2="60" y2="120"/>
+      <line class="grid-line" x1="70" y1="0" x2="70" y2="120"/>
+      <line class="grid-line" x1="80" y1="0" x2="80" y2="120"/>
+      <line class="grid-line" x1="90" y1="0" x2="90" y2="120"/>
+      <line class="grid-line" x1="100" y1="0" x2="100" y2="120"/>
+      <line class="grid-line" x1="110" y1="0" x2="110" y2="120"/>
+      <line class="grid-line" x1="120" y1="0" x2="120" y2="120"/>
+      <line class="grid-line" x1="130" y1="0" x2="130" y2="120"/>
+      <line class="grid-line" x1="140" y1="0" x2="140" y2="120"/>
+      <line class="grid-line" x1="150" y1="0" x2="150" y2="120"/>
+      <line class="grid-line" x1="160" y1="0" x2="160" y2="120"/>
+      <line class="grid-line" x1="170" y1="0" x2="170" y2="120"/>
+      <line class="grid-line" x1="180" y1="0" x2="180" y2="120"/>
+      <line class="grid-line" x1="190" y1="0" x2="190" y2="120"/>
+      <line class="grid-line" x1="200" y1="0" x2="200" y2="120"/>
+    </g>
+    <!-- Horizontal lines -->
+    <g>
+      <line class="grid-line" x1="0" y1="0" x2="780" y2="0"/>
+      <line class="grid-line" x1="0" y1="10" x2="780" y2="10"/>
+      <line class="grid-line" x1="0" y1="20" x2="780" y2="20"/>
+      <line class="grid-line" x1="0" y1="30" x2="780" y2="30"/>
+      <line class="grid-line" x1="0" y1="40" x2="780" y2="40"/>
+      <line class="grid-line" x1="0" y1="50" x2="780" y2="50"/>
+      <line class="grid-line" x1="0" y1="60" x2="780" y2="60"/>
+      <line class="grid-line" x1="0" y1="70" x2="780" y2="70"/>
+      <line class="grid-line" x1="0" y1="80" x2="780" y2="80"/>
+      <line class="grid-line" x1="0" y1="90" x2="780" y2="90"/>
+      <line class="grid-line" x1="0" y1="100" x2="780" y2="100"/>
+      <line class="grid-line" x1="0" y1="110" x2="780" y2="110"/>
+      <line class="grid-line" x1="0" y1="120" x2="780" y2="120"/>
+    </g>
+  </g>
+  
+  <!-- PROPAGE.IN Logo with Golden Ratio Proportions -->
+  
+  <!-- Letter P (first) - Position: x=20 -->
+  <!-- Width: 49.44, Height: 80 -->
+  <g id="letter-p-1" transform="translate(20, 20)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Semicircle arc: radius = 24.72 (half of letter width) -->
+    <!-- Arc curves outward from stem, forming rounded top -->
+    <path class="letter" d="M 0 0 A 24.72 24.72 0 0 0 0 49.44"/>
+    <!-- Horizontal extension: extends to golden ratio width (24.72 * 1.618 ≈ 40) -->
+    <line class="letter" x1="24.72" y1="0" x2="40" y2="0"/>
+    <!-- Vertical down from extension -->
+    <line class="letter" x1="40" y1="0" x2="40" y2="49.44"/>
+    <!-- Horizontal connecting back to stem -->
+    <line class="letter" x1="0" y1="49.44" x2="40" y2="49.44"/>
+  </g>
+  
+  <!-- Letter R - Position: x = 20 + 49.44 + 30.56 = 100 -->
+  <g id="letter-r" transform="translate(100, 20)">
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal (full width) -->
+    <line class="letter" x1="0" y1="0" x2="49.44" y2="0"/>
+    <!-- Right vertical (top part) -->
+    <line class="letter" x1="49.44" y1="0" x2="49.44" y2="49.44"/>
+    <!-- Middle horizontal -->
+    <line class="letter" x1="0" y1="49.44" x2="49.44" y2="49.44"/>
+    <!-- Diagonal leg (bottom right) -->
+    <line class="letter" x1="0" y1="49.44" x2="49.44" y2="80"/>
+  </g>
+  
+  <!-- Letter O - Position: x = 100 + 49.44 + 30.56 = 180 -->
+  <!-- Perfect golden circle: diameter = 80, radius = 40 -->
+  <g id="letter-o" transform="translate(180, 20)">
+    <circle class="letter" cx="40" cy="40" r="40"/>
+  </g>
+  
+  <!-- Letter P (second) - Position: x = 180 + 80 + 30.56 = 290.56 ≈ 291 -->
+  <g id="letter-p-2" transform="translate(291, 20)">
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Semicircle arc: radius = 24.72 -->
+    <path class="letter" d="M 0 0 A 24.72 24.72 0 0 0 0 49.44"/>
+    <!-- Horizontal extension (golden ratio) -->
+    <line class="letter" x1="24.72" y1="0" x2="40" y2="0"/>
+    <!-- Vertical down from extension -->
+    <line class="letter" x1="40" y1="0" x2="40" y2="49.44"/>
+    <!-- Horizontal connecting back to stem -->
+    <line class="letter" x1="0" y1="49.44" x2="40" y2="49.44"/>
+  </g>
+  
+  <!-- Letter A - Position: x = 291 + 49.44 + 30.56 = 371 -->
+  <g id="letter-a" transform="translate(371, 20)">
+    <!-- Left leg -->
+    <line class="letter" x1="0" y1="80" x2="24.72" y2="0"/>
+    <!-- Right leg -->
+    <line class="letter" x1="24.72" y1="0" x2="49.44" y2="80"/>
+    <!-- Crossbar at golden ratio height (49.44 from top) -->
+    <line class="letter" x1="19.44" y1="49.44" x2="30.44" y2="49.44"/>
+  </g>
+  
+  <!-- Letter G - Position: x = 371 + 49.44 + 30.56 = 451 -->
+  <g id="letter-g" transform="translate(451, 20)">
+    <!-- Left vertical -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="49.44" y2="0"/>
+    <!-- Right vertical (top part) -->
+    <line class="letter" x1="49.44" y1="0" x2="49.44" y2="49.44"/>
+    <!-- Right vertical (bottom part) -->
+    <line class="letter" x1="49.44" y1="61.76" x2="49.44" y2="80"/>
+    <!-- Bottom horizontal -->
+    <line class="letter" x1="0" y1="80" x2="49.44" y2="80"/>
+    <!-- Middle horizontal extending inward at golden ratio position -->
+    <line class="letter" x1="30.56" y1="49.44" x2="49.44" y2="49.44"/>
+  </g>
+  
+  <!-- Letter E - Position: x = 451 + 49.44 + 30.56 = 531 -->
+  <g id="letter-e" transform="translate(531, 20)">
+    <!-- Left vertical -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="49.44" y2="0"/>
+    <!-- Middle horizontal at golden ratio position (49.44 from top) -->
+    <line class="letter" x1="0" y1="49.44" x2="49.44" y2="49.44"/>
+    <!-- Bottom horizontal -->
+    <line class="letter" x1="0" y1="80" x2="49.44" y2="80"/>
+  </g>
+  
+  <!-- Dot - Position: x = 531 + 49.44 + 30.56 = 611 -->
+  <!-- Golden ratio proportional circle: radius = 12.36 (80 / (1.618^2) ≈ 30.56, then / 2.5) -->
+  <g id="dot" transform="translate(611, 20)">
+    <circle class="letter" cx="0" cy="60" r="12.36"/>
+  </g>
+  
+  <!-- Letter I - Position: x = 611 + 24.72 + 20 = 655.72 ≈ 656 -->
+  <!-- Narrower letter, width ≈ 24.72 (half of standard width) -->
+  <g id="letter-i" transform="translate(656, 20)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top serif -->
+    <line class="letter" x1="-12.36" y1="0" x2="12.36" y2="0"/>
+    <!-- Bottom serif -->
+    <line class="letter" x1="-12.36" y1="80" x2="12.36" y2="80"/>
+  </g>
+  
+  <!-- Letter N - Position: x = 656 + 24.72 + 30.56 = 711.28 ≈ 711 -->
+  <g id="letter-n" transform="translate(711, 20)">
+    <!-- Left vertical -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Diagonal (golden ratio angle) -->
+    <line class="letter" x1="0" y1="0" x2="49.44" y2="80"/>
+    <!-- Right vertical -->
+    <line class="letter" x1="49.44" y1="0" x2="49.44" y2="80"/>
+  </g>
+</svg>

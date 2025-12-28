@@ -24,12 +24,25 @@ export default function AdminLayout({
     loadUser()
   }, [])
 
-  const handleLogout = async () => {
+  const handleAuthAction = async () => {
+    // If not logged in, navigate to login page
+    if (!userEmail) {
+      window.location.href = '/admin/login#focus-email'
+      return
+    }
+
+    // If already logging out, navigate to login and focus email input
+    if (isLoggingOut) {
+      window.location.href = '/admin/login#focus-email'
+      return
+    }
+
+    // Otherwise, perform logout
     setIsLoggingOut(true)
     try {
       await signOut()
-      router.push('/admin/login')
-      router.refresh()
+      // Use window.location.href to ensure hash is preserved
+      window.location.href = '/admin/login#focus-email'
     } catch (error) {
       console.error('[AdminLayout] Logout error:', error)
       setIsLoggingOut(false)
@@ -63,11 +76,10 @@ export default function AdminLayout({
             <div className="flex items-center gap-4">
               <ThemeToggle />
               <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
+                onClick={handleAuthAction}
                 className="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoggingOut ? 'Logging out...' : 'Logout'}
+                {userEmail ? (isLoggingOut ? 'Login Again' : 'Logout') : 'Login'}
               </button>
             </div>
           </div>

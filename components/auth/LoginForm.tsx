@@ -1,15 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from '@/lib/auth'
 
 export default function LoginForm() {
   const router = useRouter()
+  const emailInputRef = useRef<HTMLInputElement>(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Focus email input when hash is present (when navigating from Login button)
+    const focusEmail = () => {
+      if (emailInputRef.current) {
+        emailInputRef.current.focus()
+        // Remove the hash from URL after focusing
+        if (window.location.hash === '#focus-email') {
+          window.history.replaceState(null, '', window.location.pathname)
+        }
+      }
+    }
+
+    // Check if we need to focus on mount
+    if (window.location.hash === '#focus-email') {
+      // Use requestAnimationFrame + setTimeout for reliable DOM timing
+      requestAnimationFrame(() => {
+        setTimeout(focusEmail, 100)
+      })
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,6 +64,7 @@ export default function LoginForm() {
                 Email Address
               </label>
               <input
+                ref={emailInputRef}
                 type="email"
                 id="email"
                 value={email}
