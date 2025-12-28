@@ -5,10 +5,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Services',
-  description: 'Website creation services: 7-day delivery, full-stack implementation, SEO optimized, accessibility compliant, performance optimized.',
+  description: 'Static website creation services: 7-day delivery, Razorpay payment link integration, SEO optimized, accessibility compliant, performance optimized.',
   openGraph: {
     title: 'Services | ProPage.in',
-    description: 'Website creation services: 7-day delivery, full-stack implementation, SEO optimized, accessibility compliant, performance optimized.',
+    description: 'Static website creation services: 7-day delivery, Razorpay payment link integration, SEO optimized, accessibility compliant, performance optimized.',
     type: 'website',
   },
 }
@@ -21,7 +21,7 @@ export default function ServicesPage() {
           Our Services
         </h1>
         <p className="text-xl text-gray-600 mb-12 text-center">
-          Complete website creation from design to deployment
+          Complete static website creation from design to deployment
         </p>
 
         {/* Main Service */}
@@ -61,6 +61,29 @@ export default function ServicesPage() {
               </Card>
             ))}
           </div>
+        </section>
+
+        {/* Important Note */}
+        <section className="mb-16">
+          <Card className="bg-gray-50 border-2 border-gray-300">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Important: Static Websites Only
+            </h2>
+            <p className="text-lg text-gray-700 mb-4">
+              We currently support <strong>static websites only</strong>. We do not build payment gateway integrations directly into websites.
+            </p>
+            <p className="text-lg text-gray-700 mb-4">
+              However, we can help you:
+            </p>
+            <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
+              <li>Onboard to Razorpay and create payment pages on their platform</li>
+              <li>Integrate Razorpay payment links into your static website</li>
+              <li>Add buttons or links that redirect to your Razorpay payment pages</li>
+            </ul>
+            <p className="text-lg text-gray-700">
+              This approach allows you to accept payments while keeping your website static and fast.
+            </p>
+          </Card>
         </section>
 
         {/* Process Link */}

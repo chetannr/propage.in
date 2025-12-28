@@ -28,12 +28,18 @@ export default function PricingPage() {
           <ul className="list-disc list-inside text-gray-700 space-y-2 max-w-2xl mx-auto text-left">
             <li>7-day delivery</li>
             <li>Minimal, elegant design</li>
-            <li>Full development (React + TypeScript)</li>
+            <li>Full development (React + TypeScript) - Static websites only</li>
+            <li>Razorpay payment link integration support</li>
             <li>Complete SEO implementation</li>
             <li>WCAG 2.1 AA accessibility</li>
             <li>Performance optimization (Lighthouse 90+)</li>
             <li>Deployment and setup</li>
           </ul>
+          <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 max-w-2xl mx-auto">
+            <p className="text-base text-gray-700 mb-2">
+              <strong>Note:</strong> We support static websites only. No payment gateway integration, but we can help you set up Razorpay payment links.
+            </p>
+          </div>
         </div>
 
         <div className="text-center">

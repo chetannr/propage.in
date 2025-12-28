@@ -5,11 +5,12 @@ export interface Service {
 }
 
 export const mainService: Service = {
-  title: 'Website Creation',
-  description: 'Complete website development from design to deployment in 7 days.',
+  title: 'Static Website Creation',
+  description: 'Complete static website development from design to deployment in 7 days. We specialize in static websites only—no payment gateway integration, but we can help you set up Razorpay payment links.',
   features: [
     '7-day delivery',
-    'Full-stack implementation',
+    'Static website only (no payment gateway integration)',
+    'Razorpay payment link integration support',
     'SEO optimized',
     'Accessibility compliant',
     'Performance optimized',
@@ -24,7 +25,11 @@ export const includedServices = [
   },
   {
     title: 'Development',
-    description: 'React + TypeScript, modern, maintainable code',
+    description: 'React + TypeScript, modern, maintainable code for static websites',
+  },
+  {
+    title: 'Payment Links',
+    description: 'Razorpay payment link integration—we help you onboard to Razorpay and add payment links to your static website',
   },
   {
     title: 'SEO Implementation',
