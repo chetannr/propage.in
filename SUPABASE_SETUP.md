@@ -46,20 +46,30 @@ The migration script already sets up RLS policies:
 
 You can modify these policies in **Authentication** → **Policies** if needed.
 
-## Step 5: Set Environment Variables
+## Step 5: Set Environment Variables ✅ COMPLETE
 
-### For Local Development ✅ COMPLETE
+### For Local Development
 
-The `.env.local` file has been created in the project root with:
+The `.env.local` file has been created in the project root at:
+```
+/Users/chetan/Documents/CodeProjects/chetan-personal-git-repos/propage.in/.env.local
+```
 
+**File Contents:**
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://yjzosjzgkaibjzkuegoi.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL
 ```
 
+**Note**: `.env.local` files are hidden by default (they start with a dot). To view it:
+- **In VS Code/Cursor**: Press `Cmd + Shift + P` → "Files: Reveal in Explorer" or enable "Show Hidden Files"
+- **In Finder (Mac)**: Press `Cmd + Shift + .` to show hidden files
+- **In Terminal**: `cat .env.local` or `ls -la | grep env`
+
 **Important**: 
-- ✅ `.env.local` is already in `.gitignore` (won't be committed)
+- ✅ `.env.local` is already in `.gitignore` (won't be committed to version control)
 - ✅ Using `NEXT_PUBLIC_` prefix for Next.js client-side environment variables
+- ✅ File is ready to use - restart your dev server if it's already running
 
 ### For Production Deployment
 
@@ -68,9 +78,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL
 1. Go to your repository → **Settings** → **Secrets and variables** → **Actions**
 2. Add the following secrets:
    - **Name**: `NEXT_PUBLIC_SUPABASE_URL`
-     - **Value**: Your Supabase project URL
+     - **Value**: `https://yjzosjzgkaibjzkuegoi.supabase.co`
    - **Name**: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-     - **Value**: Your Supabase anon key
+     - **Value**: `sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
 
 3. Update your GitHub Actions workflow to include these secrets:
 
@@ -83,8 +93,8 @@ env:
 #### Other Platforms (Vercel, Netlify, etc.)
 
 Add the environment variables in your platform's dashboard:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_URL` = `https://yjzosjzgkaibjzkuegoi.supabase.co`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
 
 ## Step 6: Test the Integration
 
