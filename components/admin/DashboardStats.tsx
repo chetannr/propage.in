@@ -119,8 +119,8 @@ export default function DashboardStats() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Form Submissions</h2>
-        <p className="text-gray-600">Click on a card to view all submissions for that form.</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Form Submissions</h2>
+        <p className="text-gray-600 dark:text-gray-400">Click on a card to view all submissions for that form.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -128,19 +128,19 @@ export default function DashboardStats() {
           <Link
             key={stat.id}
             href={stat.route}
-            className="block bg-white border-2 border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all group"
+            className="block bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600 transition-all group"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="text-4xl mb-2">{stat.icon}</div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">{stat.count}</div>
-                <div className="text-sm text-gray-500 mt-1">submissions</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stat.count}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">submissions</div>
               </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300">
               {stat.name}
             </h3>
-            <p className="text-sm text-gray-600 group-hover:text-gray-500">
+            <p className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300">
               View all entries →
             </p>
           </Link>
@@ -148,8 +148,8 @@ export default function DashboardStats() {
       </div>
 
       {stats.length > 0 && (
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-600">
+        <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             <strong>Total Submissions:</strong>{' '}
             {stats.reduce((sum, stat) => sum + stat.count, 0)} across all forms
           </p>

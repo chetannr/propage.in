@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import SkipLink from '@/components/shared/SkipLink'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://propage.in'),
@@ -45,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preload" href="/propage-logo.png" as="image" />
         <link rel="icon" type="image/png" href="/propage-favicon.png" />
@@ -75,12 +76,34 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+                    const theme = localStorage.getItem('theme') || 'system';
+                    const systemTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    const resolvedTheme = theme === 'system' ? systemTheme : theme;
+                    if (resolvedTheme === 'dark') {
+                      document.documentElement.classList.add('dark');
+                    }
+                  }
+                } catch (e) {
+                  // Silently fail if localStorage or window is not available (SSR)
+                }
+              })();
+            `,
+          }}
+        />
       </head>
       <body>
-        <SkipLink />
-        <Header />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <SkipLink />
+          <Header />
+          <main id="main-content">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   )

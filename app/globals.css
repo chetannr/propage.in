@@ -4,16 +4,16 @@
 
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-gray-200 dark:border-gray-800;
   }
   
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased;
   }
 
   /* Focus styles for accessibility */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-gray-900;
+    @apply outline-2 outline-offset-2 outline-gray-900 dark:outline-gray-100;
   }
 
   *:focus:not(:focus-visible) {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser, signOut } from '@/lib/auth'
+import ThemeToggle from '@/components/theme/ThemeToggle'
 
 export default function AdminLayout({
   children,
@@ -36,36 +37,39 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b-2 border-gray-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <header className="bg-white dark:bg-gray-800 border-b-2 border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               {userEmail && (
-                <p className="text-sm text-gray-600">Logged in as {userEmail}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Logged in as {userEmail}</p>
               )}
               <nav className="flex items-center gap-4">
                 <Link
                   href="/admin"
-                  className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 font-medium transition-colors"
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/admin/submissions"
-                  className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 font-medium transition-colors"
                 >
                   Contact Form
                 </Link>
               </nav>
             </div>
-            <button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoggingOut ? 'Logging out...' : 'Logout'}
-            </button>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoggingOut ? 'Logging out...' : 'Logout'}
+              </button>
+            </div>
           </div>
         </div>
       </header>
