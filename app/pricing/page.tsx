@@ -14,18 +14,18 @@ export default function PricingPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
           Pricing
         </h1>
-        <p className="text-xl text-gray-600 mb-12 text-center">
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 text-center">
           Transparent pricing for website creation services
         </p>
 
         <div className="text-center mb-16">
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
             We offer custom pricing based on your specific needs. Every project includes:
           </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2 max-w-2xl mx-auto text-left">
+          <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 max-w-2xl mx-auto text-left">
             <li>7-day delivery</li>
             <li>Minimal, elegant design</li>
             <li>Full development (React + TypeScript) - Static websites only</li>
@@ -35,15 +35,15 @@ export default function PricingPage() {
             <li>Performance optimization (Lighthouse 90+)</li>
             <li>Deployment and setup</li>
           </ul>
-          <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 max-w-2xl mx-auto">
-            <p className="text-base text-gray-700 mb-2">
+          <div className="mt-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto">
+            <p className="text-base text-gray-700 dark:text-gray-300 mb-2">
               <strong>Note:</strong> We support static websites only. No payment gateway integration, but we can help you set up Razorpay payment links.
             </p>
           </div>
         </div>
 
         <div className="text-center">
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
             Ready to start your project? Share your vision and we&apos;ll create a custom solution.
           </p>
           <a

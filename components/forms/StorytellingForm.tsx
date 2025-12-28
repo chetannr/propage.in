@@ -282,13 +282,13 @@ export default function StorytellingForm() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Your Story Has Been Shared
             </h2>
-            <p className="text-xl text-gray-600 mb-2">
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">
               Thank you for taking the time to share your vision with us.
             </p>
-            <p className="text-lg text-gray-500">
+            <p className="text-lg text-gray-500 dark:text-gray-400">
               We&apos;ll review your information and get back to you within 24 hours to start bringing your website to life.
             </p>
           </div>
@@ -301,22 +301,22 @@ export default function StorytellingForm() {
   const progress = ((currentStep + 1) / steps.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       {/* Progress Bar */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-200">
+      <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-600">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Step {currentStepData.number} of {currentStepData.total}
               </span>
-              <span className="text-sm font-medium text-gray-600">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 {Math.round(progress)}%
               </span>
             </div>
-            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gray-900 transition-all duration-500 ease-out"
+                className="h-full bg-gray-900 dark:bg-gray-100 transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -329,13 +329,13 @@ export default function StorytellingForm() {
         <div className="max-w-3xl mx-auto">
           {/* Step Header */}
           <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 mb-4">
+            <div className="inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
               {currentStepData.title}
             </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               {currentStepData.subtitle}
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               {currentStep === 0 && 'Every great website starts with understanding who you are.'}
               {currentStep === 1 && 'Help us understand what you\'re building and why it matters.'}
               {currentStep === 2 && 'Your business has a unique story. Let\'s capture it.'}
@@ -353,7 +353,7 @@ export default function StorytellingForm() {
             {currentStep === 0 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="name" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Your Name *
                   </label>
                   <input
@@ -363,13 +363,13 @@ export default function StorytellingForm() {
                     required
                     value={formData.name}
                     onChange={(e) => updateFormData('name', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="John Doe"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="email" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Email Address *
                   </label>
                   <input
@@ -379,13 +379,13 @@ export default function StorytellingForm() {
                     required
                     value={formData.email}
                     onChange={(e) => updateFormData('email', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="john@example.com"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="company" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="company" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Company / Business Name *
                   </label>
                   <input
@@ -395,13 +395,13 @@ export default function StorytellingForm() {
                     required
                     value={formData.company}
                     onChange={(e) => updateFormData('company', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Acme Inc."
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="role" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="role" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Your Role *
                   </label>
                   <input
@@ -411,7 +411,7 @@ export default function StorytellingForm() {
                     required
                     value={formData.role}
                     onChange={(e) => updateFormData('role', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Founder, CEO, Marketing Manager, etc."
                   />
                 </div>
@@ -422,7 +422,7 @@ export default function StorytellingForm() {
             {currentStep === 1 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label htmlFor="projectType" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="projectType" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     What are you building? *
                   </label>
                   <select
@@ -431,7 +431,7 @@ export default function StorytellingForm() {
                     required
                     value={formData.projectType}
                     onChange={(e) => updateFormData('projectType', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   >
                     <option value="">Select project type</option>
                     <option value="new-website">New Website (Static)</option>
@@ -442,13 +442,13 @@ export default function StorytellingForm() {
                     <option value="blog">Blog / Content Site (Static)</option>
                     <option value="other">Other (Static)</option>
                   </select>
-                  <p className="mt-2 text-sm text-gray-600">
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                     Note: We specialize in static websites only. For e-commerce, we can integrate Razorpay payment links (no direct payment gateway integration).
                   </p>
                 </div>
 
                 <div>
-                  <label htmlFor="currentWebsite" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="currentWebsite" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Current Website (if any)
                   </label>
                   <input
@@ -457,13 +457,13 @@ export default function StorytellingForm() {
                     name="currentWebsite"
                     value={formData.currentWebsite}
                     onChange={(e) => updateFormData('currentWebsite', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="https://example.com"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="primaryGoal" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="primaryGoal" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Primary Goal *
                   </label>
                   <select
@@ -472,7 +472,7 @@ export default function StorytellingForm() {
                     required
                     value={formData.primaryGoal}
                     onChange={(e) => updateFormData('primaryGoal', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   >
                     <option value="">Select primary goal</option>
                     <option value="generate-leads">Generate Leads</option>
@@ -485,7 +485,7 @@ export default function StorytellingForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="targetAudience" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="targetAudience" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Target Audience *
                   </label>
                   <textarea
@@ -495,7 +495,7 @@ export default function StorytellingForm() {
                     rows={4}
                     value={formData.targetAudience}
                     onChange={(e) => updateFormData('targetAudience', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Describe your ideal customer or target audience..."
                   />
                 </div>
@@ -506,7 +506,7 @@ export default function StorytellingForm() {
             {currentStep === 2 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label htmlFor="businessDescription" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="businessDescription" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     What does your business do? *
                   </label>
                   <textarea
@@ -516,13 +516,13 @@ export default function StorytellingForm() {
                     rows={5}
                     value={formData.businessDescription}
                     onChange={(e) => updateFormData('businessDescription', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Describe your business, products, or services..."
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="uniqueValue" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="uniqueValue" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     What makes you unique? *
                   </label>
                   <textarea
@@ -532,13 +532,13 @@ export default function StorytellingForm() {
                     rows={4}
                     value={formData.uniqueValue}
                     onChange={(e) => updateFormData('uniqueValue', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="What sets you apart from competitors?"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="keyMessages" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="keyMessages" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Key Messages to Communicate
                   </label>
                   <textarea
@@ -547,7 +547,7 @@ export default function StorytellingForm() {
                     rows={4}
                     value={formData.keyMessages}
                     onChange={(e) => updateFormData('keyMessages', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="What are the main messages you want visitors to take away?"
                   />
                 </div>
@@ -558,12 +558,12 @@ export default function StorytellingForm() {
             {currentStep === 3 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Do you have content ready? *
                   </label>
                   <div className="space-y-2">
                     {['Yes, all content is ready', 'Some content ready', 'Need help creating content'].map((option) => (
-                      <label key={option} className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 transition-all">
+                      <label key={option} className="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 dark:border-gray-600 transition-all">
                         <input
                           type="radio"
                           name="hasContent"
@@ -573,14 +573,14 @@ export default function StorytellingForm() {
                           className="mr-3"
                           required
                         />
-                        <span className="text-gray-700">{option}</span>
+                        <span className="text-gray-700 dark:text-gray-300">{option}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="contentDescription" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="contentDescription" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Describe Your Content
                   </label>
                   <textarea
@@ -589,13 +589,13 @@ export default function StorytellingForm() {
                     rows={4}
                     value={formData.contentDescription}
                     onChange={(e) => updateFormData('contentDescription', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="What type of content do you have? (text, images, videos, etc.)"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="preferredStyle" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="preferredStyle" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Content Style Preference
                   </label>
                   <select
@@ -603,7 +603,7 @@ export default function StorytellingForm() {
                     name="preferredStyle"
                     value={formData.preferredStyle}
                     onChange={(e) => updateFormData('preferredStyle', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   >
                     <option value="">Select style</option>
                     <option value="minimal">Minimal & Clean</option>
@@ -620,26 +620,26 @@ export default function StorytellingForm() {
             {currentStep === 4 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Design Preferences (select all that apply)
                   </label>
                   <div className="space-y-2">
                     {['Minimal & Clean', 'Bold & Vibrant', 'Professional & Corporate', 'Creative & Artistic', 'Modern & Trendy', 'Classic & Timeless'].map((pref) => (
-                      <label key={pref} className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 transition-all">
+                      <label key={pref} className="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 dark:border-gray-600 transition-all">
                         <input
                           type="checkbox"
                           checked={formData.designPreferences.includes(pref)}
                           onChange={() => toggleArrayValue('designPreferences', pref)}
                           className="mr-3"
                         />
-                        <span className="text-gray-700">{pref}</span>
+                        <span className="text-gray-700 dark:text-gray-300">{pref}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="colorPreferences" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="colorPreferences" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Color Preferences
                   </label>
                   <input
@@ -648,13 +648,13 @@ export default function StorytellingForm() {
                     name="colorPreferences"
                     value={formData.colorPreferences}
                     onChange={(e) => updateFormData('colorPreferences', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="e.g., Blue and white, Warm tones, Brand colors"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="referenceSites" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="referenceSites" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Reference Websites (URLs)
                   </label>
                   <textarea
@@ -663,13 +663,13 @@ export default function StorytellingForm() {
                     rows={3}
                     value={formData.referenceSites}
                     onChange={(e) => updateFormData('referenceSites', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Share websites you like (one per line)"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="brandGuidelines" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="brandGuidelines" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Brand Guidelines / Assets
                   </label>
                   <textarea
@@ -678,7 +678,7 @@ export default function StorytellingForm() {
                     rows={3}
                     value={formData.brandGuidelines}
                     onChange={(e) => updateFormData('brandGuidelines', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Do you have brand guidelines, logos, or style guides?"
                   />
                 </div>
@@ -689,26 +689,26 @@ export default function StorytellingForm() {
             {currentStep === 5 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Required Features (select all that apply)
                   </label>
                   <div className="space-y-2">
                     {['Contact Form', 'Blog / News Section', 'Image Gallery', 'Video Integration', 'E-commerce / Shopping Cart', 'User Accounts / Login', 'Search Functionality', 'Newsletter Signup', 'Social Media Integration', 'Analytics Integration', 'Multi-language Support', 'Booking / Appointment System'].map((feature) => (
-                      <label key={feature} className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 transition-all">
+                      <label key={feature} className="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 dark:border-gray-600 transition-all">
                         <input
                           type="checkbox"
                           checked={formData.requiredFeatures.includes(feature)}
                           onChange={() => toggleArrayValue('requiredFeatures', feature)}
                           className="mr-3"
                         />
-                        <span className="text-gray-700">{feature}</span>
+                        <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="integrations" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="integrations" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Third-Party Integrations Needed
                   </label>
                   <textarea
@@ -717,13 +717,13 @@ export default function StorytellingForm() {
                     rows={3}
                     value={formData.integrations}
                     onChange={(e) => updateFormData('integrations', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="e.g., Stripe, Mailchimp, Google Analytics, CRM systems"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="specialRequirements" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="specialRequirements" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Special Requirements
                   </label>
                   <textarea
@@ -732,7 +732,7 @@ export default function StorytellingForm() {
                     rows={4}
                     value={formData.specialRequirements}
                     onChange={(e) => updateFormData('specialRequirements', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Any special functionality, accessibility needs, or technical requirements?"
                   />
                 </div>
@@ -743,7 +743,7 @@ export default function StorytellingForm() {
             {currentStep === 6 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label htmlFor="timeline" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="timeline" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Preferred Timeline *
                   </label>
                   <select
@@ -752,7 +752,7 @@ export default function StorytellingForm() {
                     required
                     value={formData.timeline}
                     onChange={(e) => updateFormData('timeline', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   >
                     <option value="">Select timeline</option>
                     <option value="asap">As Soon As Possible</option>
@@ -764,7 +764,7 @@ export default function StorytellingForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="launchDate" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="launchDate" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Target Launch Date
                   </label>
                   <input
@@ -773,12 +773,12 @@ export default function StorytellingForm() {
                     name="launchDate"
                     value={formData.launchDate}
                     onChange={(e) => updateFormData('launchDate', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="urgency" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="urgency" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     How urgent is this project?
                   </label>
                   <select
@@ -786,7 +786,7 @@ export default function StorytellingForm() {
                     name="urgency"
                     value={formData.urgency}
                     onChange={(e) => updateFormData('urgency', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   >
                     <option value="">Select urgency</option>
                     <option value="very-urgent">Very Urgent</option>
@@ -802,7 +802,7 @@ export default function StorytellingForm() {
             {currentStep === 7 && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <label htmlFor="budget" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="budget" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Budget Range
                   </label>
                   <select
@@ -810,7 +810,7 @@ export default function StorytellingForm() {
                     name="budget"
                     value={formData.budget}
                     onChange={(e) => updateFormData('budget', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                   >
                     <option value="">Select budget range</option>
                     <option value="under-5k">Under $5,000</option>
@@ -823,7 +823,7 @@ export default function StorytellingForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="additionalInfo" className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label htmlFor="additionalInfo" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Additional Information
                   </label>
                   <textarea
@@ -832,7 +832,7 @@ export default function StorytellingForm() {
                     rows={6}
                     value={formData.additionalInfo}
                     onChange={(e) => updateFormData('additionalInfo', e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
                     placeholder="Anything else we should know? Questions, concerns, or special requests..."
                   />
                 </div>
@@ -851,12 +851,12 @@ export default function StorytellingForm() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex items-center justify-between pt-8 border-t border-gray-200">
+            <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
               <button
                 type="button"
                 onClick={handleBack}
                 disabled={currentStep === 0}
-                className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:border-gray-400 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 ← Back
               </button>
@@ -882,8 +882,8 @@ export default function StorytellingForm() {
 
             {/* Error Message */}
             {submitError && (
-              <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
-                <p className="text-red-800 font-medium">{submitError}</p>
+              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-red-800 dark:text-red-300 font-medium">{submitError}</p>
               </div>
             )}
           </form>

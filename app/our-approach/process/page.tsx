@@ -12,15 +12,15 @@ export default function ProcessPage() {
       <div className="max-w-4xl mx-auto">
         <Link 
           href="/our-approach" 
-          className="text-gray-600 hover:text-gray-900 transition-colors mb-8 inline-block"
+          className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors mb-8 inline-block"
         >
           ← Back to Our Approach
         </Link>
 
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Our Process
         </h1>
-        <p className="text-xl text-gray-600 mb-12">
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-12">
           A proven 7-day workflow that delivers quality results. Fast delivery without compromising on excellence.
         </p>
 
@@ -29,12 +29,12 @@ export default function ProcessPage() {
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">7-Day Workflow</h2>
             
             <div className="space-y-8">
-              <div className="border-l-4 border-gray-900 pl-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Day 1: Planning & Foundation</h3>
-                <p className="text-gray-700 mb-2">
+              <div className="border-l-4 border-gray-900 dark:border-gray-100 pl-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Day 1: Planning & Foundation</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">
                   We start by understanding your goals, gathering content, and setting up the project foundation.
                 </p>
-                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
                   <li>Project brief and requirements</li>
                   <li>Content collection and organization</li>
                   <li>Design direction and planning</li>
@@ -42,12 +42,12 @@ export default function ProcessPage() {
                 </ul>
               </div>
 
-              <div className="border-l-4 border-gray-900 pl-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Days 2-5: Development</h3>
-                <p className="text-gray-700 mb-2">
+              <div className="border-l-4 border-gray-900 dark:border-gray-100 pl-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Days 2-5: Development</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">
                   We build your website with attention to design, functionality, and quality standards.
                 </p>
-                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
                   <li>Design system implementation</li>
                   <li>Component development</li>
                   <li>Content integration</li>
@@ -56,12 +56,12 @@ export default function ProcessPage() {
                 </ul>
               </div>
 
-              <div className="border-l-4 border-gray-900 pl-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Day 6: Testing & Polish</h3>
-                <p className="text-gray-700 mb-2">
+              <div className="border-l-4 border-gray-900 dark:border-gray-100 pl-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Day 6: Testing & Polish</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">
                   We thoroughly test everything to ensure quality and performance.
                 </p>
-                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
                   <li>Cross-browser and device testing</li>
                   <li>Accessibility audit</li>
                   <li>Performance audit (Lighthouse 90+)</li>
@@ -70,12 +70,12 @@ export default function ProcessPage() {
                 </ul>
               </div>
 
-              <div className="border-l-4 border-gray-900 pl-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Day 7: Deployment</h3>
-                <p className="text-gray-700 mb-2">
+              <div className="border-l-4 border-gray-900 dark:border-gray-100 pl-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Day 7: Deployment</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">
                   We deploy your website and ensure everything works perfectly.
                 </p>
-                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
                   <li>Final deployment</li>
                   <li>Post-deployment verification</li>
                   <li>SEO setup (sitemap, Search Console)</li>
@@ -86,11 +86,11 @@ export default function ProcessPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Quality Gates</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Quality Gates</h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-4">
               Every website must pass these quality standards before deployment:
             </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
               <li><strong>Lighthouse 90+</strong>:Performance, accessibility, best practices, SEO</li>
               <li><strong>WCAG 2.1 AA</strong>:Accessibility compliance for all users</li>
               <li><strong>Complete SEO</strong>:Meta tags, structured data, sitemap</li>
@@ -100,11 +100,11 @@ export default function ProcessPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Communication</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Communication</h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-4">
               We keep you informed throughout the process:
             </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
               <li>Daily updates on progress</li>
               <li>Clear communication about decisions</li>
               <li>Opportunities for feedback at key stages</li>
@@ -113,11 +113,11 @@ export default function ProcessPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Why 7 Days?</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Why 7 Days?</h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-4">
               Our 7-day process balances speed with quality. We&apos;ve refined this workflow to:
             </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
               <li>Deliver results quickly without rushing</li>
               <li>Maintain high quality standards</li>
               <li>Follow a proven, repeatable process</li>

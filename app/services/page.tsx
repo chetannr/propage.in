@@ -17,27 +17,27 @@ export default function ServicesPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
           Our Services
         </h1>
-        <p className="text-xl text-gray-600 mb-12 text-center">
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 text-center">
           Complete static website creation from design to deployment
         </p>
 
         {/* Main Service */}
         <section className="mb-16">
           <Card className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               {mainService.title}
             </h2>
-            <p className="text-lg text-gray-700 mb-6">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
               {mainService.description}
             </p>
             <ul className="space-y-3">
               {mainService.features.map((feature, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="text-gray-900 mr-2">✓</span>
-                  <span className="text-gray-700">{feature}</span>
+                  <span className="text-gray-900 dark:text-gray-100 mr-2">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -46,16 +46,16 @@ export default function ServicesPage() {
 
         {/* What's Included */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
             What&apos;s Included
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {includedServices.map((service, index) => (
               <Card key={index} hover>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
                   {service.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400">
                   {service.description}
                 </p>
               </Card>
@@ -65,22 +65,22 @@ export default function ServicesPage() {
 
         {/* Important Note */}
         <section className="mb-16">
-          <Card className="bg-gray-50 border-2 border-gray-300">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <Card className="bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Important: Static Websites Only
             </h2>
-            <p className="text-lg text-gray-700 mb-4">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
               We currently support <strong>static websites only</strong>. We do not build payment gateway integrations directly into websites.
             </p>
-            <p className="text-lg text-gray-700 mb-4">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
               However, we can help you:
             </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4">
               <li>Onboard to Razorpay and create payment pages on their platform</li>
               <li>Integrate Razorpay payment links into your static website</li>
               <li>Add buttons or links that redirect to your Razorpay payment pages</li>
             </ul>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-gray-700 dark:text-gray-300">
               This approach allows you to accept payments while keeping your website static and fast.
             </p>
           </Card>
@@ -88,7 +88,7 @@ export default function ServicesPage() {
 
         {/* Process Link */}
         <section className="text-center">
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
             Want to know more about our process?
           </p>
           <Link

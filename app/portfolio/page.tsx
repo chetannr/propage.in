@@ -16,52 +16,52 @@ export default function PortfolioPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
           Our Portfolio
         </h1>
-        <p className="text-xl text-gray-600 mb-12 text-center">
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 text-center">
           Case studies of our completed projects
         </p>
 
         <div className="space-y-16">
           {portfolioItems.map((item, index) => (
-            <article key={index} className="border-b border-gray-200 pb-16 last:border-b-0 last:pb-0">
+            <article key={index} className="border-b border-gray-200 dark:border-gray-700 pb-16 last:border-b-0 last:pb-0">
               <Card>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
                   {item.title}
                 </h2>
-                <p className="text-lg text-gray-700 mb-6">
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
                   {item.description}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
                       Challenge
                     </h3>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 dark:text-gray-300">
                       {item.challenge}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
                       Solution
                     </h3>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 dark:text-gray-300">
                       {item.solution}
                     </p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Results
                   </h3>
                   <ul className="space-y-2">
                     {item.results.map((result, resultIndex) => (
                       <li key={resultIndex} className="flex items-start">
-                        <span className="text-gray-900 mr-2">✓</span>
-                        <span className="text-gray-700">{result}</span>
+                        <span className="text-gray-900 dark:text-gray-100 mr-2">✓</span>
+                        <span className="text-gray-700 dark:text-gray-300">{result}</span>
                       </li>
                     ))}
                   </ul>
