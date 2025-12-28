@@ -151,7 +151,29 @@ export default function StorytellingForm() {
     }))
   }
 
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 4: // Design Preferences step
+        if (formData.designPreferences.length === 0) {
+          setSubmitError('Please select at least one design preference.')
+          return false
+        }
+        break
+      case 5: // Required Features step
+        if (formData.requiredFeatures.length === 0) {
+          setSubmitError('Please select at least one required feature.')
+          return false
+        }
+        break
+    }
+    setSubmitError(null)
+    return true
+  }
+
   const handleNext = () => {
+    if (!validateStep(currentStep)) {
+      return
+    }
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -165,10 +187,42 @@ export default function StorytellingForm() {
     }
   }
 
+  const handleStepClick = (stepIndex: number) => {
+    setCurrentStep(stepIndex)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Check if user has entered any data
+  const hasEnteredData = () => {
+    return Object.values(formData).some((value) => {
+      if (Array.isArray(value)) {
+        return value.length > 0
+      }
+      return value !== '' && value !== null && value !== undefined
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitError(null)
+
+    // Validate checkbox groups
+    if (formData.designPreferences.length === 0) {
+      setSubmitError('Please select at least one design preference.')
+      setIsSubmitting(false)
+      setCurrentStep(4) // Jump to design preferences step
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    if (formData.requiredFeatures.length === 0) {
+      setSubmitError('Please select at least one required feature.')
+      setIsSubmitting(false)
+      setCurrentStep(5) // Jump to features step
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
 
     try {
       // Verify reCAPTCHA if site key is configured
@@ -320,6 +374,32 @@ export default function StorytellingForm() {
                 style={{ width: `${progress}%` }}
               />
             </div>
+            
+            {/* Step Navigation - Show when user has entered data */}
+            {hasEnteredData() && (
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {steps.map((step, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleStepClick(index)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all ${
+                        index === currentStep
+                          ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
+                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      }`}
+                      title={step.title}
+                    >
+                      {step.number}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
+                  Click any step number to jump to that section
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -449,12 +529,13 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="currentWebsite" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Current Website (if any)
+                    Current Website *
                   </label>
                   <input
                     type="url"
                     id="currentWebsite"
                     name="currentWebsite"
+                    required
                     value={formData.currentWebsite}
                     onChange={(e) => updateFormData('currentWebsite', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -539,11 +620,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="keyMessages" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Key Messages to Communicate
+                    Key Messages to Communicate *
                   </label>
                   <textarea
                     id="keyMessages"
                     name="keyMessages"
+                    required
                     rows={4}
                     value={formData.keyMessages}
                     onChange={(e) => updateFormData('keyMessages', e.target.value)}
@@ -581,11 +663,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="contentDescription" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Describe Your Content
+                    Describe Your Content *
                   </label>
                   <textarea
                     id="contentDescription"
                     name="contentDescription"
+                    required
                     rows={4}
                     value={formData.contentDescription}
                     onChange={(e) => updateFormData('contentDescription', e.target.value)}
@@ -596,11 +679,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="preferredStyle" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Content Style Preference
+                    Content Style Preference *
                   </label>
                   <select
                     id="preferredStyle"
                     name="preferredStyle"
+                    required
                     value={formData.preferredStyle}
                     onChange={(e) => updateFormData('preferredStyle', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -621,7 +705,7 @@ export default function StorytellingForm() {
               <div className="space-y-6 animate-fadeIn">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Design Preferences (select all that apply)
+                    Design Preferences (select all that apply) *
                   </label>
                   <div className="space-y-2">
                     {['Minimal & Clean', 'Bold & Vibrant', 'Professional & Corporate', 'Creative & Artistic', 'Modern & Trendy', 'Classic & Timeless'].map((pref) => (
@@ -640,12 +724,13 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="colorPreferences" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Color Preferences
+                    Color Preferences *
                   </label>
                   <input
                     type="text"
                     id="colorPreferences"
                     name="colorPreferences"
+                    required
                     value={formData.colorPreferences}
                     onChange={(e) => updateFormData('colorPreferences', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -655,11 +740,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="referenceSites" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Reference Websites (URLs)
+                    Reference Websites (URLs) *
                   </label>
                   <textarea
                     id="referenceSites"
                     name="referenceSites"
+                    required
                     rows={3}
                     value={formData.referenceSites}
                     onChange={(e) => updateFormData('referenceSites', e.target.value)}
@@ -670,11 +756,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="brandGuidelines" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Brand Guidelines / Assets
+                    Brand Guidelines / Assets *
                   </label>
                   <textarea
                     id="brandGuidelines"
                     name="brandGuidelines"
+                    required
                     rows={3}
                     value={formData.brandGuidelines}
                     onChange={(e) => updateFormData('brandGuidelines', e.target.value)}
@@ -690,7 +777,7 @@ export default function StorytellingForm() {
               <div className="space-y-6 animate-fadeIn">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Required Features (select all that apply)
+                    Required Features (select all that apply) *
                   </label>
                   <div className="space-y-2">
                     {['Contact Form', 'Blog / News Section', 'Image Gallery', 'Video Integration', 'E-commerce / Shopping Cart', 'User Accounts / Login', 'Search Functionality', 'Newsletter Signup', 'Social Media Integration', 'Analytics Integration', 'Multi-language Support', 'Booking / Appointment System'].map((feature) => (
@@ -709,11 +796,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="integrations" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Third-Party Integrations Needed
+                    Third-Party Integrations Needed *
                   </label>
                   <textarea
                     id="integrations"
                     name="integrations"
+                    required
                     rows={3}
                     value={formData.integrations}
                     onChange={(e) => updateFormData('integrations', e.target.value)}
@@ -724,11 +812,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="specialRequirements" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Special Requirements
+                    Special Requirements *
                   </label>
                   <textarea
                     id="specialRequirements"
                     name="specialRequirements"
+                    required
                     rows={4}
                     value={formData.specialRequirements}
                     onChange={(e) => updateFormData('specialRequirements', e.target.value)}
@@ -765,12 +854,13 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="launchDate" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Target Launch Date
+                    Target Launch Date *
                   </label>
                   <input
                     type="date"
                     id="launchDate"
                     name="launchDate"
+                    required
                     value={formData.launchDate}
                     onChange={(e) => updateFormData('launchDate', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -779,11 +869,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="urgency" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    How urgent is this project?
+                    How urgent is this project? *
                   </label>
                   <select
                     id="urgency"
                     name="urgency"
+                    required
                     value={formData.urgency}
                     onChange={(e) => updateFormData('urgency', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -803,11 +894,12 @@ export default function StorytellingForm() {
               <div className="space-y-6 animate-fadeIn">
                 <div>
                   <label htmlFor="budget" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Budget Range
+                    Budget Range *
                   </label>
                   <select
                     id="budget"
                     name="budget"
+                    required
                     value={formData.budget}
                     onChange={(e) => updateFormData('budget', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -824,11 +916,12 @@ export default function StorytellingForm() {
 
                 <div>
                   <label htmlFor="additionalInfo" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Additional Information
+                    Additional Information *
                   </label>
                   <textarea
                     id="additionalInfo"
                     name="additionalInfo"
+                    required
                     rows={6}
                     value={formData.additionalInfo}
                     onChange={(e) => updateFormData('additionalInfo', e.target.value)}
