@@ -290,7 +290,7 @@ export default function SubmissionsList() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <Link
-                        href={`/admin/submissions/${submission.id}`}
+                        href={`/admin/submissions?id=${submission.id}`}
                         className="inline-block px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                       >
                         View
