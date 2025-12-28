@@ -335,14 +335,17 @@ export default function StorytellingForm() {
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
                   >
                     <option value="">Select project type</option>
-                    <option value="new-website">New Website</option>
-                    <option value="redesign">Website Redesign</option>
-                    <option value="landing-page">Landing Page</option>
-                    <option value="ecommerce">E-commerce Store</option>
-                    <option value="portfolio">Portfolio Site</option>
-                    <option value="blog">Blog / Content Site</option>
-                    <option value="other">Other</option>
+                    <option value="new-website">New Website (Static)</option>
+                    <option value="redesign">Website Redesign (Static)</option>
+                    <option value="landing-page">Landing Page (Static)</option>
+                    <option value="ecommerce">E-commerce Store (Static with Razorpay Payment Links)</option>
+                    <option value="portfolio">Portfolio Site (Static)</option>
+                    <option value="blog">Blog / Content Site (Static)</option>
+                    <option value="other">Other (Static)</option>
                   </select>
+                  <p className="mt-2 text-sm text-gray-600">
+                    Note: We specialize in static websites only. For e-commerce, we can integrate Razorpay payment links (no direct payment gateway integration).
+                  </p>
                 </div>
 
                 <div>

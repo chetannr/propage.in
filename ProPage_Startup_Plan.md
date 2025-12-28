@@ -28,6 +28,13 @@
    - Added "Razorpay payment link integration support" to included features
    - Added note section explaining static websites only with Razorpay payment link support
 
+4. **Updated Contact Form** (`components/forms/StorytellingForm.tsx`):
+   - Updated all project type options to include "(Static)" label
+   - Changed "E-commerce Store" to "E-commerce Store (Static with Razorpay Payment Links)"
+   - Added helper text below the project type select explaining:
+     - Static websites only specialization
+     - Razorpay payment link integration for e-commerce (no direct payment gateway integration)
+
 ### Key Points Clarified
 
 - **Static Websites Only**: ProPage.in specializes in static websites only
