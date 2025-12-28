@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 import { supabase } from '@/lib/supabase'
 
 interface FormData {
@@ -140,6 +141,8 @@ export default function StorytellingForm() {
   const [submitted, setSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
 
   const updateFormData = (field: keyof FormData, value: string | string[]) => {
     setFormData((prev) => ({
@@ -168,6 +171,18 @@ export default function StorytellingForm() {
     setSubmitError(null)
 
     try {
+      // Verify reCAPTCHA if site key is configured
+      if (recaptchaSiteKey) {
+        const recaptchaToken = recaptchaRef.current?.getValue()
+        if (!recaptchaToken) {
+          setSubmitError('Please complete the reCAPTCHA verification.')
+          setIsSubmitting(false)
+          return
+        }
+        // Note: For static sites, we rely on client-side verification.
+        // For production, consider adding server-side verification via a backend service.
+      }
+
       // If Supabase is not configured, still show success (graceful degradation)
       if (!supabase) {
         console.warn('[Form] Supabase not configured. Form data:', formData)
@@ -227,6 +242,11 @@ export default function StorytellingForm() {
       }
 
       setSubmitted(true)
+      
+      // Reset reCAPTCHA on successful submission
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset()
+      }
     } catch (error) {
       console.error('[Form] Submission error:', error)
       setSubmitError(
@@ -234,6 +254,11 @@ export default function StorytellingForm() {
           ? error.message
           : 'An unexpected error occurred. Please try again or contact us directly.'
       )
+      
+      // Reset reCAPTCHA on error so user can retry
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset()
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -811,6 +836,17 @@ export default function StorytellingForm() {
                     placeholder="Anything else we should know? Questions, concerns, or special requests..."
                   />
                 </div>
+              </div>
+            )}
+
+            {/* reCAPTCHA - only show on last step */}
+            {currentStep === steps.length - 1 && recaptchaSiteKey && (
+              <div className="flex justify-center pt-6">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={recaptchaSiteKey}
+                  theme="light"
+                />
               </div>
             )}
 

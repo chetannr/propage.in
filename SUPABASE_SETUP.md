@@ -151,13 +151,67 @@ If you get permission errors:
 - The **anon key** is safe to use in client-side code (it's designed to be public)
 - RLS policies ensure only authorized operations are allowed
 - Never expose the **service_role key** in client-side code
-- Consider adding rate limiting or CAPTCHA for production
+- ✅ reCAPTCHA v2 has been implemented for spam protection (see setup below)
+
+## Step 8: Set Up reCAPTCHA (Recommended for Spam Protection)
+
+To protect your form from spam and stay within Supabase free tier limits, reCAPTCHA v2 has been implemented.
+
+### Setup Instructions
+
+1. **Register for Google reCAPTCHA**:
+   - Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
+   - Click "Create" to register a new site
+   - Fill in the form:
+     - **Label**: ProPage Contact Form
+     - **reCAPTCHA type**: Select "reCAPTCHA v2" → "I'm not a robot" Checkbox
+     - **Domains**: Add your domains:
+       - `localhost` (for local development)
+       - `propage.in` (your production domain)
+       - Add any other domains you'll use
+   - Accept the terms and click "Submit"
+
+2. **Get your Site Key**:
+   - After registration, you'll see two keys:
+     - **Site Key**: This is what you need (starts with `6L...`)
+     - **Secret Key**: Not needed for static sites (only for server-side verification)
+
+3. **Add Site Key to Environment Variables**:
+   - Add to `.env.local`:
+     ```
+     NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key_here
+     ```
+   - Restart your dev server after adding the variable
+
+4. **For Production Deployment**:
+   - Add `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` to your deployment platform's environment variables
+   - For GitHub Pages (via GitHub Actions), add it as a GitHub Secret
+
+### How It Works
+
+- reCAPTCHA appears on the last step of the form (before submit button)
+- Users must check the "I'm not a robot" box before submitting
+- Form submission is blocked if reCAPTCHA is not completed
+- reCAPTCHA automatically resets on error so users can retry
+
+### Benefits
+
+- ✅ Reduces spam submissions
+- ✅ Helps stay within Supabase free tier limits (500 requests/hour)
+- ✅ Prevents bot attacks
+- ✅ Works with static sites (no server required)
+
+### Testing
+
+- The form works without reCAPTCHA if `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is not set (graceful degradation)
+- To test reCAPTCHA, add the site key and verify it appears on the last step
+- Test that form submission is blocked if reCAPTCHA is not checked
 
 ## Next Steps
 
+- ✅ Set up reCAPTCHA for spam protection (see above)
 - Set up email notifications for new submissions
 - Create a dashboard to view submissions
-- Add form validation and spam protection
 - Export submissions to your CRM or email system
 
 ## Related Files

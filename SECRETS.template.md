@@ -38,11 +38,29 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=[Your Supabase Anon Key]
 
 ---
 
+## Google reCAPTCHA Credentials
+
+### reCAPTCHA Setup
+1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
+2. Register a new site:
+   - **Label**: ProPage Contact Form
+   - **reCAPTCHA type**: reCAPTCHA v2 → "I'm not a robot" Checkbox
+   - **Domains**: Add your domain(s) (e.g., `propage.in`, `localhost` for development)
+3. Copy the **Site Key** (starts with `6L...`)
+4. Copy the **Secret Key** (keep this secure, not needed for static sites)
+
+### reCAPTCHA Keys
+- **Site Key**: `[Your reCAPTCHA Site Key]` (public, safe to expose)
+- **Secret Key**: `[Your reCAPTCHA Secret Key]` (keep secure, not used for static sites)
+
+**Note**: For static sites, only the Site Key is needed. The Secret Key would be used if you add server-side verification later.
+
 ## GitHub Secrets (for CI/CD)
 
 ### Required Secrets for GitHub Actions
 - `NEXT_PUBLIC_SUPABASE_URL` = `[Your Supabase Project URL]`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `[Your Supabase Anon Key]`
+- `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` = `[Your Google reCAPTCHA Site Key]`
 
 ---
 
