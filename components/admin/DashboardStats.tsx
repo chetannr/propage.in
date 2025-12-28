@@ -26,6 +26,8 @@ export default function DashboardStats() {
         return
       }
 
+      const supabaseClient = supabase
+
       try {
         // Define all forms (extensible for future forms)
         const forms: Omit<FormStats, 'count'>[] = [
@@ -49,7 +51,7 @@ export default function DashboardStats() {
         // Fetch counts for each form
         const statsPromises = forms.map(async (form) => {
           try {
-            const { count, error: countError } = await supabase
+            const { count, error: countError } = await supabaseClient
               .from(form.tableName)
               .select('*', { count: 'exact', head: true })
 
