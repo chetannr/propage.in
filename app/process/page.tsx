@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import StructuredData from '@/components/shared/StructuredData'
+import { generateBreadcrumbSchema, breadcrumbs } from '@/lib/breadcrumbs'
 
 export const metadata: Metadata = {
   title: 'Our Process',
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default function ProcessPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs['/process'])
   const days = [
     {
       day: 1,

@@ -1,6 +1,8 @@
 import { portfolioItems } from '@/data/portfolio'
 import Card from '@/components/ui/Card'
 import type { Metadata } from 'next'
+import StructuredData from '@/components/shared/StructuredData'
+import { generateBreadcrumbSchema, breadcrumbs } from '@/lib/breadcrumbs'
 
 export const metadata: Metadata = {
   title: 'Portfolio',
@@ -13,8 +15,12 @@ export const metadata: Metadata = {
 }
 
 export default function PortfolioPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs['/portfolio'])
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <>
+      <StructuredData data={breadcrumbSchema} />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
           Our Portfolio
@@ -72,6 +78,7 @@ export default function PortfolioPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

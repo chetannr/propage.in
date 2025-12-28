@@ -1,6 +1,8 @@
 import { documentationItems } from '@/data/documentation'
 import ApproachCard from '@/components/ui/ApproachCard'
 import type { Metadata } from 'next'
+import StructuredData from '@/components/shared/StructuredData'
+import { generateBreadcrumbSchema, breadcrumbs } from '@/lib/breadcrumbs'
 
 export const metadata: Metadata = {
   title: 'Our Approach',
@@ -13,8 +15,12 @@ export const metadata: Metadata = {
 }
 
 export default function OurApproachPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs['/our-approach'])
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <>
+      <StructuredData data={breadcrumbSchema} />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
           Our Approach
@@ -35,6 +41,7 @@ export default function OurApproachPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

@@ -1,5 +1,7 @@
 import StorytellingForm from '@/components/forms/StorytellingForm'
 import type { Metadata } from 'next'
+import StructuredData from '@/components/shared/StructuredData'
+import { generateBreadcrumbSchema, breadcrumbs } from '@/lib/breadcrumbs'
 
 export const metadata: Metadata = {
   title: 'Get Started | ProPage.in',
@@ -12,10 +14,15 @@ export const metadata: Metadata = {
 }
 
 export default function ContactPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs['/contact'])
+
   return (
-    <div>
-      <StorytellingForm />
-    </div>
+    <>
+      <StructuredData data={breadcrumbSchema} />
+      <div>
+        <StorytellingForm />
+      </div>
+    </>
   )
 }
 

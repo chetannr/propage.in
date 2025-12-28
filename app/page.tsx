@@ -2,6 +2,8 @@ import Hero from '@/components/sections/Hero'
 import Services from '@/components/sections/Services'
 import CTASection from '@/components/sections/CTASection'
 import type { Metadata } from 'next'
+import StructuredData from '@/components/shared/StructuredData'
+import { generateBreadcrumbSchema, breadcrumbs } from '@/lib/breadcrumbs'
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -19,8 +21,11 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs['/'])
+
   return (
     <>
+      <StructuredData data={breadcrumbSchema} />
       <Hero />
       <Services />
       <CTASection />

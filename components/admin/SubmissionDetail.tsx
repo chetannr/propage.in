@@ -116,7 +116,7 @@ export default function SubmissionDetail({ submissionId }: SubmissionDetailProps
         <div className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{submission.name}</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">{submission.email}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
             Submitted on {formatDate(submission.created_at)}
           </p>
         </div>

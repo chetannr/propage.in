@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import StructuredData from '@/components/shared/StructuredData'
+import { generateBreadcrumbSchema, breadcrumbs } from '@/lib/breadcrumbs'
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -11,8 +13,12 @@ export const metadata: Metadata = {
 }
 
 export default function AboutPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs['/about'])
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <>
+      <StructuredData data={breadcrumbSchema} />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-8">
           About ProPage.in
@@ -90,6 +96,7 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

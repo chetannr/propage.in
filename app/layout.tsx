@@ -48,11 +48,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Security Headers (Meta tags - HTTP headers should be set at hosting level) */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        {/* Note: Content-Security-Policy should be set at hosting/server level for static sites */}
+        
         <link rel="preload" href="/propage-logo.png" as="image" />
         <link rel="icon" type="image/png" href="/propage-favicon.png" />
         <link rel="icon" type="image/svg+xml" href="/LogoIcon16x16.svg" />
         <link rel="apple-touch-icon" href="/LogoIcon512x512.svg" />
         <link rel="icon" type="image/svg+xml" sizes="512x512" href="/LogoIcon512x512.svg" />
+        <link rel="manifest" href="/site.webmanifest" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

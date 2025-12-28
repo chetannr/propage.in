@@ -1,0 +1,25 @@
+{
+  "name": "ProPage.in",
+  "short_name": "ProPage",
+  "description": "Minimal, elegant websites in 7 days. Quality guaranteed (Lighthouse 90+), full SEO & accessibility.",
+  "icons": [
+    {
+      "src": "/LogoIcon512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/LogoIcon16x16.svg",
+      "sizes": "16x16",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#6C4971",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait-primary"
+}
+
