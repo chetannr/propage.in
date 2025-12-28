@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 interface FormData {
   // Step 1: The Beginning
@@ -137,6 +138,8 @@ export default function StorytellingForm() {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const updateFormData = (field: keyof FormData, value: string | string[]) => {
     setFormData((prev) => ({
@@ -159,10 +162,69 @@ export default function StorytellingForm() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement form submission
-    setSubmitted(true)
+    setIsSubmitting(true)
+    setSubmitError(null)
+
+    try {
+      // If Supabase is not configured, still show success (graceful degradation)
+      if (!supabase) {
+        console.warn('[Form] Supabase not configured. Form data:', formData)
+        setSubmitted(true)
+        return
+      }
+
+      // Transform form data to match database schema
+      const submissionData = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company || null,
+        role: formData.role || null,
+        project_type: formData.projectType || null,
+        current_website: formData.currentWebsite || null,
+        primary_goal: formData.primaryGoal || null,
+        target_audience: formData.targetAudience || null,
+        business_description: formData.businessDescription || null,
+        unique_value: formData.uniqueValue || null,
+        key_messages: formData.keyMessages || null,
+        has_content: formData.hasContent || null,
+        content_description: formData.contentDescription || null,
+        preferred_style: formData.preferredStyle || null,
+        design_preferences: formData.designPreferences.length > 0 ? formData.designPreferences : null,
+        color_preferences: formData.colorPreferences || null,
+        reference_sites: formData.referenceSites || null,
+        brand_guidelines: formData.brandGuidelines || null,
+        required_features: formData.requiredFeatures.length > 0 ? formData.requiredFeatures : null,
+        integrations: formData.integrations || null,
+        special_requirements: formData.specialRequirements || null,
+        timeline: formData.timeline || null,
+        launch_date: formData.launchDate || null,
+        urgency: formData.urgency || null,
+        budget: formData.budget || null,
+        additional_info: formData.additionalInfo || null,
+      }
+
+      const { error } = await supabase
+        .from('contact_form_submissions')
+        .insert([submissionData])
+
+      if (error) {
+        console.error('[Form] Supabase error:', error)
+        throw new Error('Failed to submit form. Please try again or contact us directly.')
+      }
+
+      setSubmitted(true)
+    } catch (error) {
+      console.error('[Form] Submission error:', error)
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred. Please try again or contact us directly.'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const toggleArrayValue = (field: keyof FormData, value: string) => {
@@ -762,12 +824,20 @@ export default function StorytellingForm() {
               ) : (
                 <button
                   type="submit"
-                  className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium"
+                  disabled={isSubmitting}
+                  className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Submit Your Story
+                  {isSubmitting ? 'Submitting...' : 'Submit Your Story'}
                 </button>
               )}
             </div>
+
+            {/* Error Message */}
+            {submitError && (
+              <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
+                <p className="text-red-800 font-medium">{submitError}</p>
+              </div>
+            )}
           </form>
         </div>
       </div>
