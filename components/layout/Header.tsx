@@ -1,11 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+  
+  // Hide header on admin pages (admin layout has its own header)
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white/98 backdrop-blur-sm border-b border-gray-200">

@@ -41,12 +41,9 @@ export default function AdminLayout({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                {userEmail && (
-                  <p className="text-sm text-gray-600 mt-1">Logged in as {userEmail}</p>
-                )}
-              </div>
+              {userEmail && (
+                <p className="text-sm text-gray-600">Logged in as {userEmail}</p>
+              )}
               <nav className="flex items-center gap-4">
                 <Link
                   href="/admin"
