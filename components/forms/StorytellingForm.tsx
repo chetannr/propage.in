@@ -502,30 +502,140 @@ export default function StorytellingForm() {
       </div>
 
       {/* Form Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-3xl mx-auto">
-          {/* Step Header */}
-          <div className="text-center mb-6">
-            <div className="inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              {currentStepData.title}
+      <div className="max-w-4xl mx-auto py-8">
+        {currentStep === 4 ? (
+          /* Single Column Layout for Step 4: The Design */
+          <div className="w-full grid grid-cols-12 gap-4">
+            {/* Step Header */}
+            <div className="col-span-4 text-left mb-6">
+              <div className="inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                {currentStepData.title}
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                {currentStepData.subtitle}
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400">
+                Design should reflect your brand. Share your vision.
+              </p>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-              {currentStepData.subtitle}
-            </h2>
-            <p className="text-base text-gray-600 dark:text-gray-400">
-              {currentStep === 0 && 'Every great website starts with understanding who you are.'}
-              {currentStep === 1 && 'Help us understand what you\'re building and why it matters.'}
-              {currentStep === 2 && 'Your business has a unique story. Let\'s capture it.'}
-              {currentStep === 3 && 'Content is the heart of your website. What do you have ready?'}
-              {currentStep === 4 && 'Design should reflect your brand. Share your vision.'}
-              {currentStep === 5 && 'Tell us what functionality your website needs.'}
-              {currentStep === 6 && 'Timing is everything. When do you need this live?'}
-              {currentStep === 7 && 'Any final details that will help us serve you better?'}
-            </p>
-          </div>
 
-          {/* Form Fields */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Form Fields */}
+            <form id="storytelling-form" onSubmit={handleSubmit} className="space-y-5 col-span-8">
+                {/* Step 5: The Design */}
+                {currentStep === 4 && (
+                  <div className="space-y-4 animate-fadeIn">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                        Design Preferences (select all that apply) *
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {['Minimal & Clean', 'Bold & Vibrant', 'Professional & Corporate', 'Creative & Artistic', 'Modern & Trendy', 'Classic & Timeless'].map((pref) => (
+                          <label key={pref} className="flex items-center p-2 px-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 transition-all col-span-1">
+                            <input
+                              type="checkbox"
+                              checked={formData.designPreferences.includes(pref)}
+                              onChange={() => toggleArrayValue('designPreferences', pref)}
+                              className="mr-3"
+                            />
+                            <span className="text-gray-700 dark:text-gray-300">{pref}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="colorPreferences" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        Color Preferences *
+                      </label>
+                      <input
+                        type="text"
+                        id="colorPreferences"
+                        name="colorPreferences"
+                        required
+                        value={formData.colorPreferences}
+                        onChange={(e) => updateFormData('colorPreferences', e.target.value)}
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
+                        placeholder="e.g., Blue and white, Warm tones, Brand colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="referenceSites" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        Reference Websites (URLs) *
+                      </label>
+                      <textarea
+                        id="referenceSites"
+                        name="referenceSites"
+                        required
+                        rows={2}
+                        value={formData.referenceSites}
+                        onChange={(e) => updateFormData('referenceSites', e.target.value)}
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
+                        placeholder="Share websites you like (one per line)"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="brandGuidelines" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        Brand Guidelines / Assets *
+                      </label>
+                      <textarea
+                        id="brandGuidelines"
+                        name="brandGuidelines"
+                        required
+                        rows={2}
+                        value={formData.brandGuidelines}
+                        onChange={(e) => updateFormData('brandGuidelines', e.target.value)}
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
+                        placeholder="Do you have brand guidelines, logos, or style guides?"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* reCAPTCHA - only show on last step */}
+                {currentStep === steps.length - 1 && recaptchaSiteKey && (
+                  <div className="flex justify-center pt-6">
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={recaptchaSiteKey}
+                      theme="light"
+                    />
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {submitError && (
+                  <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg">
+                    <p className="text-red-800 dark:text-red-300 font-medium">{submitError}</p>
+                  </div>
+                )}
+              </form>
+          </div>
+        ) : (
+          /* Standard Single Column Layout for Other Steps */
+          <div className="w-full grid grid-cols-12 gap-4">
+            {/* Step Header */}
+            <div className="col-span-4 text-left mb-6">
+              <div className="inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                {currentStepData.title}
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                {currentStepData.subtitle}
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400">
+                {currentStep === 0 && 'Every great website starts with understanding who you are.'}
+                {currentStep === 1 && 'Help us understand what you\'re building and why it matters.'}
+                {currentStep === 2 && 'Your business has a unique story. Let\'s capture it.'}
+                {currentStep === 3 && 'Content is the heart of your website. What do you have ready?'}
+                {currentStep === 5 && 'Tell us what functionality your website needs.'}
+                {currentStep === 6 && 'Timing is everything. When do you need this live?'}
+                {currentStep === 7 && 'Any final details that will help us serve you better?'}
+              </p>
+            </div>
+
+            {/* Form Fields */}
+            <form id="storytelling-form" onSubmit={handleSubmit} className="space-y-5 col-span-8">
             {/* Step 1: The Beginning */}
             {currentStep === 0 && (
               <div className="space-y-4 animate-fadeIn">
@@ -797,78 +907,6 @@ export default function StorytellingForm() {
               </div>
             )}
 
-            {/* Step 5: The Design */}
-            {currentStep === 4 && (
-              <div className="space-y-4 animate-fadeIn">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Design Preferences (select all that apply) *
-                  </label>
-                  <div className="space-y-2">
-                    {['Minimal & Clean', 'Bold & Vibrant', 'Professional & Corporate', 'Creative & Artistic', 'Modern & Trendy', 'Classic & Timeless'].map((pref) => (
-                      <label key={pref} className="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 dark:border-gray-600 transition-all">
-                        <input
-                          type="checkbox"
-                          checked={formData.designPreferences.includes(pref)}
-                          onChange={() => toggleArrayValue('designPreferences', pref)}
-                          className="mr-3"
-                        />
-                        <span className="text-gray-700 dark:text-gray-300">{pref}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="colorPreferences" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Color Preferences *
-                  </label>
-                  <input
-                    type="text"
-                    id="colorPreferences"
-                    name="colorPreferences"
-                    required
-                    value={formData.colorPreferences}
-                    onChange={(e) => updateFormData('colorPreferences', e.target.value)}
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
-                    placeholder="e.g., Blue and white, Warm tones, Brand colors"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="referenceSites" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Reference Websites (URLs) *
-                  </label>
-                  <textarea
-                    id="referenceSites"
-                    name="referenceSites"
-                    required
-                    rows={2}
-                    value={formData.referenceSites}
-                    onChange={(e) => updateFormData('referenceSites', e.target.value)}
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
-                    placeholder="Share websites you like (one per line)"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="brandGuidelines" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Brand Guidelines / Assets *
-                  </label>
-                  <textarea
-                    id="brandGuidelines"
-                    name="brandGuidelines"
-                    required
-                    rows={2}
-                    value={formData.brandGuidelines}
-                    onChange={(e) => updateFormData('brandGuidelines', e.target.value)}
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
-                    placeholder="Do you have brand guidelines, logos, or style guides?"
-                  />
-                </div>
-              </div>
-            )}
-
             {/* Step 6: The Features */}
             {currentStep === 5 && (
               <div className="space-y-4 animate-fadeIn">
@@ -876,9 +914,9 @@ export default function StorytellingForm() {
                   <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Required Features (select all that apply) *
                   </label>
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {['Contact Form', 'Blog / News Section', 'Image Gallery', 'Video Integration', 'E-commerce / Shopping Cart', 'User Accounts / Login', 'Search Functionality', 'Newsletter Signup', 'Social Media Integration', 'Analytics Integration', 'Multi-language Support', 'Booking / Appointment System'].map((feature) => (
-                      <label key={feature} className="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 dark:border-gray-600 transition-all">
+                      <label key={feature} className="flex items-center p-2 px-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-300 transition-all col-span-1">
                         <input
                           type="checkbox"
                           checked={formData.requiredFeatures.includes(feature)}
@@ -1031,7 +1069,7 @@ export default function StorytellingForm() {
 
             {/* reCAPTCHA - only show on last step */}
             {currentStep === steps.length - 1 && recaptchaSiteKey && (
-              <div className="flex justify-center pt-6">
+              <div className="flex pt-6">
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={recaptchaSiteKey}
@@ -1040,47 +1078,50 @@ export default function StorytellingForm() {
               </div>
             )}
 
-            {/* Navigation Buttons - Fixed at bottom */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 pt-4 pb-4 border-t border-gray-200 dark:border-gray-700 z-20 shadow-lg">
-              <div className="container mx-auto max-w-3xl px-4 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={handleBack}
-                disabled={currentStep === 0}
-                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-              >
-                ← Back
-              </button>
-
-              {currentStep < steps.length - 1 ? (
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium"
-                >
-                  Continue →
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit Your Story'}
-                </button>
-              )}
-              </div>
-            </div>
-
             {/* Error Message */}
             {submitError && (
               <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg">
                 <p className="text-red-800 dark:text-red-300 font-medium">{submitError}</p>
               </div>
             )}
-          </form>
+            {/* Navigation Buttons - Fixed at bottom (outside conditional, always visible) */}
+      <div className="pb-4 dark:border-gray-700">
+        <div className={`container w-full flex items-center justify-between`}>
+          <button
+            type="button"
+            onClick={handleBack}
+            disabled={currentStep === 0}
+            className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          >
+            ← Back
+          </button>
+
+          {currentStep < steps.length - 1 ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium"
+            >
+              Continue →
+            </button>
+          ) : (
+            <button
+              type="submit"
+              form="storytelling-form"
+              disabled={isSubmitting}
+              className="px-8 py-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Your Story'}
+            </button>
+          )}
         </div>
       </div>
+          </form>
+        </div>
+        )}
+      </div>
+
+      
 
     </div>
   )
