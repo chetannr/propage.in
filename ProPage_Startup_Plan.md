@@ -109,3 +109,90 @@ This approach allows clients to accept payments while keeping their websites sta
 - `SUPABASE_SETUP.md` - Setup documentation
 - `package.json` - Added @supabase/supabase-js dependency
 
+---
+
+## Update: Google Analytics Integration (Official Next.js Method)
+
+**Date:** Current Session  
+**Topic:** Migrating to Next.js official `@next/third-parties` for Google Analytics integration
+
+### Changes Made
+
+1. **Installed Official Package** (`package.json`):
+   - Added `@next/third-parties@latest` package
+   - Updated Next.js to latest version
+   - This package provides optimized third-party integrations for Next.js
+
+2. **Updated Root Layout** (`app/layout.tsx`):
+   - Removed custom `GoogleAnalytics` component import
+   - Added `GoogleAnalytics` import from `@next/third-parties/google`
+   - Implemented conditional rendering based on `NEXT_PUBLIC_GA_MEASUREMENT_ID` environment variable
+   - Component placed in `<body>` tag for optimal loading
+
+3. **Removed Custom Component**:
+   - Deleted `components/shared/GoogleAnalytics.tsx` (replaced by official component)
+
+4. **Created Setup Documentation** (`GOOGLE_ANALYTICS_SETUP.md`):
+   - Complete step-by-step guide for Google Analytics setup
+   - Tracks progress through all setup steps
+   - Includes testing and verification instructions
+
+### Implementation Details
+
+**Code Pattern:**
+```tsx
+import { GoogleAnalytics } from '@next/third-parties/google'
+
+// In RootLayout body:
+{process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+  <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+)}
+```
+
+### Benefits of Official Implementation
+
+- **Optimized Loading**: Next.js handles script loading optimization automatically
+- **Better Performance**: Uses `afterInteractive` strategy by default
+- **Automatic Pageview Tracking**: Tracks client-side navigations automatically
+- **Maintained by Next.js**: Official support and updates
+- **Simpler Code**: No custom script injection needed
+
+### Next Steps for User
+
+1. Get Google Analytics Measurement ID:
+   - Go to [Google Analytics](https://analytics.google.com/)
+   - Create property for `propage.in` (if needed)
+   - Set up Web data stream
+   - Copy Measurement ID (format: `G-XXXXXXXXXX`)
+
+2. Set Environment Variable:
+   - Create/update `.env.local` file
+   - Add: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX`
+   - Replace with actual Measurement ID
+
+3. Test Integration:
+   - Restart dev server
+   - Check browser DevTools for GA script loading
+   - Verify in Google Analytics Real-Time reports
+
+### Files Created/Modified
+
+- `package.json` - Added @next/third-parties dependency
+- `app/layout.tsx` - Updated to use official GoogleAnalytics component
+- `GOOGLE_ANALYTICS_SETUP.md` - Complete setup guide and progress tracker
+- `components/shared/GoogleAnalytics.tsx` - Removed (replaced by official component)
+
+### Reference Documentation
+
+- [Next.js Third-Party Libraries](https://nextjs.org/docs/app/guides/third-party-libraries)
+- [Next.js Google Analytics Guide](https://nextjs.org/docs/app/guides/third-party-libraries#google-analytics)
+
+---
+
+## Update: Google Analytics Integration (Initial Implementation - Superseded)
+
+**Date:** Previous Session  
+**Status:** Migrated to official Next.js method (see next section)
+
+**Note:** This initial implementation using a custom component has been replaced with the official `@next/third-parties` approach for better performance and maintainability.
+

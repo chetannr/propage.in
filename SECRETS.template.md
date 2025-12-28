@@ -55,12 +55,38 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=[Your Supabase Anon Key]
 
 **Note**: For static sites, only the Site Key is needed. The Secret Key would be used if you add server-side verification later.
 
+---
+
+## Google Analytics Credentials
+
+### Google Analytics Setup
+1. Go to [Google Analytics](https://analytics.google.com/)
+2. Create a new property for your website (e.g., `propage.in`)
+3. Set up a data stream:
+   - **Platform**: Web
+   - **Website URL**: `https://propage.in`
+   - **Stream name**: ProPage.in Website
+4. Copy the **Measurement ID** (starts with `G-`)
+
+### Analytics Credentials
+- **Measurement ID**: `[Your GA Measurement ID]` (e.g., `G-XXXXXXXXXX`)
+
+### Environment Variables (for .env.local)
+```
+NEXT_PUBLIC_GA_MEASUREMENT_ID=[Your GA Measurement ID]
+```
+
+**Note**: The Measurement ID is safe to expose in client-side code as it's public-facing.
+
+---
+
 ## GitHub Secrets (for CI/CD)
 
 ### Required Secrets for GitHub Actions
 - `NEXT_PUBLIC_SUPABASE_URL` = `[Your Supabase Project URL]`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `[Your Supabase Anon Key]`
 - `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` = `[Your Google reCAPTCHA Site Key]`
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` = `[Your Google Analytics Measurement ID]`
 
 ---
 

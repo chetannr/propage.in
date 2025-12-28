@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 100" width="520" height="100">
+  <defs>
+    <style>
+      .letter { stroke: #111827; stroke-width: 2.5; fill: none; stroke-linecap: square; stroke-linejoin: miter; }
+      @media (prefers-color-scheme: dark) {
+        .letter { stroke: #f9fafb; }
+      }
+    </style>
+  </defs>
+  
+  <!-- PROPAGE.IN Logo - Clean Geometric Design -->
+  
+  <!-- Letter P (first) -->
+  <g id="letter-p-1" transform="translate(10, 10)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="45" y2="0"/>
+    <!-- Right vertical (top part) -->
+    <line class="letter" x1="45" y1="0" x2="45" y2="38"/>
+    <!-- Middle horizontal -->
+    <line class="letter" x1="0" y1="38" x2="45" y2="38"/>
+  </g>
+  
+  <!-- Letter R -->
+  <g id="letter-r" transform="translate(70, 10)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="45" y2="0"/>
+    <!-- Right vertical (top part) -->
+    <line class="letter" x1="45" y1="0" x2="45" y2="38"/>
+    <!-- Middle horizontal -->
+    <line class="letter" x1="0" y1="38" x2="45" y2="38"/>
+    <!-- Diagonal leg -->
+    <line class="letter" x1="0" y1="38" x2="45" y2="80"/>
+  </g>
+  
+  <!-- Letter O - Perfect circle -->
+  <g id="letter-o" transform="translate(130, 10)">
+    <circle class="letter" cx="40" cy="40" r="40"/>
+  </g>
+  
+  <!-- Letter P (second) -->
+  <g id="letter-p-2" transform="translate(220, 10)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="45" y2="0"/>
+    <!-- Right vertical (top part) -->
+    <line class="letter" x1="45" y1="0" x2="45" y2="38"/>
+    <!-- Middle horizontal -->
+    <line class="letter" x1="0" y1="38" x2="45" y2="38"/>
+  </g>
+  
+  <!-- Letter A -->
+  <g id="letter-a" transform="translate(280, 10)">
+    <!-- Left diagonal -->
+    <line class="letter" x1="0" y1="80" x2="22.5" y2="0"/>
+    <!-- Right diagonal -->
+    <line class="letter" x1="22.5" y1="0" x2="45" y2="80"/>
+    <!-- Crossbar -->
+    <line class="letter" x1="11" y1="38" x2="34" y2="38"/>
+  </g>
+  
+  <!-- Letter G -->
+  <g id="letter-g" transform="translate(340, 10)">
+    <!-- Left vertical -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="45" y2="0"/>
+    <!-- Right vertical (top part) -->
+    <line class="letter" x1="45" y1="0" x2="45" y2="38"/>
+    <!-- Right vertical (bottom part) -->
+    <line class="letter" x1="45" y1="55" x2="45" y2="80"/>
+    <!-- Bottom horizontal -->
+    <line class="letter" x1="0" y1="80" x2="45" y2="80"/>
+    <!-- Middle horizontal extending inward -->
+    <line class="letter" x1="27" y1="38" x2="45" y2="38"/>
+  </g>
+  
+  <!-- Letter E -->
+  <g id="letter-e" transform="translate(400, 10)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top horizontal -->
+    <line class="letter" x1="0" y1="0" x2="45" y2="0"/>
+    <!-- Middle horizontal -->
+    <line class="letter" x1="0" y1="38" x2="45" y2="38"/>
+    <!-- Bottom horizontal -->
+    <line class="letter" x1="0" y1="80" x2="45" y2="80"/>
+  </g>
+  
+  <!-- Dot -->
+  <g id="dot" transform="translate(460, 10)">
+    <circle class="letter" cx="0" cy="60" r="3.5"/>
+  </g>
+  
+  <!-- Letter I -->
+  <g id="letter-i" transform="translate(475, 10)">
+    <!-- Vertical stem -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Top serif -->
+    <line class="letter" x1="-5" y1="0" x2="5" y2="0"/>
+    <!-- Bottom serif -->
+    <line class="letter" x1="-5" y1="80" x2="5" y2="80"/>
+  </g>
+  
+  <!-- Letter N -->
+  <g id="letter-n" transform="translate(495, 10)">
+    <!-- Left vertical -->
+    <line class="letter" x1="0" y1="0" x2="0" y2="80"/>
+    <!-- Diagonal -->
+    <line class="letter" x1="0" y1="0" x2="45" y2="80"/>
+    <!-- Right vertical -->
+    <line class="letter" x1="45" y1="0" x2="45" y2="80"/>
+  </g>
+</svg>

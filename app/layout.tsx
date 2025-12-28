@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import SkipLink from '@/components/shared/SkipLink'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from '@/components/theme/ThemeProvider'
 
 export const metadata: Metadata = {
@@ -105,6 +106,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
         <ThemeProvider>
           <SkipLink />
           <Header />
