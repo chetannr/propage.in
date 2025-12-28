@@ -5,14 +5,18 @@
 - **Project Name**: ProPage Contact Form
 - **Organization**: Propage
 - **Login Email**: chetan.nr@gmail.com (GitHub.com account)
-- **Database Password**: QhvyMaOjaJuWoXuP
+- **Database Password**: See `SECRETS.local.md` (not committed to Git)
 - **Region**: Asia-Pacific
 
 ## API Credentials ✅
 
-- **Project URL**: `https://yjzosjzgkaibjzkuegoi.supabase.co`
-- **anon/public key**: `sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
+⚠️ **Sensitive credentials are stored in `SECRETS.local.md` (not committed to Git)**
+
+- **Project URL**: See `SECRETS.local.md`
+- **anon/public key**: See `SECRETS.local.md`
 - **Dashboard**: https://supabase.com/dashboard/project/yjzosjzgkaibjzkuegoi/settings/api
+
+**Note**: Copy `SECRETS.template.md` to `SECRETS.local.md` and fill in your actual credentials.
 
 ## Quick Setup Checklist
 
@@ -36,11 +40,8 @@
    - Paste and run
 
 3. **Set Environment Variables** ✅ DONE:
-   - `.env.local` file created with:
-     ```
-     NEXT_PUBLIC_SUPABASE_URL=https://yjzosjzgkaibjzkuegoi.supabase.co
-     NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL
-     ```
+   - `.env.local` file created (see `SECRETS.local.md` for actual values)
+   - Values are stored securely and not committed to Git
 
 4. **Test**:
    - Run `npm run dev`

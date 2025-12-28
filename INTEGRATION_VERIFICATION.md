@@ -12,9 +12,8 @@
 - ✅ Console warning if Supabase is not configured
 
 **Environment Variables**:
-- ✅ `.env.local` file exists with correct values:
-  - `NEXT_PUBLIC_SUPABASE_URL=https://yjzosjzgkaibjzkuegoi.supabase.co`
-  - `NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
+- ✅ `.env.local` file exists with correct values (see `SECRETS.local.md` for actual values)
+- ⚠️ Sensitive credentials are stored in `SECRETS.local.md` (not committed to Git)
 
 ### 2. Form Component Integration ✅
 

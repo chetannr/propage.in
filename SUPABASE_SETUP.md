@@ -11,21 +11,25 @@ This guide explains how to set up Supabase to capture contact form submissions f
 
 **Project Details:**
 - **Project name**: ProPage Contact Form
-- **Database password**: QhvyMaOjaJuWoXuP
+- **Database password**: See `SECRETS.local.md` (not committed to Git)
 - **Region**: Asia-Pacific
 - **Organization**: Propage
 - **Login**: chetan.nr@gmail.com (GitHub.com account)
+
+⚠️ **Sensitive credentials are stored in `SECRETS.local.md` (not committed to Git)**
 
 ✅ Project has been created successfully!
 
 ## Step 2: Get API Credentials ✅ COMPLETE
 
 **API Credentials:**
-- **Project URL**: `https://yjzosjzgkaibjzkuegoi.supabase.co`
-- **anon/public key**: `sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
+⚠️ **Sensitive credentials are stored in `SECRETS.local.md` (not committed to Git)**
+
+- **Project URL**: See `SECRETS.local.md`
+- **anon/public key**: See `SECRETS.local.md`
 - **Dashboard**: https://supabase.com/dashboard/project/yjzosjzgkaibjzkuegoi/settings/api
 
-✅ Credentials retrieved and saved to `.env.local`
+✅ Credentials retrieved and saved to `.env.local` and `SECRETS.local.md`
 
 ## Step 3: Create Database Table
 
@@ -56,10 +60,9 @@ The `.env.local` file has been created in the project root at:
 ```
 
 **File Contents:**
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://yjzosjzgkaibjzkuegoi.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL
-```
+See `SECRETS.local.md` for actual values (not committed to Git).
+
+⚠️ **Never commit `.env.local` or `SECRETS.local.md` to version control**
 
 **Note**: `.env.local` files are hidden by default (they start with a dot). To view it:
 - **In VS Code/Cursor**: Press `Cmd + Shift + P` → "Files: Reveal in Explorer" or enable "Show Hidden Files"
@@ -76,11 +79,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL
 #### GitHub Pages (via GitHub Actions)
 
 1. Go to your repository → **Settings** → **Secrets and variables** → **Actions**
-2. Add the following secrets:
+2. Add the following secrets (see `SECRETS.local.md` for actual values):
    - **Name**: `NEXT_PUBLIC_SUPABASE_URL`
-     - **Value**: `https://yjzosjzgkaibjzkuegoi.supabase.co`
+     - **Value**: [See `SECRETS.local.md`]
    - **Name**: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-     - **Value**: `sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
+     - **Value**: [See `SECRETS.local.md`]
 
 3. Update your GitHub Actions workflow to include these secrets:
 
@@ -92,9 +95,9 @@ env:
 
 #### Other Platforms (Vercel, Netlify, etc.)
 
-Add the environment variables in your platform's dashboard:
-- `NEXT_PUBLIC_SUPABASE_URL` = `https://yjzosjzgkaibjzkuegoi.supabase.co`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `sb_publishable_YLaVZwHKSV0BsraBMkMfMA_r318xMzL`
+Add the environment variables in your platform's dashboard (see `SECRETS.local.md` for actual values):
+- `NEXT_PUBLIC_SUPABASE_URL` = [See `SECRETS.local.md`]
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` = [See `SECRETS.local.md`]
 
 ## Step 6: Test the Integration
 

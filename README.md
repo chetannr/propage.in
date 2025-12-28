@@ -74,3 +74,12 @@ Following our own design principles:
 - Lighthouse Best Practices: 90+
 - Lighthouse SEO: 90+
 - WCAG 2.1 AA compliance
+
+## Security & Credentials
+
+⚠️ **Important**: Sensitive credentials (passwords, API keys) are stored in `SECRETS.local.md`, which is automatically ignored by Git.
+
+- See `SECRETS.template.md` for the structure
+- Copy to `SECRETS.local.md` and fill in your actual credentials
+- Never commit `SECRETS.local.md` or `.env.local` to Git
+- See `SECURITY.md` for detailed security guidelines

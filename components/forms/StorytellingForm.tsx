@@ -199,11 +199,23 @@ export default function StorytellingForm() {
         integrations: formData.integrations || null,
         special_requirements: formData.specialRequirements || null,
         timeline: formData.timeline || null,
-        launch_date: formData.launchDate || null,
+        launch_date: formData.launchDate && formData.launchDate.trim() !== '' ? formData.launchDate : null,
         urgency: formData.urgency || null,
-        budget: formData.budget || null,
-        additional_info: formData.additionalInfo || null,
+        budget: formData.budget && formData.budget.trim() !== '' ? formData.budget : null,
+        additional_info: formData.additionalInfo && formData.additionalInfo.trim() !== '' ? formData.additionalInfo : null,
       }
+
+      // Debug: Log form data to verify values are captured
+      console.log('[Form] Submitting data:', {
+        launchDate: formData.launchDate,
+        budget: formData.budget,
+        additionalInfo: formData.additionalInfo,
+        submissionData: {
+          launch_date: submissionData.launch_date,
+          budget: submissionData.budget,
+          additional_info: submissionData.additional_info,
+        },
+      })
 
       const { error } = await supabase
         .from('contact_form_submissions')

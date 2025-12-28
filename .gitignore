@@ -27,6 +27,14 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# sensitive credentials (never commit)
+SECRETS.local.md
+secrets.local.md
+*.secrets.md
+*.secrets.local.md
+SECRETS.local.*
+secrets.local.*
+
 # vercel
 .vercel
 
