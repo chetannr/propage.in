@@ -152,21 +152,130 @@ export default function StorytellingForm() {
   }
 
   const validateStep = (step: number): boolean => {
+    setSubmitError(null)
+    
     switch (step) {
-      case 4: // Design Preferences step
+      case 0: // Step 1: The Beginning
+        if (!formData.name.trim()) {
+          setSubmitError('Your name is required.')
+          return false
+        }
+        if (!formData.email.trim()) {
+          setSubmitError('Email address is required.')
+          return false
+        }
+        if (!formData.company.trim()) {
+          setSubmitError('Company/Business name is required.')
+          return false
+        }
+        if (!formData.role.trim()) {
+          setSubmitError('Your role is required.')
+          return false
+        }
+        break
+      case 1: // Step 2: The Vision
+        if (!formData.projectType) {
+          setSubmitError('Project type is required.')
+          return false
+        }
+        if (!formData.currentWebsite.trim()) {
+          setSubmitError('Current website is required.')
+          return false
+        }
+        if (!formData.primaryGoal) {
+          setSubmitError('Primary goal is required.')
+          return false
+        }
+        if (!formData.targetAudience.trim()) {
+          setSubmitError('Target audience is required.')
+          return false
+        }
+        break
+      case 2: // Step 3: The Story
+        if (!formData.businessDescription.trim()) {
+          setSubmitError('Business description is required.')
+          return false
+        }
+        if (!formData.uniqueValue.trim()) {
+          setSubmitError('Unique value proposition is required.')
+          return false
+        }
+        if (!formData.keyMessages.trim()) {
+          setSubmitError('Key messages are required.')
+          return false
+        }
+        break
+      case 3: // Step 4: The Content
+        if (!formData.hasContent) {
+          setSubmitError('Please select a content readiness option.')
+          return false
+        }
+        if (!formData.contentDescription.trim()) {
+          setSubmitError('Content description is required.')
+          return false
+        }
+        if (!formData.preferredStyle) {
+          setSubmitError('Content style preference is required.')
+          return false
+        }
+        break
+      case 4: // Step 5: The Design
         if (formData.designPreferences.length === 0) {
           setSubmitError('Please select at least one design preference.')
           return false
         }
+        if (!formData.colorPreferences.trim()) {
+          setSubmitError('Color preferences are required.')
+          return false
+        }
+        if (!formData.referenceSites.trim()) {
+          setSubmitError('Reference websites are required.')
+          return false
+        }
+        if (!formData.brandGuidelines.trim()) {
+          setSubmitError('Brand guidelines/assets information is required.')
+          return false
+        }
         break
-      case 5: // Required Features step
+      case 5: // Step 6: The Features
         if (formData.requiredFeatures.length === 0) {
           setSubmitError('Please select at least one required feature.')
           return false
         }
+        if (!formData.integrations.trim()) {
+          setSubmitError('Third-party integrations information is required.')
+          return false
+        }
+        if (!formData.specialRequirements.trim()) {
+          setSubmitError('Special requirements information is required.')
+          return false
+        }
+        break
+      case 6: // Step 7: The Timeline
+        if (!formData.timeline) {
+          setSubmitError('Preferred timeline is required.')
+          return false
+        }
+        if (!formData.launchDate) {
+          setSubmitError('Target launch date is required.')
+          return false
+        }
+        if (!formData.urgency) {
+          setSubmitError('Project urgency is required.')
+          return false
+        }
+        break
+      case 7: // Step 8: The Details
+        if (!formData.budget) {
+          setSubmitError('Budget range is required.')
+          return false
+        }
+        if (!formData.additionalInfo.trim()) {
+          setSubmitError('Additional information is required.')
+          return false
+        }
         break
     }
-    setSubmitError(null)
     return true
   }
 
@@ -190,16 +299,6 @@ export default function StorytellingForm() {
   const handleStepClick = (stepIndex: number) => {
     setCurrentStep(stepIndex)
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Check if user has entered any data
-  const hasEnteredData = () => {
-    return Object.values(formData).some((value) => {
-      if (Array.isArray(value)) {
-        return value.length > 0
-      }
-      return value !== '' && value !== null && value !== undefined
-    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -355,7 +454,7 @@ export default function StorytellingForm() {
   const progress = ((currentStep + 1) / steps.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pb-24">
       {/* Progress Bar */}
       <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -375,47 +474,45 @@ export default function StorytellingForm() {
               />
             </div>
             
-            {/* Step Navigation - Show when user has entered data */}
-            {hasEnteredData() && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {steps.map((step, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => handleStepClick(index)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all ${
-                        index === currentStep
-                          ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                      }`}
-                      title={step.title}
-                    >
-                      {step.number}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
-                  Click any step number to jump to that section
-                </p>
+            {/* Step Navigation - Always visible */}
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap gap-2 justify-center">
+                {steps.map((step, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleStepClick(index)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all ${
+                      index === currentStep
+                        ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    }`}
+                    title={step.title}
+                  >
+                    {step.number}
+                  </button>
+                ))}
               </div>
-            )}
+              <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
+                Click any step number to jump to that section
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Form Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-3xl mx-auto">
           {/* Step Header */}
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+          <div className="text-center mb-6">
+            <div className="inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               {currentStepData.title}
             </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {currentStepData.subtitle}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
+            <p className="text-base text-gray-600 dark:text-gray-400">
               {currentStep === 0 && 'Every great website starts with understanding who you are.'}
               {currentStep === 1 && 'Help us understand what you\'re building and why it matters.'}
               {currentStep === 2 && 'Your business has a unique story. Let\'s capture it.'}
@@ -428,10 +525,10 @@ export default function StorytellingForm() {
           </div>
 
           {/* Form Fields */}
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Step 1: The Beginning */}
             {currentStep === 0 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Your Name *
@@ -500,7 +597,7 @@ export default function StorytellingForm() {
 
             {/* Step 2: The Vision */}
             {currentStep === 1 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label htmlFor="projectType" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     What are you building? *
@@ -573,7 +670,7 @@ export default function StorytellingForm() {
                     id="targetAudience"
                     name="targetAudience"
                     required
-                    rows={4}
+                    rows={3}
                     value={formData.targetAudience}
                     onChange={(e) => updateFormData('targetAudience', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -585,7 +682,7 @@ export default function StorytellingForm() {
 
             {/* Step 3: The Story */}
             {currentStep === 2 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label htmlFor="businessDescription" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     What does your business do? *
@@ -594,7 +691,7 @@ export default function StorytellingForm() {
                     id="businessDescription"
                     name="businessDescription"
                     required
-                    rows={5}
+                    rows={4}
                     value={formData.businessDescription}
                     onChange={(e) => updateFormData('businessDescription', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -610,7 +707,7 @@ export default function StorytellingForm() {
                     id="uniqueValue"
                     name="uniqueValue"
                     required
-                    rows={4}
+                    rows={3}
                     value={formData.uniqueValue}
                     onChange={(e) => updateFormData('uniqueValue', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -626,7 +723,7 @@ export default function StorytellingForm() {
                     id="keyMessages"
                     name="keyMessages"
                     required
-                    rows={4}
+                    rows={3}
                     value={formData.keyMessages}
                     onChange={(e) => updateFormData('keyMessages', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -638,7 +735,7 @@ export default function StorytellingForm() {
 
             {/* Step 4: The Content */}
             {currentStep === 3 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Do you have content ready? *
@@ -669,7 +766,7 @@ export default function StorytellingForm() {
                     id="contentDescription"
                     name="contentDescription"
                     required
-                    rows={4}
+                    rows={3}
                     value={formData.contentDescription}
                     onChange={(e) => updateFormData('contentDescription', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -702,7 +799,7 @@ export default function StorytellingForm() {
 
             {/* Step 5: The Design */}
             {currentStep === 4 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Design Preferences (select all that apply) *
@@ -746,7 +843,7 @@ export default function StorytellingForm() {
                     id="referenceSites"
                     name="referenceSites"
                     required
-                    rows={3}
+                    rows={2}
                     value={formData.referenceSites}
                     onChange={(e) => updateFormData('referenceSites', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -762,7 +859,7 @@ export default function StorytellingForm() {
                     id="brandGuidelines"
                     name="brandGuidelines"
                     required
-                    rows={3}
+                    rows={2}
                     value={formData.brandGuidelines}
                     onChange={(e) => updateFormData('brandGuidelines', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -774,7 +871,7 @@ export default function StorytellingForm() {
 
             {/* Step 6: The Features */}
             {currentStep === 5 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     Required Features (select all that apply) *
@@ -802,7 +899,7 @@ export default function StorytellingForm() {
                     id="integrations"
                     name="integrations"
                     required
-                    rows={3}
+                    rows={2}
                     value={formData.integrations}
                     onChange={(e) => updateFormData('integrations', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -818,7 +915,7 @@ export default function StorytellingForm() {
                     id="specialRequirements"
                     name="specialRequirements"
                     required
-                    rows={4}
+                    rows={3}
                     value={formData.specialRequirements}
                     onChange={(e) => updateFormData('specialRequirements', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -830,7 +927,7 @@ export default function StorytellingForm() {
 
             {/* Step 7: The Timeline */}
             {currentStep === 6 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label htmlFor="timeline" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Preferred Timeline *
@@ -891,7 +988,7 @@ export default function StorytellingForm() {
 
             {/* Step 8: The Details */}
             {currentStep === 7 && (
-              <div className="space-y-6 animate-fadeIn">
+              <div className="space-y-4 animate-fadeIn">
                 <div>
                   <label htmlFor="budget" className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Budget Range *
@@ -922,7 +1019,7 @@ export default function StorytellingForm() {
                     id="additionalInfo"
                     name="additionalInfo"
                     required
-                    rows={6}
+                    rows={4}
                     value={formData.additionalInfo}
                     onChange={(e) => updateFormData('additionalInfo', e.target.value)}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent transition-all text-gray-900 dark:text-gray-100"
@@ -943,8 +1040,9 @@ export default function StorytellingForm() {
               </div>
             )}
 
-            {/* Navigation Buttons */}
-            <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
+            {/* Navigation Buttons - Fixed at bottom */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 pt-4 pb-4 border-t border-gray-200 dark:border-gray-700 z-20 shadow-lg">
+              <div className="container mx-auto max-w-3xl px-4 flex items-center justify-between">
               <button
                 type="button"
                 onClick={handleBack}
@@ -971,6 +1069,7 @@ export default function StorytellingForm() {
                   {isSubmitting ? 'Submitting...' : 'Submit Your Story'}
                 </button>
               )}
+              </div>
             </div>
 
             {/* Error Message */}
