@@ -71,4 +71,13 @@ export const breadcrumbs = {
     { name: 'Home', url: 'https://propage.in' },
     { name: 'Contact', url: 'https://propage.in/contact' },
   ],
+  '/guides': [
+    { name: 'Home', url: 'https://propage.in' },
+    { name: 'Guides', url: 'https://propage.in/guides' },
+  ],
+  '/guides/nameserver-migration': [
+    { name: 'Home', url: 'https://propage.in' },
+    { name: 'Guides', url: 'https://propage.in/guides' },
+    { name: 'Nameserver Migration', url: 'https://propage.in/guides/nameserver-migration' },
+  ],
 }
