@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internal Runbook · Static Site Go-Live · GitHub Pages + Cloudflare DNS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E0F0C;
+    --ink-2:#151713;
+    --ink-3:#1D1F1A;
+    --line:#2A2C26;
+    --paper:#F2EDE2;
+    --paper-dim:#C9C3B5;
+    --paper-mute:#7E796E;
+    --accent:#E2552A;
+    --accent-2:#D9B26A;
+    --good:#7FB069;
+    --warn:#E2A52A;
+    --bad:#D94C3D;
+    --grain-blend:overlay;
+    --grain-opacity:0.6;
+    --bg-glow-1:rgba(226,85,42,0.08);
+    --bg-glow-2:rgba(217,178,106,0.04);
+  }
+  [data-theme="light"]{
+    --ink:#F5EFE2;
+    --ink-2:#EBE4D2;
+    --ink-3:#DFD7C0;
+    --line:#C9C2AE;
+    --paper:#1B1D17;
+    --paper-dim:#4B4D45;
+    --paper-mute:#7E7A6E;
+    --accent:#B83E18;
+    --accent-2:#8C6B2C;
+    --good:#4F7A3D;
+    --warn:#A07210;
+    --bad:#A8362D;
+    --grain-blend:multiply;
+    --grain-opacity:0.25;
+    --bg-glow-1:rgba(184,62,24,0.05);
+    --bg-glow-2:rgba(140,107,44,0.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ink);color:var(--paper);font-family:'Geist',-apple-system,sans-serif;font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color 0.3s ease, color 0.3s ease}
+  body{
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, var(--bg-glow-1), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, var(--bg-glow-2), transparent 60%);
+    min-height:100vh;
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:var(--grain-blend);opacity:var(--grain-opacity);
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:48px 32px 96px;position:relative;z-index:2}
+
+  /* Theme toggle */
+  .theme-toggle{
+    position:fixed;top:24px;right:24px;width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--line);background:var(--ink-2);color:var(--paper);
+    cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;
+    transition:all 0.25s ease;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  }
+  .theme-toggle:hover{
+    border-color:var(--accent);color:var(--accent);
+    transform:rotate(20deg) scale(1.05);
+  }
+  .theme-toggle svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:opacity 0.2s ease}
+  .theme-toggle .icon-sun{display:none}
+  .theme-toggle .icon-moon{display:block}
+  [data-theme="light"] .theme-toggle .icon-sun{display:block}
+  [data-theme="light"] .theme-toggle .icon-moon{display:none}
+
+  /* Single audio button — speaker icon with a tiny kebab-dot indicator at the
+     bottom-right showing it opens a menu. Click → unified audio panel below. */
+  .audio-toggle{
+    position:fixed;top:24px;right:80px;width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--line);background:var(--ink-2);color:var(--paper);
+    cursor:pointer;z-index:100;display:none;align-items:center;justify-content:center;
+    transition:all 0.25s ease;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  }
+  .audio-toggle.supported{display:flex}
+  .audio-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.05)}
+  .audio-toggle.open{background:var(--accent);color:var(--ink);border-color:var(--accent);transform:none}
+  .audio-toggle.playing{
+    background:var(--accent);color:var(--ink);border-color:var(--accent);
+    animation:audio-pulse 1.6s ease-in-out infinite;
+  }
+  .audio-toggle .icon-main{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .audio-toggle .kebab-dot{
+    position:absolute;bottom:5px;right:6px;width:11px;height:4px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--ink-2);border-radius:3px;padding:0 1px;
+    transition:background 0.2s ease;
+  }
+  .audio-toggle .kebab-dot svg{width:9px;height:3px;fill:currentColor;opacity:0.7}
+  .audio-toggle:hover .kebab-dot svg{opacity:1}
+  .audio-toggle.open .kebab-dot,
+  .audio-toggle.playing .kebab-dot{background:var(--accent)}
+  .audio-toggle.open .kebab-dot svg,
+  .audio-toggle.playing .kebab-dot svg{opacity:1}
+
+  .voice-panel{
+    position:fixed;top:80px;right:24px;width:248px;z-index:99;
+    background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:14px;
+    opacity:0;transform:translateY(-6px);pointer-events:none;
+    transition:opacity 0.18s ease, transform 0.18s ease;
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    box-shadow:0 8px 32px -8px rgba(0,0,0,0.4);
+  }
+  .voice-panel.open{opacity:1;transform:translateY(0);pointer-events:auto}
+
+  /* Big play/stop CTA at the top of the audio panel */
+  .play-control{
+    display:flex;width:100%;align-items:center;gap:10px;
+    padding:11px 12px;border-radius:5px;
+    background:var(--bg-glow-1);border:1px solid var(--accent);color:var(--paper);
+    cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;
+    text-align:left;margin-bottom:4px;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .play-control:hover{background:var(--accent);color:var(--ink)}
+  .play-control svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;stroke:currentColor;stroke-width:1;stroke-linejoin:round}
+  .play-control .icon-stop{display:none}
+  .play-control.playing{background:var(--accent);color:var(--ink)}
+  .play-control.playing .icon-play{display:none}
+  .play-control.playing .icon-stop{display:block}
+  .play-control .play-label{flex:1}
+  .play-control .play-meta{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.05em;
+    opacity:0.65;text-transform:uppercase;
+  }
+  .voice-panel h4{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--paper-mute);margin-bottom:10px;font-weight:500;
+  }
+  .voice-panel h4:not(:first-child){margin-top:14px}
+  .panel-divider{
+    height:1px;background:var(--line);margin:12px -2px;
+  }
+  .voice-option{
+    display:flex;width:100%;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:10px 12px;border-radius:5px;background:transparent;border:1px solid transparent;
+    color:var(--paper);cursor:pointer;font-family:inherit;text-align:left;font-size:14px;
+    margin-bottom:4px;transition:all 0.12s ease;
+  }
+  .voice-option:last-child{margin-bottom:0}
+  .voice-option:hover{background:var(--ink-3)}
+  .voice-option.selected{border-color:var(--accent);background:var(--bg-glow-1)}
+  .voice-option.selected .voice-label{color:var(--accent)}
+  .voice-option .voice-label{font-weight:500;flex-shrink:0}
+  .voice-option .voice-name{
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--paper-mute);
+    text-overflow:ellipsis;overflow:hidden;max-width:140px;white-space:nowrap;
+  }
+  .voice-option[data-disabled="true"]{opacity:0.35;cursor:not-allowed}
+  .voice-option[data-disabled="true"]:hover{background:transparent}
+
+  @keyframes audio-pulse{
+    0%,100%{box-shadow:0 0 0 0 var(--bg-glow-1)}
+    50%{box-shadow:0 0 0 10px transparent}
+  }
+
+  /* Currently-being-read section — shown as a pulsing accent bar on the left */
+  .is-reading{position:relative}
+  .is-reading::after{
+    content:"";position:absolute;left:-14px;top:12px;bottom:12px;width:3px;
+    background:var(--accent);border-radius:2px;pointer-events:none;
+    animation:reading-bar 1.8s ease-in-out infinite;
+  }
+  @keyframes reading-bar{
+    0%,100%{opacity:1;transform:scaleY(1)}
+    50%{opacity:0.45;transform:scaleY(0.75)}
+  }
+
+  /* Per-section play button — bottom-right, fades in on hover. JS adds
+     'has-section-play' to each readable container so position:relative is set. */
+  .has-section-play{position:relative}
+  .section-play{
+    position:absolute;right:14px;bottom:14px;width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--line);background:var(--ink-2);color:var(--paper-mute);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    opacity:0;transform:translateY(4px);
+    transition:opacity 0.2s ease, transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    z-index:5;
+  }
+  .has-section-play:hover .section-play,
+  .has-section-play:focus-within .section-play,
+  .section-play:focus-visible{
+    opacity:1;transform:translateY(0);
+  }
+  .section-play:hover{
+    color:var(--accent);border-color:var(--accent);
+    transform:translateY(0) scale(1.08);
+  }
+  .section-play.playing{
+    opacity:1;transform:translateY(0);
+    background:var(--accent);color:var(--ink);border-color:var(--accent);
+    animation:audio-pulse 1.6s ease-in-out infinite;
+  }
+  .section-play svg{width:13px;height:13px;stroke:currentColor;fill:currentColor;stroke-width:1;stroke-linejoin:round}
+  .section-play .icon-stop{display:none}
+  .section-play.playing .icon-play{display:none}
+  .section-play.playing .icon-stop{display:block}
+  /* Touch devices have no hover — keep the button visible at low opacity */
+  @media (hover:none){
+    .has-section-play .section-play{opacity:0.5;transform:translateY(0)}
+    .has-section-play .section-play.playing{opacity:1}
+  }
+
+  @media (max-width:680px){
+    .theme-toggle{top:16px;right:16px;width:40px;height:40px}
+    .audio-toggle{top:16px;right:64px;width:40px;height:40px}
+    .audio-toggle .kebab-dot{bottom:4px;right:5px}
+    .voice-panel{top:64px;right:16px;left:16px;width:auto}
+    .is-reading::after{left:-8px}
+    .section-play{right:10px;bottom:10px;width:30px;height:30px}
+  }
+
+  .topbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-bottom:20px;border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--paper-mute);
+  }
+  .topbar .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);margin-right:8px;box-shadow:0 0 10px var(--good)}
+
+  header.hero{margin-top:64px;margin-bottom:64px;position:relative}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::before{content:"";display:block;width:32px;height:1px;background:var(--accent)}
+  h1{
+    font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(48px,7.5vw,88px);
+    line-height:0.96;letter-spacing:-0.02em;margin-bottom:32px;color:var(--paper);
+  }
+  h1 em{font-style:italic;color:var(--accent-2)}
+  .lede{
+    font-size:19px;color:var(--paper-dim);max-width:680px;line-height:1.55;
+  }
+  .lede strong{color:var(--paper);font-weight:500}
+
+  .meta-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);margin-top:48px;
+  }
+  .meta-cell{background:var(--ink);padding:18px 20px}
+  .meta-cell .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-mute);margin-bottom:6px}
+  .meta-cell .v{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--paper)}
+
+  /* Variables block */
+  .vars{
+    margin:48px 0 16px;padding:32px 36px;border:1px solid var(--line);border-radius:8px;
+    background:var(--ink-2);
+  }
+  .vars .label{
+    display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.15em;
+    text-transform:uppercase;color:var(--accent-2);margin-bottom:8px;
+  }
+  .vars h3{
+    font-family:'Instrument Serif',serif;font-weight:400;font-size:28px;margin-bottom:16px;color:var(--paper);
+  }
+  .vars p{color:var(--paper-dim);margin-bottom:20px;font-size:15px}
+  .vars dl{display:grid;grid-template-columns:auto 1fr;gap:14px 24px;align-items:start}
+  .vars dt{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);font-weight:500}
+  .vars dd{color:var(--paper-dim);font-size:14px;line-height:1.4}
+  .vars dd em{color:var(--paper);font-style:normal}
+  .var{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.86em;
+    background:rgba(226,85,42,0.12);color:var(--accent);padding:1px 7px;border-radius:3px;
+    border:1px solid rgba(226,85,42,0.3);
+  }
+
+  /* Principle banner */
+  .principle{
+    margin:56px 0 64px;padding:32px 36px;border-left:3px solid var(--accent);
+    background:linear-gradient(90deg,rgba(226,85,42,0.06),transparent 70%);
+    font-family:'Instrument Serif',serif;font-size:24px;line-height:1.4;font-style:italic;
+    color:var(--paper);
+  }
+  .principle .label{
+    display:block;font-family:'JetBrains Mono',monospace;font-size:11px;font-style:normal;
+    letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;
+  }
+  .principle code{font-family:'JetBrains Mono',monospace;font-size:18px;background:var(--ink-3);padding:2px 8px;border-radius:3px;color:var(--accent-2);font-style:normal}
+
+  /* Steps */
+  .step{
+    display:grid;grid-template-columns:80px 1fr;gap:32px;
+    padding:48px 0;border-top:1px solid var(--line);position:relative;
+  }
+  .step:last-of-type{border-bottom:1px solid var(--line)}
+  .step-num{
+    font-family:'Instrument Serif',serif;font-size:64px;line-height:1;color:var(--accent);
+    font-style:italic;
+  }
+  .step-num::after{
+    content:"";display:block;width:24px;height:1px;background:var(--accent);margin-top:16px;
+  }
+  .step h2{
+    font-family:'Instrument Serif',serif;font-weight:400;font-size:36px;line-height:1.1;
+    letter-spacing:-0.01em;margin-bottom:8px;color:var(--paper);
+  }
+  .step .step-tag{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--paper-mute);margin-bottom:24px;display:block;
+  }
+  .step ol, .step ul{padding-left:20px;margin:16px 0}
+  .step li{margin:10px 0;color:var(--paper-dim)}
+  .step li strong{color:var(--paper);font-weight:500}
+  .step p{color:var(--paper-dim);margin:14px 0}
+  code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:var(--ink-3);color:var(--accent-2);padding:2px 6px;border-radius:3px;border:1px solid var(--line)}
+
+  /* Code block */
+  pre{
+    background:var(--ink-2);border:1px solid var(--line);border-radius:6px;
+    padding:20px 22px;margin:18px 0;overflow-x:auto;position:relative;
+  }
+  pre::before{
+    content:"";position:absolute;top:12px;left:14px;width:8px;height:8px;border-radius:50%;
+    background:var(--bad);box-shadow:14px 0 0 var(--warn),28px 0 0 var(--good);
+  }
+  pre code{background:none;border:none;padding:0;color:var(--paper);font-size:13px;line-height:1.6;display:block;margin-top:18px}
+  pre.plain{padding-top:20px}
+  pre.plain::before{display:none}
+  pre.plain code{margin-top:0}
+
+  /* Callouts */
+  .callout{
+    margin:20px 0;padding:18px 22px;border-radius:6px;border:1px solid var(--line);
+    background:var(--ink-2);font-size:14px;
+  }
+  .callout.warn{border-left:3px solid var(--warn);background:linear-gradient(90deg,rgba(226,165,42,0.06),var(--ink-2) 30%)}
+  .callout.bad{border-left:3px solid var(--bad);background:linear-gradient(90deg,rgba(217,76,61,0.06),var(--ink-2) 30%)}
+  .callout.good{border-left:3px solid var(--good);background:linear-gradient(90deg,rgba(127,176,105,0.06),var(--ink-2) 30%)}
+  .callout .ctitle{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+    margin-bottom:8px;display:block;
+  }
+  .callout.warn .ctitle{color:var(--warn)}
+  .callout.bad .ctitle{color:var(--bad)}
+  .callout.good .ctitle{color:var(--good)}
+  .callout p{margin:6px 0;color:var(--paper-dim)}
+
+  /* Pitfalls */
+  .pitfalls{margin-top:64px;padding:40px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px}
+  .pitfalls h3{
+    font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin-bottom:8px;
+  }
+  .pitfalls .step-tag{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--bad);margin-bottom:24px}
+  .pitfalls ul{list-style:none;padding:0}
+  .pitfalls li{
+    padding:14px 0 14px 28px;border-top:1px solid var(--line);position:relative;color:var(--paper-dim);
+  }
+  .pitfalls li:first-child{border-top:none}
+  .pitfalls li::before{
+    content:"✕";position:absolute;left:0;top:14px;color:var(--bad);font-family:'JetBrains Mono',monospace;font-size:14px;
+  }
+  .pitfalls li strong{color:var(--paper);font-weight:500}
+
+  /* Checklist */
+  .checklist{
+    margin-top:48px;padding:36px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;
+  }
+  .checklist h3{font-family:'Instrument Serif',serif;font-weight:400;font-size:28px;margin-bottom:8px;color:var(--paper)}
+  .checklist .step-tag{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--good);margin-bottom:20px}
+  .checklist label{
+    display:flex;gap:14px;padding:10px 0;cursor:pointer;color:var(--paper-dim);font-size:15px;
+    border-top:1px solid var(--line);
+  }
+  .checklist label:first-of-type{border-top:none}
+  .checklist input[type=checkbox]{
+    appearance:none;width:18px;height:18px;border:1px solid var(--paper-mute);border-radius:3px;
+    margin-top:3px;flex-shrink:0;cursor:pointer;position:relative;background:var(--ink);
+  }
+  .checklist input[type=checkbox]:checked{background:var(--good);border-color:var(--good)}
+  .checklist input[type=checkbox]:checked::after{
+    content:"✓";position:absolute;top:-2px;left:3px;color:var(--ink);font-weight:700;font-size:14px;
+  }
+  .checklist input[type=checkbox]:checked + span{text-decoration:line-through;color:var(--paper-mute)}
+
+  /* Comet prompt section */
+  .comet{
+    margin-top:64px;padding:40px;background:var(--ink-2);
+    border:1px solid var(--line);border-radius:8px;position:relative;
+  }
+  .comet .step-tag{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px}
+  .comet h3{font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin-bottom:8px;color:var(--paper)}
+  .comet > p{color:var(--paper-dim);font-size:15px;margin:14px 0 24px;max-width:700px}
+  .prompt-box{
+    position:relative;background:var(--ink);border:1px solid var(--line);border-radius:6px;
+    max-height:520px;overflow:auto;
+  }
+  .prompt-box::-webkit-scrollbar{width:10px;height:10px}
+  .prompt-box::-webkit-scrollbar-track{background:var(--ink-2)}
+  .prompt-box::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
+  .prompt-box::-webkit-scrollbar-thumb:hover{background:var(--paper-mute)}
+  .prompt-box pre{
+    background:transparent;border:none;border-radius:0;margin:0;padding:54px 24px 28px;
+  }
+  .prompt-box pre::before{display:none}
+  .prompt-box pre code{margin-top:0;font-size:12px;line-height:1.7;color:var(--paper);white-space:pre;font-family:'JetBrains Mono',monospace}
+  .copy-btn{
+    position:sticky;top:12px;float:right;margin-right:12px;margin-bottom:-32px;z-index:10;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    background:var(--ink-3);color:var(--paper-dim);border:1px solid var(--line);
+    padding:8px 14px;border-radius:4px;cursor:pointer;transition:all 0.15s;
+  }
+  .copy-btn:hover{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+  .copy-btn.copied{background:var(--good);color:var(--ink);border-color:var(--good)}
+  .comet .hint{
+    margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.05em;
+    color:var(--paper-mute);
+  }
+  .comet .hint strong{color:var(--accent-2);font-weight:500}
+
+  footer{margin-top:96px;padding-top:32px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--paper-mute);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  footer span em{font-style:italic;color:var(--accent-2);text-transform:none;letter-spacing:0;font-family:'Instrument Serif',serif;font-size:14px}
+
+  @media (max-width:680px){
+    .wrap{padding:24px 20px 64px}
+    .step{grid-template-columns:1fr;gap:16px}
+    .step-num{font-size:48px}
+    .meta-grid{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:44px}
+    .principle,.vars{padding:24px;font-size:18px}
+    .pitfalls,.checklist,.comet{padding:28px 24px}
+    .prompt-box pre{padding:54px 16px 20px}
+    .prompt-box pre code{font-size:11px}
+    .vars dl{grid-template-columns:1fr;gap:6px 0}
+    .vars dt{margin-top:10px}
+  }
+</style>
+</head>
+<body>
+
+<button class="audio-toggle" id="audioToggle" type="button" aria-label="Audio menu" title="Audio menu" aria-expanded="false" aria-haspopup="true" aria-controls="voicePanel">
+  <svg class="icon-main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+  <span class="kebab-dot" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 4"><circle cx="2" cy="2" r="1"/><circle cx="6" cy="2" r="1"/><circle cx="10" cy="2" r="1"/></svg>
+  </span>
+</button>
+
+<div class="voice-panel" id="voicePanel" role="menu" aria-labelledby="audioToggle">
+  <h4>Audio</h4>
+  <button class="play-control" id="playControl" type="button">
+    <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="7 4 21 12 7 20 7 4"/></svg>
+    <svg class="icon-stop" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5" stroke="none"/></svg>
+    <span class="play-label">Read aloud</span>
+    <span class="play-meta" id="playMeta"></span>
+  </button>
+
+  <h4>Voice</h4>
+  <button class="voice-option selected" data-gender="default" type="button" role="menuitemradio" aria-checked="true">
+    <span class="voice-label">Default</span>
+    <span class="voice-name">system voice</span>
+  </button>
+  <button class="voice-option" data-gender="female" type="button" role="menuitemradio" aria-checked="false">
+    <span class="voice-label">Female</span>
+    <span class="voice-name" id="voiceNameF">—</span>
+  </button>
+  <button class="voice-option" data-gender="male" type="button" role="menuitemradio" aria-checked="false">
+    <span class="voice-label">Male</span>
+    <span class="voice-name" id="voiceNameM">—</span>
+  </button>
+</div>
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark / light theme" title="Toggle theme">
+  <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+</button>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <span><span class="dot"></span>INTERNAL RUNBOOK · OPS-SOP-007</span>
+    <span>STATIC SITE · GO-LIVE</span>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Standard Operating Procedure · DevOps</div>
+    <h1>Static site go-live.<br>GitHub Pages,<br>Cloudflare DNS,<br><em>and the certificate</em><br>that lives between.</h1>
+    <p class="lede">The <strong>standard procedure</strong> every team must follow when launching a static website on GitHub Pages with DNS managed by Cloudflare. HTTPS is enforced by GitHub via a Let's Encrypt certificate — Cloudflare's SSL features stay <strong>off</strong>.</p>
+
+    <div class="meta-grid">
+      <div class="meta-cell"><div class="k">Audience</div><div class="v">All Engineering</div></div>
+      <div class="meta-cell"><div class="k">DNS</div><div class="v">Cloudflare</div></div>
+      <div class="meta-cell"><div class="k">Hosting</div><div class="v">GitHub Pages</div></div>
+      <div class="meta-cell"><div class="k">TLS</div><div class="v">Let's Encrypt</div></div>
+    </div>
+  </header>
+
+  <!-- VARIABLES -->
+  <div class="vars">
+    <span class="label">⌗ Variables</span>
+    <h3>Substitute these in every command</h3>
+    <p>Throughout this runbook, the highlighted placeholders below appear in code, file contents, and Cloudflare/GitHub configuration. Replace each with your project's actual value before executing.</p>
+    <dl>
+      <dt><span class="var">{DOMAIN}</span></dt>
+      <dd>The apex domain you're publishing — <em>e.g. example.com, acme-careers.io</em></dd>
+      <dt><span class="var">{GITHUB_USER}</span></dt>
+      <dd>The GitHub user or organisation that owns the repo — <em>e.g. acme-corp</em></dd>
+      <dt><span class="var">{REPO}</span></dt>
+      <dd>The repository name holding the static site source — <em>e.g. acme-marketing-site</em></dd>
+    </dl>
+  </div>
+
+  <div class="principle">
+    <span class="label">Core Principle</span>
+    GitHub issues a Let's Encrypt cert for the custom domain, and that issuance only works if Cloudflare's proxy is <strong>off</strong> — gray cloud, <code>DNS only</code>. Anything proxied breaks the ACME challenge and disables the <em>Enforce HTTPS</em> checkbox.
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="step">
+    <div class="step-num">01</div>
+    <div>
+      <span class="step-tag">Repository</span>
+      <h2>Prepare the GitHub repo</h2>
+      <ol>
+        <li>Push the static site to a repo: <code><span class="var">{GITHUB_USER}</span>/<span class="var">{REPO}</span></code>.</li>
+        <li>The repo must be <strong>public</strong> unless the org is on GitHub Pro/Team/Enterprise — Pages on private repos requires a paid plan.</li>
+        <li>At the root of the repo, create a file named <code>CNAME</code> (uppercase, no extension) with exactly:
+<pre class="plain"><code>{DOMAIN}</code></pre>
+        Commit and push.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step">
+    <div class="step-num">02</div>
+    <div>
+      <span class="step-tag">GitHub Pages</span>
+      <h2>Enable GitHub Pages</h2>
+      <ol>
+        <li>Go to <strong>Repo → Settings → Pages</strong>.</li>
+        <li>Under <strong>Build and deployment → Source</strong>, choose either <strong>Deploy from a branch</strong> (select <code>main</code> and <code>/root</code>) or <strong>GitHub Actions</strong> if a workflow is used to build.</li>
+        <li>Confirm the site loads at <code>https://&lt;<span class="var">{GITHUB_USER}</span>&gt;.github.io</code> (or <code>…/<span class="var">{REPO}</span></code> for project sites) <strong>before</strong> touching DNS.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step">
+    <div class="step-num">03</div>
+    <div>
+      <span class="step-tag">Cloudflare · DNS Records</span>
+      <h2>Configure DNS in Cloudflare</h2>
+      <p>In Cloudflare → zone <code><span class="var">{DOMAIN}</span></code> → <strong>DNS → Records</strong>, create the following. Every record's <strong>Proxy status</strong> must be <code>DNS only</code> (gray cloud).</p>
+
+      <p style="margin-top:20px"><strong>Apex (<code><span class="var">{DOMAIN}</span></code>)</strong> — four A records:</p>
+<pre><code>A   @   185.199.108.153   DNS only
+A   @   185.199.109.153   DNS only
+A   @   185.199.110.153   DNS only
+A   @   185.199.111.153   DNS only</code></pre>
+
+      <p>Optional but recommended IPv6 — also <code>DNS only</code>:</p>
+<pre><code>AAAA  @  2606:50c0:8000::153  DNS only
+AAAA  @  2606:50c0:8001::153  DNS only
+AAAA  @  2606:50c0:8002::153  DNS only
+AAAA  @  2606:50c0:8003::153  DNS only</code></pre>
+
+      <p><strong><code>www</code></strong> — single CNAME, also <code>DNS only</code>:</p>
+<pre><code>CNAME   www   {GITHUB_USER}.github.io   DNS only</code></pre>
+
+      <div class="callout warn">
+        <span class="ctitle">⚠ Cleanup</span>
+        <p>Delete any old A / AAAA / CNAME records on <code>@</code> or <code>www</code> that conflict with the above.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step">
+    <div class="step-num">04</div>
+    <div>
+      <span class="step-tag">Cloudflare · SSL/TLS</span>
+      <h2>Disable Cloudflare's SSL features</h2>
+      <p>Since the proxy is off, most of these don't apply — but turn them off anyway so nothing interferes later.</p>
+      <ol>
+        <li><strong>SSL/TLS → Overview:</strong> the mode is irrelevant when no record is proxied, but if you want to be safe set it to <strong>Full (strict)</strong>. <strong>Never</strong> use <code>Flexible</code> with GitHub Pages.</li>
+        <li><strong>SSL/TLS → Edge Certificates:</strong> turn <strong>off</strong> <em>Always Use HTTPS</em> and <em>Automatic HTTPS Rewrites</em>. GitHub will handle these.</li>
+        <li><strong>Rules / Page Rules / Redirect Rules:</strong> remove any HTTP→HTTPS or domain-rewrite rules pointing at <code><span class="var">{DOMAIN}</span></code>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step">
+    <div class="step-num">05</div>
+    <div>
+      <span class="step-tag">GitHub · Custom Domain</span>
+      <h2>Bind the custom domain in GitHub</h2>
+      <ol>
+        <li>Go to <strong>Repo → Settings → Pages → Custom domain</strong>, enter <code><span class="var">{DOMAIN}</span></code>, and click <strong>Save</strong>.</li>
+        <li>GitHub runs a DNS check. Wait for the green check on the apex and on <code>www</code> — it verifies the four A records and the CNAME.</li>
+        <li>Resolution should be fast since the proxy is off; if it fails, recheck the records.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step">
+    <div class="step-num">06</div>
+    <div>
+      <span class="step-tag">Certificate Provisioning</span>
+      <h2>Wait for the Let's Encrypt certificate</h2>
+      <ol>
+        <li>After the DNS check passes, GitHub provisions a TLS cert via Let's Encrypt.</li>
+        <li>This usually takes a few minutes; the docs allow up to <strong>24 hours</strong>.</li>
+        <li>The <strong>Enforce HTTPS</strong> checkbox under Pages stays greyed out with a status message until the cert is issued.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- STEP 7 -->
+  <section class="step">
+    <div class="step-num">07</div>
+    <div>
+      <span class="step-tag">HTTPS · Enforce</span>
+      <h2>Enforce HTTPS</h2>
+      <ol>
+        <li>Once the cert is ready, the checkbox becomes active.</li>
+        <li>Go to <strong>Repo → Settings → Pages → Enforce HTTPS</strong> and enable it.</li>
+        <li>GitHub will now redirect all <code>http://</code> requests to <code>https://</code> and serve <code>www</code> ↔ apex according to the CNAME.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- STEP 8 -->
+  <section class="step">
+    <div class="step-num">08</div>
+    <div>
+      <span class="step-tag">Verification</span>
+      <h2>Verify everything from the terminal</h2>
+<pre><code>dig +short {DOMAIN}
+dig +short www.{DOMAIN}
+curl -I https://{DOMAIN}
+curl -I http://{DOMAIN}    # expect 301 → https
+curl -vI https://{DOMAIN} 2>&amp;1 | grep -i "issuer\|subject"</code></pre>
+
+      <div class="callout good">
+        <span class="ctitle">✓ Pass</span>
+        <p>The cert issuer should be <strong>Let's Encrypt</strong>.</p>
+      </div>
+      <div class="callout bad">
+        <span class="ctitle">✕ Fail</span>
+        <p>If the issuer is <code>Cloudflare Inc ECC CA</code>, the proxy is still on somewhere — switch that record back to <code>DNS only</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMET ASSISTANT PROMPT -->
+  <div class="comet">
+    <span class="step-tag">⌬ Automation · Comet Browser Assistant</span>
+    <h3>Or — let Comet drive the browser</h3>
+    <p>If your team uses the Comet browser assistant and is already signed into <code>github.com</code> and <code>dash.cloudflare.com</code> for the target zone, paste the prompt below into the assistant. It will collect your three variables, then walk through all 8 steps <strong>one at a time</strong>, pausing for your approval between each — and stopping for an explicit <code>confirm</code> before any destructive action.</p>
+
+    <div class="prompt-box">
+      <button class="copy-btn" id="copyBtn" type="button">Copy</button>
+<pre><code id="cometPrompt">You are a careful Senior DevOps assistant operating inside the Comet browser. Your job is to take a static site live on GitHub Pages with DNS managed by Cloudflare, where HTTPS is enforced by GitHub (not Cloudflare).
+
+═══════════════════════════════════════════════
+PRECONDITIONS — VERIFY BEFORE STARTING
+═══════════════════════════════════════════════
+1. I am already logged into github.com in this browser session.
+2. I am already logged into dash.cloudflare.com and the target domain's zone is accessible to my account.
+3. The static site code is already pushed to a GitHub repo I own or have admin rights on.
+4. I have the authority to change DNS for the domain.
+
+If any precondition is not met, STOP and tell me. Do not proceed.
+
+═══════════════════════════════════════════════
+VARIABLES — ASK ME FOR THESE FIRST
+═══════════════════════════════════════════════
+Before doing ANY action, ask me for the following values in a single message and wait for my reply:
+
+  • {DOMAIN}        the apex domain to publish (e.g. example.com)
+  • {GITHUB_USER}   the GitHub user or org owning the repo
+  • {REPO}          the repository name containing the static site
+
+Echo these values back to me and ask me to confirm before proceeding to Step 1.
+
+═══════════════════════════════════════════════
+EXECUTION RULES — FOLLOW STRICTLY
+═══════════════════════════════════════════════
+A. Do EXACTLY ONE step at a time. Never batch steps.
+B. At the start of each step, state: "Starting Step N of 8 — &lt;title&gt;".
+C. At the end of each step, summarise what you did, paste the final URL you're on, and ask: "Step N complete. Proceed to Step N+1? (yes / no / pause)". Wait for my reply.
+D. Never assume. If a UI element, button, or setting is not where you expect, describe what you see on screen and ask me before clicking anything.
+E. Before any DESTRUCTIVE action (deleting DNS records, overwriting settings, removing rules), list exactly what will be deleted/changed and ask me to confirm with the word "confirm".
+F. Never navigate away from a tab without telling me first.
+G. If a step requires waiting (e.g. cert provisioning), set a clear expectation, do not poll aggressively, and let me tell you when to re-check.
+H. Treat values like the four GitHub Pages IPs (185.199.108.153, .109.153, .110.153, .111.153) as fixed — type them exactly, no autocorrect.
+I. If something fails or behaves unexpectedly, STOP, capture the error or screenshot description, and ask me how to proceed. Do not retry silently.
+J. Never disclose, paste, or screenshot session cookies, tokens, or 2FA codes into chat.
+
+═══════════════════════════════════════════════
+THE 8 STEPS
+═══════════════════════════════════════════════
+
+──────── STEP 1 — Verify the GitHub repo and CNAME file ────────
+1. Open https://github.com/{GITHUB_USER}/{REPO}
+2. Confirm the repo loads and is accessible.
+3. Check whether a file named CNAME (uppercase, no extension) exists in the repo root.
+   • If it exists and contains exactly "{DOMAIN}" → OK, report and continue.
+   • If it exists but contains a different value → STOP and ask me what to do.
+   • If it does not exist → create it via the GitHub web UI:
+       - Click "Add file" → "Create new file"
+       - Filename: CNAME
+       - Content: {DOMAIN}    (no trailing whitespace, no quotes, no extra lines)
+       - Commit directly to the default branch with message: "Add CNAME for {DOMAIN}"
+4. Report the commit URL.
+5. End of Step 1 — request approval.
+
+──────── STEP 2 — Enable GitHub Pages ────────
+1. Navigate to https://github.com/{GITHUB_USER}/{REPO}/settings/pages
+2. Read aloud the current state of "Build and deployment → Source".
+3. If Pages is not yet enabled:
+   • Source: "Deploy from a branch"
+   • Branch: "main"  /  Folder: "/ (root)"
+   • Click Save.
+   (If the user mentions they use GitHub Actions for build, ask before changing source.)
+4. Wait until the page shows the live URL (https://{GITHUB_USER}.github.io/... or .../{REPO}). Report it.
+5. Open that URL in a new tab and confirm the site loads.
+6. End of Step 2 — request approval.
+
+──────── STEP 3 — Configure DNS in Cloudflare ────────
+1. Open https://dash.cloudflare.com and navigate to the {DOMAIN} zone → DNS → Records.
+2. List every existing A, AAAA, and CNAME record on "@" (apex) and "www". Show them to me.
+3. Ask me to confirm which conflicting records may be deleted. Wait for my "confirm".
+4. After my confirmation, delete the conflicting records.
+5. Add the following records, one at a time. For EACH record, set Proxy status = "DNS only" (gray cloud). Verify the proxy toggle visually before saving.
+
+   Apex A records:
+     A   @   185.199.108.153   DNS only
+     A   @   185.199.109.153   DNS only
+     A   @   185.199.110.153   DNS only
+     A   @   185.199.111.153   DNS only
+
+   Optional IPv6 (ask me yes/no before adding):
+     AAAA  @  2606:50c0:8000::153  DNS only
+     AAAA  @  2606:50c0:8001::153  DNS only
+     AAAA  @  2606:50c0:8002::153  DNS only
+     AAAA  @  2606:50c0:8003::153  DNS only
+
+   www CNAME:
+     CNAME   www   {GITHUB_USER}.github.io   DNS only
+
+6. After each record is saved, re-read the records list and confirm the new row is present and gray-cloud. If any record shows orange cloud, fix it before continuing.
+7. Show me a final summary table of all records on @ and www.
+8. End of Step 3 — request approval.
+
+──────── STEP 4 — Disable Cloudflare's SSL/HTTPS features ────────
+1. Go to SSL/TLS → Overview. Read the current encryption mode aloud.
+   • If it is "Flexible", change it to "Full (strict)" and tell me. Never leave it on Flexible.
+   • Otherwise, leave it as-is.
+2. Go to SSL/TLS → Edge Certificates.
+   • Turn OFF "Always Use HTTPS"
+   • Turn OFF "Automatic HTTPS Rewrites"
+   • Confirm both toggles read OFF.
+3. Go to Rules → Page Rules and Rules → Redirect Rules. List any rule whose target includes {DOMAIN}.
+   • For each such rule, ask me to confirm before disabling/deleting it.
+4. End of Step 4 — request approval.
+
+──────── STEP 5 — Bind the custom domain in GitHub ────────
+1. Return to https://github.com/{GITHUB_USER}/{REPO}/settings/pages
+2. Under "Custom domain", enter: {DOMAIN}
+3. Click Save.
+4. Wait for GitHub's DNS check. Report the status messages exactly as they appear.
+5. If the DNS check fails, capture the exact error text and STOP. Do not retry without my approval.
+6. End of Step 5 — request approval.
+
+──────── STEP 6 — Wait for the Let's Encrypt certificate ────────
+1. On the same Pages settings screen, locate the "Enforce HTTPS" checkbox.
+2. Report whether it is currently enabled, disabled, or grayed-out with a status message.
+3. If it is grayed out with a "certificate is being provisioned" type message, INFORM me that this can take a few minutes up to 24 hours, and PAUSE. Do not poll repeatedly. Ask me to tell you when to re-check.
+4. End of Step 6 — request approval (or pause).
+
+──────── STEP 7 — Enforce HTTPS ────────
+1. When I tell you to re-check, refresh the Pages settings screen.
+2. If the "Enforce HTTPS" checkbox is now active, tick it.
+3. Confirm the checkbox is now in the enabled state and report it.
+4. End of Step 7 — request approval.
+
+──────── STEP 8 — Verification ────────
+1. Open a new tab and visit each of the following, reporting status code and final URL:
+     • http://{DOMAIN}        (expect 301 → https)
+     • https://{DOMAIN}
+     • http://www.{DOMAIN}    (expect 301 → https)
+     • https://www.{DOMAIN}
+2. On https://{DOMAIN}, click the padlock and read the certificate issuer. Report it.
+   • If the issuer is "Let's Encrypt" → PASS.
+   • If the issuer is "Cloudflare Inc ECC CA" or similar → FAIL: a Cloudflare proxy is still on somewhere. Go back to Step 3, find the orange-cloud record, switch it to DNS only, and re-run Step 8.
+3. Provide a final go-live report:
+     ✓ DNS records (with proxy state)
+     ✓ Custom domain bound
+     ✓ Cert issuer
+     ✓ Enforce HTTPS state
+     ✓ All four URLs and their final status codes
+4. End of Step 8 — go-live complete. Confirm I have no follow-up changes.
+
+═══════════════════════════════════════════════
+COMMON PITFALLS — WATCH FOR THESE THROUGHOUT
+═══════════════════════════════════════════════
+• Orange cloud on ANY record breaks GitHub's cert issuance. Always verify gray cloud after saving.
+• Cloudflare "Flexible" SSL + GitHub redirects = infinite redirect loop. Never use Flexible.
+• Don't put a CNAME on @ even if Cloudflare offers flattening — use the four A records.
+• Don't delete the CNAME file in the repo; GitHub will overwrite the custom domain on next deploy if it's missing.
+• Never share session cookies, tokens, or 2FA codes in chat.
+
+Begin by asking me for the three variables. Do not start Step 1 until I confirm them.</code></pre>
+    </div>
+
+    <p class="hint">→ <strong>Usage:</strong> open Comet's assistant panel in a window where you're already signed into both GitHub and Cloudflare, click <strong>Copy</strong> above, paste the prompt, and send. Reply with the three variables when asked.</p>
+  </div>
+
+  <!-- PITFALLS -->
+  <div class="pitfalls">
+    <span class="step-tag">Watch For</span>
+    <h3>Common pitfalls</h3>
+    <ul>
+      <li><strong>Orange cloud on any record</strong> → cert won't issue, <em>Enforce HTTPS</em> stays disabled, or the Cloudflare cert is served instead of GitHub's.</li>
+      <li><strong>Cloudflare Flexible SSL</strong> + GitHub redirects = <em>infinite redirect loop</em>. Don't use Flexible.</li>
+      <li><strong>Forgetting the <code>CNAME</code> file</strong> in the repo → GitHub will overwrite the custom domain setting on the next deploy.</li>
+      <li><strong>Apex CNAME flattening</strong> → don't put a CNAME on <code>@</code>. Use the four A records. Cloudflare supports flattening but GitHub's docs and verification expect A records.</li>
+    </ul>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist">
+    <span class="step-tag">Pre-launch</span>
+    <h3>Go-live checklist</h3>
+    <label><input type="checkbox"><span>Repo created and contains <code>CNAME</code> file with <span class="var">{DOMAIN}</span></span></label>
+    <label><input type="checkbox"><span>GitHub Pages source configured and <code>github.io</code> URL works</span></label>
+    <label><input type="checkbox"><span>All four apex A records present in Cloudflare, set to <code>DNS only</code></span></label>
+    <label><input type="checkbox"><span><code>www</code> CNAME present, set to <code>DNS only</code></span></label>
+    <label><input type="checkbox"><span>Conflicting old DNS records removed</span></label>
+    <label><input type="checkbox"><span>Cloudflare <em>Always Use HTTPS</em> and <em>Automatic HTTPS Rewrites</em> turned off</span></label>
+    <label><input type="checkbox"><span>Custom domain saved in GitHub Pages with a green check</span></label>
+    <label><input type="checkbox"><span>Let's Encrypt cert issued · <em>Enforce HTTPS</em> enabled</span></label>
+    <label><input type="checkbox"><span>Verification commands all pass · issuer is <strong>Let's Encrypt</strong></span></label>
+  </div>
+
+  <div class="callout warn" style="margin-top:32px">
+    <span class="ctitle">Future · If the Cloudflare proxy is ever re-enabled</span>
+    <p>Disable <em>Enforce HTTPS</em> in GitHub first, then switch records to proxied, then set Cloudflare SSL/TLS to <strong>Full (strict)</strong>. Default posture for this SOP: leave everything <code>DNS only</code>.</p>
+  </div>
+
+  <footer>
+    <span>END OF RUNBOOK</span>
+    <span><em>Internal use · all engineering teams</em></span>
+    <span>v1.1</span>
+  </footer>
+
+</div>
+<script>
+  // Read-aloud (Web Speech API) — section-aware, pauses after every step so the
+  // user can carry out the action and return for the next one. Feature-detected,
+  // no third-party libraries.
+  (function(){
+    var synth = window.speechSynthesis;
+    var btn = document.getElementById('audioToggle');
+    var voicePanel = document.getElementById('voicePanel');
+    var playControl = document.getElementById('playControl');
+    if (!btn || !synth || typeof window.SpeechSynthesisUtterance !== 'function') return;
+    btn.classList.add('supported');
+
+    var sections = [];
+    var currentIndex = 0;       // which section will play on the next click
+    var isPlaying = false;
+    var userStopped = false;    // distinguishes manual stop from natural end
+    var currentSectionEl = null;
+    var speechSession = 0;      // bumped on every new speak/stop so stale callbacks no-op
+
+    // Voice selection — 'default' (system), 'female', or 'male'
+    var voicePref = 'default';
+    var voiceMap = { female: null, male: null };
+    try {
+      var savedVoice = localStorage.getItem('runbook-voice');
+      if (savedVoice === 'female' || savedVoice === 'male' || savedVoice === 'default') {
+        voicePref = savedVoice;
+      }
+    } catch(e){}
+
+    // Heuristic gender inference from voice name (Web Speech API doesn't expose gender)
+    function inferGender(voice){
+      var name = (voice && voice.name || '').toLowerCase();
+      if (/\bfemale\b|\bwoman\b/.test(name)) return 'female';
+      if (/\bmale\b|\bman\b/.test(name)) return 'male';
+      var female = ['samantha','karen','victoria','susan','allison','ava','serena','tessa','veena','moira','fiona','anna','zira','helena','hazel','eva','catherine','linda','heather','paulina','monica','marisol','lucia','nora','kalpana','helga','klara','satu','amelie','audrey','milena','agnes','nicky','vicki','siri','sofia','elena','lekha','joana','luciana','tingting','meijia','yuna','kyoko','clara','ellen','tracy','alice','carmit','damayanti','ioana','laura','mariska','melina','sara','tarik','mei-jia','zuzana'];
+      var male = ['alex','daniel','tom','fred','aaron','bruce','jorge','diego','yuri','otoya','hattori','david','mark','george','arthur','paul','rishi','oliver','guy','henrik','pavel','mikhail','helmut','hans','klaus','pablo','hugo','matthias','felipe','luca','xander','reed','rocko','ralph','albert','bahh','bells','boing','bubbles','cellos','deranged','jester','junior','kathy','organ','superstar','trinoids','whisper','zarvox','google uk english male'];
+      for (var i=0;i<female.length;i++) if (name.indexOf(female[i])!==-1) return 'female';
+      for (var i=0;i<male.length;i++) if (name.indexOf(male[i])!==-1) return 'male';
+      return 'unknown';
+    }
+
+    function pickVoice(voices, gender){
+      var lang = (document.documentElement.lang || 'en-US').toLowerCase();
+      var langPrefix = lang.split('-')[0];
+      var matched = voices.filter(function(v){
+        return v.lang && v.lang.toLowerCase().indexOf(langPrefix) === 0;
+      });
+      if (matched.length === 0) matched = voices.slice();
+      if (gender){
+        var byGender = matched.filter(function(v){ return inferGender(v) === gender; });
+        if (byGender.length === 0) return null;
+        matched = byGender;
+      }
+      // Prefer local (non-network) voices for reliability
+      var local = matched.filter(function(v){ return v.localService; });
+      if (local.length > 0) matched = local;
+      // Prefer exact lang match
+      var exact = matched.filter(function(v){ return v.lang && v.lang.toLowerCase() === lang; });
+      if (exact.length > 0) return exact[0];
+      return matched[0] || null;
+    }
+
+    function prettyVoiceName(v){
+      if (!v) return 'unavailable';
+      // Trim verbose Microsoft / Google prefixes for display
+      return v.name.replace(/^Microsoft\s+/i, '').replace(/^Google\s+/i, '').replace(/\s*-.*$/, '').slice(0, 24);
+    }
+
+    function loadVoices(){
+      var voices = synth.getVoices();
+      if (!voices || voices.length === 0) return;
+      voiceMap.female = pickVoice(voices, 'female');
+      voiceMap.male = pickVoice(voices, 'male');
+
+      // Voice picker is always available now; just disable individual options below
+      // when the matching voice doesn't exist on this device.
+
+      var fName = document.getElementById('voiceNameF');
+      var mName = document.getElementById('voiceNameM');
+      if (fName) fName.textContent = prettyVoiceName(voiceMap.female);
+      if (mName) mName.textContent = prettyVoiceName(voiceMap.male);
+
+      // Disable options for missing voices
+      Array.prototype.forEach.call(document.querySelectorAll('.voice-option'), function(opt){
+        var g = opt.getAttribute('data-gender');
+        if (g === 'female' && !voiceMap.female) opt.setAttribute('data-disabled','true');
+        else if (g === 'male' && !voiceMap.male) opt.setAttribute('data-disabled','true');
+        else opt.removeAttribute('data-disabled');
+      });
+
+      // Fall back if saved preference is now unavailable
+      if (voicePref === 'female' && !voiceMap.female) voicePref = 'default';
+      if (voicePref === 'male' && !voiceMap.male) voicePref = 'default';
+      updateVoiceSelection();
+    }
+
+    function updateVoiceSelection(){
+      Array.prototype.forEach.call(document.querySelectorAll('.voice-option'), function(opt){
+        var match = opt.getAttribute('data-gender') === voicePref;
+        opt.classList.toggle('selected', match);
+        opt.setAttribute('aria-checked', match ? 'true' : 'false');
+      });
+    }
+
+    function getCurrentVoice(){
+      if (voicePref === 'female') return voiceMap.female;
+      if (voicePref === 'male') return voiceMap.male;
+      return null; // null → browser uses its default voice
+    }
+
+    function discoverSections(){
+      // Reading order: hero → variables → core principle → 8 steps → comet section → pitfalls → checklist
+      return Array.prototype.slice.call(
+        document.querySelectorAll('header.hero, .vars, .principle, .step, .comet, .pitfalls, .checklist')
+      );
+    }
+
+    function getSectionText(el){
+      var clone = el.cloneNode(true);
+      // Strip non-spoken elements (code blocks, copy button, big decorative step numbers, the meta grid in hero)
+      clone.querySelectorAll('pre, .copy-btn, .step-num, .meta-grid, script, style')
+        .forEach(function(n){ n.remove(); });
+      // Insert sentence breaks after headings/list items so cadence sounds natural
+      clone.querySelectorAll('h1, h2, h3, h4, li, p, dt, dd').forEach(function(n){
+        n.appendChild(document.createTextNode('. '));
+      });
+      return (clone.textContent || '').replace(/\s+/g, ' ').replace(/\.\s*\./g, '.').trim();
+    }
+
+    function chunkText(text){
+      // Chrome cuts off utterances longer than ~15s; split on sentence boundaries
+      var parts = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+      var chunks = [];
+      var current = '';
+      for (var i = 0; i < parts.length; i++){
+        var p = parts[i].trim();
+        if (!p) continue;
+        if ((current + ' ' + p).length > 200){
+          if (current) chunks.push(current);
+          current = p;
+        } else {
+          current = current ? current + ' ' + p : p;
+        }
+      }
+      if (current) chunks.push(current);
+      return chunks;
+    }
+
+    function highlightSection(el){
+      clearHighlight();
+      if (el){
+        el.classList.add('is-reading');
+        currentSectionEl = el;
+        var pb = el.querySelector(':scope > .section-play');
+        if (pb) pb.classList.add('playing');
+        try { el.scrollIntoView({behavior:'smooth', block:'start'}); } catch(e){}
+      }
+    }
+
+    function clearHighlight(){
+      // Remove .playing from every per-section button (cheap, only a handful)
+      Array.prototype.forEach.call(document.querySelectorAll('.section-play.playing'), function(b){
+        b.classList.remove('playing');
+      });
+      if (currentSectionEl){
+        currentSectionEl.classList.remove('is-reading');
+        currentSectionEl = null;
+      }
+    }
+
+    function updateButton(){
+      btn.classList.toggle('playing', isPlaying);
+      if (isPlaying){
+        btn.setAttribute('aria-label', 'Audio menu — currently reading');
+        btn.setAttribute('title', 'Audio menu (reading)');
+      } else {
+        btn.setAttribute('aria-label', 'Audio menu');
+        btn.setAttribute('title', 'Audio menu');
+      }
+      // Drive the in-panel play CTA
+      if (playControl){
+        playControl.classList.toggle('playing', isPlaying);
+        var lbl = playControl.querySelector('.play-label');
+        var meta = playControl.querySelector('.play-meta');
+        if (isPlaying){
+          if (lbl) lbl.textContent = 'Stop reading';
+          if (meta) meta.textContent = '';
+        } else if (sections.length === 0){
+          if (lbl) lbl.textContent = 'Read aloud';
+          if (meta) meta.textContent = '';
+        } else if (currentIndex >= sections.length){
+          if (lbl) lbl.textContent = 'Read from beginning';
+          if (meta) meta.textContent = '';
+        } else {
+          if (lbl) lbl.textContent = 'Read section ' + (currentIndex + 1);
+          if (meta) meta.textContent = 'of ' + sections.length;
+        }
+      }
+    }
+
+    function speakCurrentSection(){
+      if (sections.length === 0) sections = discoverSections();
+      if (sections.length === 0) return;
+      if (currentIndex >= sections.length) currentIndex = 0;
+
+      var sectionEl = sections[currentIndex];
+      var text = getSectionText(sectionEl);
+      if (!text){
+        currentIndex++;
+        speakCurrentSection();
+        return;
+      }
+
+      try { synth.cancel(); } catch(e){}
+      userStopped = false;
+      var thisIndex = currentIndex;
+      var session = ++speechSession;
+      highlightSection(sectionEl);
+
+      var chunks = chunkText(text);
+      var lastIdx = chunks.length - 1;
+
+      chunks.forEach(function(chunk, i){
+        var u = new SpeechSynthesisUtterance(chunk);
+        u.rate = 0.95;
+        u.pitch = 1.0;
+        u.volume = 1.0;
+        u.lang = document.documentElement.lang || 'en-US';
+        var v = getCurrentVoice();
+        if (v) u.voice = v;
+        if (i === lastIdx){
+          u.onend = function(){
+            if (session !== speechSession) return;
+            // Section finished naturally — advance pointer so next click reads NEXT section.
+            // If the user manually stopped, we don't advance — next click replays this section.
+            if (!userStopped) currentIndex = thisIndex + 1;
+            isPlaying = false;
+            clearHighlight();
+            updateButton();
+          };
+        }
+        u.onerror = function(){
+          if (session !== speechSession) return;
+          isPlaying = false;
+          clearHighlight();
+          updateButton();
+        };
+        synth.speak(u);
+      });
+
+      isPlaying = true;
+      updateButton();
+    }
+
+    function stop(){
+      userStopped = true;
+      speechSession++;
+      try { synth.cancel(); } catch(e){}
+      isPlaying = false;
+      clearHighlight();
+      updateButton();
+    }
+
+    // Inject a small play button into the bottom-right of each readable section
+    // (skipping the hero, where the meta-grid occupies the corner).
+    function injectSectionPlayButtons(){
+      var ICON = '<svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="7 4 21 12 7 20 7 4"/></svg>'
+               + '<svg class="icon-stop" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>';
+      sections.forEach(function(section, index){
+        if (section.tagName === 'HEADER' && section.classList.contains('hero')) return;
+        if (section.querySelector(':scope > .section-play')) return;
+        section.classList.add('has-section-play');
+        var pb = document.createElement('button');
+        pb.type = 'button';
+        pb.className = 'section-play';
+        pb.setAttribute('aria-label', 'Read this section aloud');
+        pb.setAttribute('title', 'Read from here');
+        pb.dataset.sectionIndex = String(index);
+        pb.innerHTML = ICON;
+        pb.addEventListener('click', function(e){
+          e.stopPropagation();
+          var idx = parseInt(pb.dataset.sectionIndex, 10);
+          if (isPlaying && currentSectionEl === sections[idx]){
+            stop();
+            return;
+          }
+          currentIndex = idx;
+          speakCurrentSection();
+        });
+        section.appendChild(pb);
+      });
+    }
+
+    // Audio icon click → toggle the unified audio panel
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = !voicePanel.classList.contains('open');
+      voicePanel.classList.toggle('open', open);
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open && playControl){
+        // Jump focus to the play CTA so keyboard users can hit Enter immediately
+        try { playControl.focus(); } catch(err){}
+      }
+    });
+
+    // In-panel play/stop CTA
+    if (playControl){
+      playControl.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (isPlaying) stop();
+        else speakCurrentSection();
+      });
+    }
+
+    // Voice picker — option selection, outside-click & Escape to close the panel
+    function closePanel(){
+      voicePanel.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.voice-option'), function(opt){
+      opt.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (opt.getAttribute('data-disabled') === 'true') return;
+        voicePref = opt.getAttribute('data-gender') || 'default';
+        try { localStorage.setItem('runbook-voice', voicePref); } catch(err){}
+        updateVoiceSelection();
+        // Stop any current playback so the new voice applies on next play
+        if (isPlaying) stop();
+        closePanel();
+      });
+    });
+    document.addEventListener('click', function(e){
+      if (voicePanel.classList.contains('open') && !voicePanel.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+        closePanel();
+      }
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closePanel();
+    });
+
+    // Initial population & label
+    sections = discoverSections();
+    injectSectionPlayButtons();
+    updateButton();
+
+    // Voice list often loads asynchronously (Chrome) — try now, then on the change event
+    loadVoices();
+    if (typeof synth.addEventListener === 'function'){
+      synth.addEventListener('voiceschanged', loadVoices);
+    } else if ('onvoiceschanged' in synth){
+      synth.onvoiceschanged = loadVoices;
+    }
+
+    // Stop speaking if the user navigates away, closes the tab, or hides the tab
+    window.addEventListener('beforeunload', function(){ try { synth.cancel(); } catch(e){} });
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden && isPlaying) stop();
+    });
+  })();
+
+  // Theme toggle
+  (function(){
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    if(!btn) return;
+    try{
+      var saved = localStorage.getItem('runbook-theme');
+      if (saved === 'light') root.setAttribute('data-theme', 'light');
+    } catch(e){}
+    btn.addEventListener('click', function(){
+      var isLight = root.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        root.removeAttribute('data-theme');
+        try{ localStorage.setItem('runbook-theme', 'dark'); } catch(e){}
+      } else {
+        root.setAttribute('data-theme', 'light');
+        try{ localStorage.setItem('runbook-theme', 'light'); } catch(e){}
+      }
+    });
+  })();
+
+  // Copy Comet prompt
+  (function(){
+    var btn = document.getElementById('copyBtn');
+    var src = document.getElementById('cometPrompt');
+    if(!btn || !src) return;
+    btn.addEventListener('click', async function(){
+      var text = src.innerText;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+          document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+        }
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      } catch(e){
+        btn.textContent = 'Copy failed';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 2000);
+      }
+    });
+  })();
+</script>
+</body>
+</html>
