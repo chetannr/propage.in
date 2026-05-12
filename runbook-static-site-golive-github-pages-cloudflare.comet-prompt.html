@@ -1779,15 +1779,80 @@
         <section class="step">
             <div class="step-num">02</div>
             <div>
-                <span class="step-tag">GitHub Pages</span>
-                <h2>Enable GitHub Pages</h2>
+                <span class="step-tag">GitHub Pages &middot; Custom Deploy</span>
+                <h2>Commit the deploy workflow and enable Pages via GitHub Actions</h2>
+                <p>Modern GitHub Pages deployments run via a custom GitHub Actions workflow rather than the legacy <em>"deploy from branch"</em> mode. The workflow below builds on every push to <code>main</code>,
+                    refreshes <code>sitemap.xml</code>'s <code>&lt;lastmod&gt;</code> date automatically for SEO, and publishes through GitHub's official <code>deploy-pages</code> action.</p>
+
+                <p>Add <code>.github/workflows/deploy.yml</code>:</p>
+                <pre><code>name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update sitemap lastmod for deploy
+        run: |
+          if [ -f sitemap.xml ]; then
+            ISODATE=$(date +%Y-%m-%d)
+            sed -i "s/&lt;lastmod&gt;.*&lt;\/lastmod&gt;/&lt;lastmod&gt;${ISODATE}&lt;\/lastmod&gt;/g" sitemap.xml
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4</code></pre>
+
+                <p><strong>Then in the GitHub UI:</strong></p>
                 <ol>
-                    <li>Go to <strong>Repo &rarr; Settings &rarr; Pages</strong>.</li>
-                    <li>Under <strong>Build and deployment &rarr; Source</strong>, choose either <strong>Deploy from a branch</strong> (select <code>main</code> and <code>/ (root)</code>) or <strong>GitHub
-                            Actions</strong> if a workflow is used to build.</li>
+                    <li>Repo &rarr; <strong>Settings &rarr; Pages</strong>.</li>
+                    <li>Under <strong>Build and deployment &rarr; Source</strong>, select <strong>GitHub Actions</strong> (not <em>"Deploy from a branch"</em>). No other settings on this page need changing &mdash; the
+                        workflow handles everything.</li>
+                    <li>Push any commit to <code>main</code>, or trigger manually via <strong>Actions tab &rarr; "Deploy static site to GitHub Pages" &rarr; Run workflow</strong>. The workflow completes in ~30&ndash;60
+                        seconds.</li>
                     <li>Confirm the site loads at the URL shown in the Pages settings panel &mdash; <code>https://<span class="var">{GITHUB_USER}</span>.github.io</code> for user/org sites, or
                         <code>https://<span class="var">{GITHUB_USER}</span>.github.io/<span class="var">{REPO}</span></code> for project sites &mdash; <strong>before</strong> touching DNS.</li>
                 </ol>
+
+                <div class="callout good">
+                    <span class="ctitle">&#10003; sitemap.xml auto-refreshes on every deploy</span>
+                    <p>If you maintain a <code>sitemap.xml</code> at the repo root, the workflow rewrites every <code>&lt;lastmod&gt;</code> tag to today's date during the deploy step. Search engines pick up the
+                        freshness signal without manual editing &mdash; faster re-crawls, better SEO posture.</p>
+                </div>
+
+                <div class="callout warn">
+                    <span class="ctitle">&#9888; Step 7a chains off this workflow's <code>name:</code></span>
+                    <p>The cache-purge workflow in Step 7a fires when this deploy workflow completes, matching by <code>name:</code> field. If you rename this workflow from
+                        <code>"Deploy static site to GitHub Pages"</code> to anything else, you must update the <code>workflows:</code> array in <code>cloudflare-purge.yml</code> to match &mdash; otherwise the cache
+                        won't auto-purge on deploys and stale content will linger for up to 30 days.</p>
+                </div>
             </div>
         </section>
 
@@ -1950,14 +2015,14 @@ Browser TTL:       Respect origin   (or override to 4 hours)</code></pre>
 
                 <h3 style="font-family:'Instrument Serif',serif;font-size:24px;font-style:italic;color:var(--accent);margin:32px 0 12px">7a &middot; Cache purge on every deploy</h3>
 
-                <p>GitHub Pages rebuilds on every push, but Cloudflare keeps serving the cached version until edge TTL expires (we set 30 days). Without automated purge, content changes won't show up for a month. This
-                    workflow chains off the built-in <code>pages-build-deployment</code> workflow and purges automatically on every successful publish:</p>
+                <p>Every push triggers Step 2's <code>deploy.yml</code> workflow, but Cloudflare keeps serving the cached version until edge TTL expires (we set 30 days). Without automated purge, content changes won't
+                    show up for a month. This workflow chains off <code>deploy.yml</code> by name and purges automatically on every successful publish:</p>
 
                 <p>Add <code>.github/workflows/cloudflare-purge.yml</code>:</p>
                 <pre><code>name: Purge Cloudflare cache
 on:
   workflow_run:
-    workflows: ["pages-build-deployment"]
+    workflows: ["Deploy static site to GitHub Pages"]
     types: [completed]
 jobs:
   purge:
@@ -2340,17 +2405,27 @@ THE 8 STEPS
 4. Report the commit URL.
 5. End of Step 1 &mdash; request approval.
 
-&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; STEP 2 &mdash; Enable GitHub Pages &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
-1. Navigate to https://github.com/{GITHUB_USER}/{REPO}/settings/pages
-2. Read aloud the current state of "Build and deployment &rarr; Source".
-3. If Pages is not yet enabled:
-   &bull; Source: "Deploy from a branch"
-   &bull; Branch: "main"  /  Folder: "/ (root)"
-   &bull; Click Save.
-   (If the user mentions they use GitHub Actions for build, ask before changing source.)
-4. Wait until the page shows the live URL (https://{GITHUB_USER}.github.io/&hellip; or &hellip;/{REPO}). Report it.
-5. Open that URL in a new tab and confirm the site loads.
-6. End of Step 2 &mdash; request approval.
+&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; STEP 2 &mdash; Commit deploy.yml + enable Pages via GitHub Actions &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
+1. Check whether .github/workflows/deploy.yml already exists in the repo.
+   Navigate to https://github.com/{GITHUB_USER}/{REPO}/tree/main/.github/workflows
+   &bull; If deploy.yml exists &rarr; show me the contents (especially the `name:` field) and
+     ask if I want to keep or replace it.
+   &bull; If it doesn't exist &rarr; instruct me to copy the deploy.yml YAML from the
+     runbook (Step 2 code block), commit it at path .github/workflows/deploy.yml with
+     message "Add Pages deploy workflow", confirm when done.
+2. Navigate to https://github.com/{GITHUB_USER}/{REPO}/settings/pages
+3. Read aloud the current state of "Build and deployment &rarr; Source".
+4. If Source is not already "GitHub Actions":
+   &bull; Change Source to "GitHub Actions" (NOT "Deploy from a branch")
+   &bull; Save (the UI may auto-save with no Save button &mdash; verify the change persists)
+5. Trigger the first deploy. Two options &mdash; pick one with me:
+   &bull; Push any small change to main (edit README, etc.), OR
+   &bull; Navigate to https://github.com/{GITHUB_USER}/{REPO}/actions/workflows/deploy.yml
+     and click "Run workflow"
+6. Watch the Actions tab. The "Deploy static site to GitHub Pages" workflow should
+   complete in ~30-60 seconds. Report the page_url shown in the deployment output.
+7. Open the github.io URL in a new tab and confirm the site loads.
+8. End of Step 2 &mdash; request approval.
 
 &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; STEP 3 &mdash; Configure Cloudflare DNS (temporarily DNS-only) &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 Context: every record stays gray-cloud / DNS-only for now. Step 5 flips them to orange-cloud / Proxied once GitHub has issued its Let's Encrypt cert. If the proxy is on now, GitHub's DNS check fails (it sees Cloudflare's IPs instead of 185.199.x.153) and cert issuance never starts.
@@ -2513,10 +2588,11 @@ Procedure (this step has 7 sub-tasks; do them in order):
 7.7 Confirm the deploy &rarr; purge chain works
   Tell me to make a trivial content change to the repo (edit a heading, fix a typo)
   and push to the default branch. Then watch the Actions tab. We should see:
-    &bull; "pages-build-deployment" run and succeed
+    &bull; "Deploy static site to GitHub Pages" run and succeed
     &bull; "Purge Cloudflare cache" run a few seconds later and succeed
   If only the first runs, the cache-purge workflow_run trigger isn't wired correctly &mdash;
-  re-check the workflows: ["pages-build-deployment"] line in the YAML.
+  re-check the workflows: ["Deploy static site to GitHub Pages"] line in
+  cloudflare-purge.yml. The name string must match deploy.yml's `name:` field exactly.
 
 7.8 Commit Workflow C &mdash; heartbeat
   a. Same repo. Check whether .github/workflows/heartbeat.yml exists.
@@ -2544,7 +2620,7 @@ End of Step 7 &mdash; request approval.
 4. Walk me through testing the deploy &rarr; purge cycle:
    &bull; Make a small visible content change in the repo (e.g. edit a heading)
    &bull; Commit and push to main
-   &bull; Watch the Actions tab &mdash; both "pages-build-deployment" and "Purge Cloudflare cache" should run, the second after the first succeeds
+   &bull; Watch the Actions tab &mdash; both "Deploy static site to GitHub Pages" and "Purge Cloudflare cache" should run, the second after the first succeeds
    &bull; After both succeed, reload {DOMAIN} &mdash; the change should be visible (browser cache may need a hard reload)
 5. Final summary: report all 8 step states (done/issue) and any follow-ups needed.
 
@@ -2636,7 +2712,8 @@ Begin by asking me for the three variables.</code></pre>
             <span class="step-tag">Go-Live</span>
             <h3>Single-flow checklist</h3>
             <label><input type="checkbox"><span>Repo created and contains <code>CNAME</code> file with <span class="var">{DOMAIN}</span></span></label>
-            <label><input type="checkbox"><span>GitHub Pages source configured, <code>github.io</code> URL works</span></label>
+            <label><input type="checkbox"><span><code>.github/workflows/deploy.yml</code> committed and Pages source set to <strong>GitHub Actions</strong></span></label>
+            <label><input type="checkbox"><span>First deploy completes successfully &mdash; <code>github.io</code> URL works</span></label>
             <label><input type="checkbox"><span>Four apex A records (and IPv6 if used) added in Cloudflare, set to <code>DNS only</code></span></label>
             <label><input type="checkbox"><span><code>www</code> CNAME present, set to <code>DNS only</code></span></label>
             <label><input type="checkbox"><span>Conflicting old DNS records cleaned up</span></label>
