@@ -1588,7 +1588,7 @@
             <h1>Static site go-live.<br>GitHub Pages,<br>Cloudflare DNS,<br>and nothing in between.</h1>
             <p class="lede">The <strong>minimal procedure</strong> for taking a low-traffic static website live on GitHub Pages, with Cloudflare hosting DNS records only. <strong>Five steps</strong> from
                 <code>git init</code> to globally-served HTTPS. GitHub provisions and auto-renews the Let's Encrypt certificate &mdash; no proxy in the way, so renewal just works. No edge cache, no API tokens, no
-                workflows to maintain.</p>
+                recurring workflows.</p>
             <div class="meta-grid">
                 <div class="meta-cell">
                     <div class="k">Audience</div>
@@ -1710,8 +1710,8 @@
                 <div class="stat-meta">Total go-live steps</div>
                 <ul>
                     <li>From <code>git init</code> to verified HTTPS, <strong>end-to-end</strong></li>
-                    <li>Plan B requires <strong>8 steps and 4 workflow files</strong>; Plan A drops both tiers</li>
-                    <li><code>deploy.yml</code> is <strong>optional</strong>, only if you want sitemap refresh</li>
+                    <li>Plan B uses <strong>8 steps and 4 workflows</strong>; Plan A is <strong>5 steps and 1 workflow</strong></li>
+                    <li>Shares <code>deploy.yml</code> with Plan B &mdash; same proven workflow, with auto sitemap refresh</li>
                     <li>Re-readable in 10 minutes; executable in an afternoon</li>
                 </ul>
             </div>
@@ -1719,11 +1719,11 @@
                 <span class="tag">Maintenance</span>
                 <h3>Zero recurring tasks</h3>
                 <div class="stat">0</div>
-                <div class="stat-meta">Workflows to maintain</div>
+                <div class="stat-meta">Recurring tasks</div>
                 <ul>
-                    <li><strong>No cache purge</strong> — no edge cache to invalidate</li>
-                    <li><strong>No cert renewal trap</strong> — GitHub auto-renews freely (proxy off)</li>
-                    <li><strong>No heartbeat</strong> — no scheduled jobs to keep alive</li>
+                    <li><strong><code>deploy.yml</code> is event-driven</strong> &mdash; runs on push, not on a schedule; nothing to keep alive</li>
+                    <li><strong>No cache purge</strong> &mdash; no edge cache to invalidate</li>
+                    <li><strong>No cert renewal trap</strong> &mdash; GitHub auto-renews Let's Encrypt freely (proxy off)</li>
                     <li><strong>No Cloudflare API tokens</strong> to rotate, audit, or expire</li>
                 </ul>
             </div>
@@ -1763,25 +1763,79 @@
         <section class="step">
             <div class="step-num">02</div>
             <div>
-                <span class="step-tag">GitHub Pages</span>
-                <h2>Enable GitHub Pages (Deploy from branch)</h2>
+                <span class="step-tag">GitHub Pages &middot; Custom Deploy</span>
+                <h2>Commit the deploy workflow and enable Pages via GitHub Actions</h2>
+                <p>Modern GitHub Pages deployments run via a custom GitHub Actions workflow rather than the legacy <em>"deploy from branch"</em> mode. The workflow below builds on every push to <code>main</code>,
+                    refreshes <code>sitemap.xml</code>'s <code>&lt;lastmod&gt;</code> date automatically for SEO, and publishes through GitHub's official <code>deploy-pages</code> action. This is the same
+                    <code>deploy.yml</code> used by Plan B &mdash; one file, identical between plans, validated in production.</p>
+
+                <p>Add <code>.github/workflows/deploy.yml</code>:</p>
+                <pre><code>name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update sitemap lastmod for deploy
+        run: |
+          if [ -f sitemap.xml ]; then
+            ISODATE=$(date +%Y-%m-%d)
+            sed -i "s/&lt;lastmod&gt;.*&lt;\/lastmod&gt;/&lt;lastmod&gt;${ISODATE}&lt;\/lastmod&gt;/g" sitemap.xml
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4</code></pre>
+
+                <p><strong>Then in the GitHub UI:</strong></p>
                 <ol>
-                    <li>Go to <strong>Repo &rarr; Settings &rarr; Pages</strong>.</li>
-                    <li>Under <strong>Build and deployment &rarr; Source</strong>, select <strong>Deploy from a branch</strong> &mdash; the simplest setup, no workflow file required.
-                        <ul>
-                            <li>Branch: <code>main</code></li>
-                            <li>Folder: <code>/ (root)</code></li>
-                        </ul>
-                        Click <strong>Save</strong>.
-                    </li>
-                    <li>Wait ~30&ndash;60 seconds for the first build, then confirm the site loads at the URL shown in the Pages settings panel &mdash;
-                        <code>https://<span class="var">{GITHUB_USER}</span>.github.io</code> for user/org sites, or <code>https://<span class="var">{GITHUB_USER}</span>.github.io/<span class="var">{REPO}</span></code>
-                        for project sites &mdash; <strong>before</strong> touching DNS.</li>
+                    <li>Repo &rarr; <strong>Settings &rarr; Pages</strong>.</li>
+                    <li>Under <strong>Build and deployment &rarr; Source</strong>, select <strong>GitHub Actions</strong> (not <em>"Deploy from a branch"</em>). No other settings on this page need changing &mdash; the
+                        workflow handles everything.</li>
+                    <li>Push any commit to <code>main</code>, or trigger manually via <strong>Actions tab &rarr; "Deploy static site to GitHub Pages" &rarr; Run workflow</strong>. The workflow completes in ~30&ndash;60
+                        seconds.</li>
+                    <li>Confirm the site loads at the URL shown in the Pages settings panel &mdash; <code>https://<span class="var">{GITHUB_USER}</span>.github.io</code> for user/org sites, or
+                        <code>https://<span class="var">{GITHUB_USER}</span>.github.io/<span class="var">{REPO}</span></code> for project sites &mdash; <strong>before</strong> touching DNS.</li>
                 </ol>
+
                 <div class="callout good">
-                    <span class="ctitle">&#10003; If you want sitemap.xml refresh on each deploy</span>
-                    <p>Switch the Source to <strong>GitHub Actions</strong> and add the <code>deploy.yml</code> from Plan B's Step 2 (which rewrites <code>&lt;lastmod&gt;</code> dates on every deploy). Otherwise
-                        <em>Deploy from a branch</em> is the simpler default and works fine.</p>
+                    <span class="ctitle">&#10003; sitemap.xml auto-refreshes on every deploy</span>
+                    <p>If you maintain a <code>sitemap.xml</code> at the repo root, the workflow rewrites every <code>&lt;lastmod&gt;</code> tag to today's date during the deploy step. Search engines pick up the
+                        freshness signal without manual editing &mdash; faster re-crawls, better SEO posture.</p>
+                </div>
+
+                <div class="callout good">
+                    <span class="ctitle">&#10003; Event-driven, not recurring</span>
+                    <p>Unlike Plan B's cert-renewal, heartbeat, and cache-purge workflows (which run on schedules), <code>deploy.yml</code> only fires when you push to <code>main</code>. There's no cron job to keep
+                        alive, no scheduled task that GitHub can auto-disable. It's a single workflow file that just sits there until a push triggers it.</p>
                 </div>
             </div>
         </section>
@@ -1983,16 +2037,27 @@ THE 5 STEPS
 4. Report the commit URL.
 5. End of Step 1 &mdash; request approval.
 
-&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; STEP 2 &mdash; Enable GitHub Pages (Deploy from branch) &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
-1. Navigate to https://github.com/{GITHUB_USER}/{REPO}/settings/pages
-2. Read aloud the current Build and deployment &rarr; Source state.
-3. If Pages is not yet enabled, configure:
-   &bull; Source: "Deploy from a branch"
-   &bull; Branch: "main"  /  Folder: "/ (root)"
-   &bull; Click Save.
-4. Wait until the page shows the live URL (https://{GITHUB_USER}.github.io/... or .../{REPO}). Report it.
-5. Open that URL in a new tab and confirm the site loads.
-6. End of Step 2 &mdash; request approval.
+&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; STEP 2 &mdash; Commit deploy.yml + enable Pages via GitHub Actions &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
+1. Check whether .github/workflows/deploy.yml already exists in the repo.
+   Navigate to https://github.com/{GITHUB_USER}/{REPO}/tree/main/.github/workflows
+   &bull; If deploy.yml exists &rarr; show me the contents (especially the `name:` field) and
+     ask if I want to keep or replace it.
+   &bull; If it doesn't exist &rarr; instruct me to copy the deploy.yml YAML from the
+     runbook (Step 2 code block), commit it at path .github/workflows/deploy.yml with
+     message "Add Pages deploy workflow", confirm when done.
+2. Navigate to https://github.com/{GITHUB_USER}/{REPO}/settings/pages
+3. Read aloud the current state of "Build and deployment &rarr; Source".
+4. If Source is not already "GitHub Actions":
+   &bull; Change Source to "GitHub Actions" (NOT "Deploy from a branch")
+   &bull; Save (the UI may auto-save with no Save button &mdash; verify the change persists)
+5. Trigger the first deploy. Two options &mdash; pick one with me:
+   &bull; Push any small change to main (edit README, etc.), OR
+   &bull; Navigate to https://github.com/{GITHUB_USER}/{REPO}/actions/workflows/deploy.yml
+     and click "Run workflow"
+6. Watch the Actions tab. The "Deploy static site to GitHub Pages" workflow should
+   complete in ~30-60 seconds. Report the page_url shown in the deployment output.
+7. Open the github.io URL in a new tab and confirm the site loads.
+8. End of Step 2 &mdash; request approval.
 
 &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; STEP 3 &mdash; Configure Cloudflare DNS (DNS-only, permanently) &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 Context: every record stays gray-cloud / DNS-only. PERMANENTLY. There is no later step that flips them to proxied. Plan A's whole point is no proxy.
@@ -2128,7 +2193,8 @@ Begin by asking me for the three variables.</code></pre>
             <span class="step-tag">Go-Live</span>
             <h3>Minimal-flow checklist</h3>
             <label><input type="checkbox"><span>Repo created and contains <code>CNAME</code> file with <span class="var">{DOMAIN}</span></span></label>
-            <label><input type="checkbox"><span>GitHub Pages enabled (Source: <em>Deploy from a branch</em>), <code>github.io</code> URL works</span></label>
+            <label><input type="checkbox"><span><code>.github/workflows/deploy.yml</code> committed and Pages source set to <strong>GitHub Actions</strong></span></label>
+            <label><input type="checkbox"><span>First deploy completes successfully &mdash; <code>github.io</code> URL works</span></label>
             <label><input type="checkbox"><span>Four apex A records (and IPv6 if used) added in Cloudflare, set to <code>DNS only</code></span></label>
             <label><input type="checkbox"><span><code>www</code> CNAME present, set to <code>DNS only</code></span></label>
             <label><input type="checkbox"><span>Conflicting old DNS records cleaned up</span></label>
