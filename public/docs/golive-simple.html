@@ -1611,16 +1611,27 @@
 
         <!-- VARIABLES -->
         <div class="vars">
-            <span class="label">⌗ Variables</span>
-            <h3>Substitute these in every command</h3>
-            <p>Throughout this runbook, the highlighted placeholders below appear in code, file contents, and Cloudflare/GitHub configuration. Replace each with your project's actual value before executing.</p>
+            <span class="label">⌗ Inputs</span>
+            <h3>Three things to paste &mdash; the runbook derives the rest</h3>
+            <p>Before starting, gather these three values from your browser. Comet (or any operator) will parse the URLs to extract everything else automatically.</p>
             <dl>
+                <dt><span class="var">{GITHUB_URL}</span></dt>
+                <dd>URL of the GitHub repo &mdash; any page on it works (homepage, <code>/settings/pages</code>, <code>/actions</code>, etc.). <em>e.g.
+                        <code>https://github.com/propagetech/deprosupplychain.com/settings/pages</code></em></dd>
+                <dt><span class="var">{CLOUDFLARE_URL}</span></dt>
+                <dd>URL of the Cloudflare zone page for this domain. <em>e.g. <code>https://dash.cloudflare.com/9a13adf00a7720885dcb8e53dc4204f8/deprosupplychain.com</code></em></dd>
                 <dt><span class="var">{DOMAIN}</span></dt>
-                <dd>The apex domain you're publishing — <em>e.g. example.com, acme-careers.io</em></dd>
+                <dd>The apex domain you're publishing. <em>e.g. <code>deprosupplychain.com</code></em></dd>
+            </dl>
+            <p style="margin-top:28px;color:var(--paper-mute);font-size:14px"><strong style="color:var(--paper);font-weight:500">Derived automatically</strong> from the URLs above &mdash; you'll see these placeholders
+                used throughout the steps:</p>
+            <dl>
                 <dt><span class="var">{GITHUB_USER}</span></dt>
-                <dd>The GitHub user or organisation that owns the repo — <em>e.g. acme-corp</em></dd>
+                <dd>2nd path segment of <code>{GITHUB_URL}</code> &mdash; <em>e.g. <code>propagetech</code></em></dd>
                 <dt><span class="var">{REPO}</span></dt>
-                <dd>The repository name holding the static site source — <em>e.g. acme-marketing-site</em></dd>
+                <dd>3rd path segment of <code>{GITHUB_URL}</code> &mdash; <em>e.g. <code>deprosupplychain.com</code></em></dd>
+                <dt><span class="var">{CF_ACCOUNT_ID}</span></dt>
+                <dd>2nd path segment of <code>{CLOUDFLARE_URL}</code> &mdash; <em>e.g. <code>9a13adf00a7720885dcb8e53dc4204f8</code></em></dd>
             </dl>
         </div>
 
@@ -1910,12 +1921,40 @@ If any precondition is not met, STOP and tell me. Do not proceed.
 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
 VARIABLES &mdash; ASK ME FOR THESE FIRST
 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
-Ask for these in a single message and wait for my reply:
-  &bull; {DOMAIN}        the apex domain (e.g. example.com)
-  &bull; {GITHUB_USER}   the GitHub user or org owning the repo
-  &bull; {REPO}          the repo name containing the static site
+Ask me for these 3 inputs in a single message, then wait for my reply:
 
-Echo values back and confirm before Step 1.
+  &bull; {GITHUB_URL}     The URL of the GitHub repo. Any page on the repo works
+                      (homepage, /settings/pages, /actions, /tree/main, etc.).
+                      Example: https://github.com/propagetech/deprosupplychain.com/settings/pages
+
+  &bull; {CLOUDFLARE_URL} The URL of the Cloudflare zone page for this domain.
+                      Example: https://dash.cloudflare.com/9a13adf00a7720885dcb8e53dc4204f8/deprosupplychain.com
+
+  &bull; {DOMAIN}         The apex domain.
+                      Example: deprosupplychain.com
+
+&#9472;&#9472;&#9472; PARSE the URLs to derive these variables &#9472;&#9472;&#9472;
+  &bull; {GITHUB_USER}    = 2nd path segment of {GITHUB_URL}
+  &bull; {REPO}           = 3rd path segment of {GITHUB_URL}
+  &bull; {CF_ACCOUNT_ID}  = 2nd path segment of {CLOUDFLARE_URL}
+  &bull; {CF_ZONE_NAME}   = 3rd path segment of {CLOUDFLARE_URL}
+
+&#9472;&#9472;&#9472; VALIDATE before proceeding &#9472;&#9472;&#9472;
+  &bull; {DOMAIN} should match {CF_ZONE_NAME}. If they differ, STOP and ask me which is canonical.
+  &bull; {REPO} often matches {DOMAIN} for static-site projects, but doesn't have to. Don't enforce.
+  &bull; If {GITHUB_URL} or {CLOUDFLARE_URL} doesn't match the expected pattern, STOP and show me what you parsed so I can correct.
+
+&#9472;&#9472;&#9472; ECHO ALL parsed values back to me before Step 1, in this exact format &#9472;&#9472;&#9472;
+
+  I parsed:
+    &bull; GitHub user:        propagetech
+    &bull; Repo:               deprosupplychain.com
+    &bull; Cloudflare account: 9a13adf00a7720885dcb8e53dc4204f8
+    &bull; Cloudflare zone:    deprosupplychain.com
+    &bull; Domain:             deprosupplychain.com
+  Correct? Reply "yes" to start Step 1.
+
+Wait for my "yes" before doing anything else.
 
 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
 EXECUTION RULES
