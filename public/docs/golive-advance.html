@@ -2417,9 +2417,18 @@ Ask me for these 3 inputs in a single message, then wait for my reply:
     &bull; Cloudflare account: 9a13adf00a7720885dcb8e53dc4204f8
     &bull; Cloudflare zone:    deprosupplychain.com
     &bull; Domain:             deprosupplychain.com
-  Correct? Reply "yes" to start Step 1.
+  Reply with your preferred mode to confirm and start:
+    &bull; <b>manual</b> &mdash; I pause for your approval after each of the 8 steps.
+              Recommended for first-time operators, dry runs, or production sites
+              where you want full visibility into every action.
+    &bull; <b>auto</b>   &mdash; I execute the 8 steps continuously, pausing only on
+              failures, destructive actions, or external verifications (cert
+              provisioning, DNS propagation). You can say "pause" at any time
+              during auto execution to switch back to manual for the rest.
 
-Wait for my "yes" before doing anything else.
+  Or reply 'no' if anything I parsed looks wrong.
+
+Wait for "manual", "auto", or "no" before doing anything else.
 
 NOTE: Plan B also requires Cloudflare API tokens, the CF_ZONE_ID, and the
 CUSTOM_DOMAIN repo variable for the workflows in Step 7. Those are created
@@ -2427,20 +2436,73 @@ WITHIN their respective steps (you'll guide me through token creation in
 Step 7a, secret setup in Step 7b, etc.) &mdash; not at the start.
 
 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
-EXECUTION RULES &mdash; FOLLOW STRICTLY
-&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
-A. Do EXACTLY ONE step at a time. Never batch steps.
-B. At the start of each step, state: "Starting Step N of 8 &mdash; &lt;title&gt;".
-C. At the end of each step, summarise what you did, paste the final URL you're on, and ask: "Step N complete. Proceed to Step N+1? (yes / no / pause)". Wait for my reply.
-D. Never assume. If a UI element, button, or setting is not where you expect, describe what you see on screen and ask me before clicking anything.
-E. Before any DESTRUCTIVE action (deleting DNS records, overwriting settings, removing rules), list exactly what will be deleted/changed and ask me to confirm with the word "confirm".
-F. Never navigate away from a tab without telling me first.
-G. If a step requires waiting (e.g. cert provisioning), set a clear expectation, do not poll aggressively, and let me tell you when to re-check.
-H. Treat fixed values as literals &mdash; type exactly, no autocorrect:
-   &bull; GitHub Pages IPv4: 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153
-   &bull; GitHub Pages IPv6: 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153, 2606:50c0:8003::153
-I. If something fails or behaves unexpectedly, STOP, capture the error or screenshot description, and ask me how to proceed. Do not retry silently.
-J. Never disclose, paste, or screenshot session cookies, tokens, or 2FA codes into chat.
+EXECUTION RULES &mdash; APPLY BASED ON MODE
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+&#9472;&#9472;&#9472; COMMON RULES (apply in BOTH modes &mdash; never violated) &#9472;&#9472;&#9472;
+
+  C1. Treat fixed values as literals (do NOT substitute or autocorrect):
+      GitHub Pages IPv4: 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153
+      GitHub Pages IPv6: 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153, 2606:50c0:8003::153
+
+  C2. SAFETY GATE &mdash; before any DESTRUCTIVE action (deleting DNS records,
+      deleting Cloudflare Page Rules / Redirect Rules / Configuration Rules,
+      overwriting Pages settings, revoking API tokens), ALWAYS:
+        &bull; List exactly what will be deleted/modified
+        &bull; Wait for explicit "confirm" reply
+      Auto mode does NOT skip this gate.
+
+  C3. SAFETY GATE &mdash; on ANY failure (network error, unexpected UI state,
+      validation failure, ambiguous behavior, missing button), STOP immediately,
+      describe what you observed (or paste a screenshot description), and ask
+      for guidance. Do NOT retry silently.
+
+  C4. SAFETY GATE &mdash; for operations requiring EXTERNAL verification
+      (Let's Encrypt cert provisioning, DNS propagation, cache purge, workflow
+      runs in Actions tab): tell me what to verify externally, then WAIT for
+      my "verified" or "ready" reply before continuing. Do not poll aggressively.
+
+  C5. Never disclose, paste, or screenshot session cookies, tokens, secrets, or
+      2FA codes into chat. Never navigate away from a tab without telling me first.
+
+  C6. If I say "pause" at ANY point, immediately stop and wait for my next
+      instruction. Works in both modes.
+
+  C7. Never assume. If a UI element, button, or setting is not where you expect,
+      describe what you see on screen and ask me before clicking anything.
+
+
+&#9472;&#9472;&#9472; MANUAL MODE rules &#9472;&#9472;&#9472;
+
+  M1. Start each step: "Starting Step N of 8 &mdash; &lt;title&gt;".
+  M2. Narrate actions as you execute the step body.
+  M3. End each step with: summary, paste final URL, then ask
+      "Step N complete. Proceed to Step N+1? (yes / no / pause)".
+      Wait for my reply.
+
+
+&#9472;&#9472;&#9472; AUTO MODE rules &#9472;&#9472;&#9472;
+
+  A1. Execute steps continuously &mdash; no inter-step approval required.
+  A2. Report each completed step in one of these formats:
+        &#10003; Step N: &lt;title&gt; &mdash; &lt;one-line success summary&gt;
+        &#9208; Step N: &lt;title&gt; &mdash; PAUSED &mdash; &lt;reason; what I need from you&gt;
+        &#10007; Step N: &lt;title&gt; &mdash; FAILED &mdash; &lt;reason; suggested next action&gt;
+  A3. Rules C1-C7 apply unchanged. Auto mode is faster, not less careful.
+      The most common "PAUSED" reasons are safety-gate triggers (C2-C4) and
+      operations that require the human to act in another tab (committing
+      workflow YAMLs via GitHub web UI, creating Cloudflare API tokens, adding
+      repo secrets/variables, manually running workflows from the Actions tab).
+  A4. Step 7 in Plan B has multiple sub-tasks (7.1 token creation, 7.2 secret
+      setup, 7.3 commit cloudflare-purge.yml, 7.4 commit cert-renewal.yml, etc.).
+      Treat each sub-task as a checkpoint and report &#10003;/&#9208;/&#10007; per sub-task,
+      not just per top-level step.
+  A5. After ALL steps complete (or after a terminal FAILED), produce a final
+      summary block:
+        &bull; Status of every step and sub-task (&#10003; / &#9208; / &#10007;)
+        &bull; Final live URL
+        &bull; Confirmation that deploy &rarr; cache-purge chain works (Step 7.7)
+        &bull; Any follow-ups required
 
 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
 THE 8 STEPS
