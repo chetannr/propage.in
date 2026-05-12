@@ -1791,6 +1791,18 @@
                         the 90-day mark fails because Let's Encrypt can't reach origin. Plan A sidesteps this entirely by keeping the proxy off. The trade-off: no edge caching, no DDoS shield, no HTTP/3.</p>
                 </div>
 
+                <div class="callout warn">
+                    <span class="ctitle">&#9888; Pre-flight: audit existing Cloudflare Rules</span>
+                    <p>Before adding any DNS records, navigate to Cloudflare &rarr; <strong>Rules &rarr; Overview</strong> and check three panels:</p>
+                    <ul>
+                        <li><strong>Page Rules</strong> (being phased out, but still active if present)</li>
+                        <li><strong>Redirect Rules</strong> (the modern replacement)</li>
+                        <li><strong>Configuration Rules</strong></li>
+                    </ul>
+                    <p>Delete anything that targets <code>@</code>, <code>www</code>, or the apex/subdomain combination unless you intentionally want to keep it. Legacy rules from a prior setup are invisible from the DNS
+                        panel and will silently override your new configuration &mdash; the classic symptom is <code>ERR_TOO_MANY_REDIRECTS</code> on apex or www after DNS propagates.</p>
+                </div>
+
                 <p><strong>1. Clean up first.</strong> Delete any existing A / AAAA / CNAME records on <code>@</code> or <code>www</code> that would conflict.</p>
 
                 <p><strong>2. Add the apex A records</strong> &mdash; four of them, all <code>DNS only</code>:</p>
@@ -2059,6 +2071,10 @@ Begin by asking me for the three variables.</code></pre>
             <ul>
                 <li><strong>Orange cloud on ANY record</strong> &rarr; GitHub's DNS check sees Cloudflare's edge IPs instead of <code>185.199.x.153</code> and rejects cert provisioning. <em>Enforce HTTPS</em> stays
                     disabled. In Plan A, the gray cloud is permanent &mdash; there is no later step that flips it.</li>
+                <li><strong>Legacy Page Rules / Redirect Rules</strong> &rarr; pre-existing Cloudflare rules from a prior setup survive across DNS changes, cert reissuance, and proxy flips. They're invisible from the DNS
+                    panel where this runbook spends most of its time, but they still execute. Symptom: <code>ERR_TOO_MANY_REDIRECTS</code> on apex or www despite a correct DNS + cert + Enforce HTTPS setup. Fix:
+                    <strong>Rules &rarr; Overview</strong>, audit Page Rules + Redirect Rules + Configuration Rules, delete anything targeting apex or www unless intentional. The Step 3 pre-flight callout catches this
+                    before it bites.</li>
                 <li><strong>Missing CNAME file</strong> &rarr; GitHub may overwrite the custom domain setting on the next deploy. Always commit a <code>CNAME</code> file at the repo root with
                     <code><span class="var">{DOMAIN}</span></code> as the sole content.</li>
                 <li><strong>Lowercase <code>cname</code> filename</strong> &rarr; GitHub Pages expects the file to be named <code>CNAME</code> exactly (uppercase, no extension). Case matters on Linux runners.</li>

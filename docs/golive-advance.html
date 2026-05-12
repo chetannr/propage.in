@@ -1838,8 +1838,7 @@ jobs:
                     <li>Push any commit to <code>main</code>, or trigger manually via <strong>Actions tab &rarr; "Deploy static site to GitHub Pages" &rarr; Run workflow</strong>. The workflow completes in ~30&ndash;60
                         seconds.</li>
                     <li>Confirm the site loads at the URL shown in the Pages settings panel &mdash; <code>https://<span class="var">{GITHUB_USER}</span>.github.io</code> for user/org sites, or
-                        <code>https://<span class="var">{GITHUB_USER}</span>.github.io/<span class="var">{REPO}</span></code> for project sites &mdash; <strong>before</strong> touching DNS.
-                    </li>
+                        <code>https://<span class="var">{GITHUB_USER}</span>.github.io/<span class="var">{REPO}</span></code> for project sites &mdash; <strong>before</strong> touching DNS.</li>
                 </ol>
 
                 <div class="callout good">
@@ -1852,8 +1851,7 @@ jobs:
                     <span class="ctitle">&#9888; Step 7a chains off this workflow's <code>name:</code></span>
                     <p>The cache-purge workflow in Step 7a fires when this deploy workflow completes, matching by <code>name:</code> field. If you rename this workflow from
                         <code>"Deploy static site to GitHub Pages"</code> to anything else, you must update the <code>workflows:</code> array in <code>cloudflare-purge.yml</code> to match &mdash; otherwise the cache
-                        won't auto-purge on deploys and stale content will linger for up to 30 days.
-                    </p>
+                        won't auto-purge on deploys and stale content will linger for up to 30 days.</p>
                 </div>
             </div>
         </section>
@@ -1866,13 +1864,24 @@ jobs:
                 <h2>Configure DNS records (temporarily DNS-only)</h2>
                 <p>In Cloudflare &rarr; zone <code><span class="var">{DOMAIN}</span></code> &rarr; <strong>DNS &rarr; Records</strong>, the records below must end up being the <em>only</em> A / AAAA / CNAME records on
                     <code>@</code> and <code>www</code>. Each one's <strong>Proxy status</strong> must be <code>DNS only</code> (gray cloud) for now &mdash; Step 5 flips them to <code>Proxied</code> once GitHub has
-                    issued its Let's Encrypt cert.
-                </p>
+                    issued its Let's Encrypt cert.</p>
 
                 <div class="callout warn">
                     <span class="ctitle">&#9888; Why DNS-only first</span>
                     <p>GitHub's DNS check verifies the apex resolves <em>directly</em> to GitHub Pages' IPs (<code>185.199.108&ndash;111.153</code>). With Cloudflare's proxy on, the apex resolves to Cloudflare's edge IPs
                         (<code>104.x.x.x</code>) instead &mdash; GitHub's check fails and cert issuance never starts. Step 5 turns the proxy on intentionally once the cert is in place.</p>
+                </div>
+
+                <div class="callout warn">
+                    <span class="ctitle">&#9888; Pre-flight: audit existing Cloudflare Rules</span>
+                    <p>Before adding any DNS records, navigate to Cloudflare &rarr; <strong>Rules &rarr; Overview</strong> and check three panels:</p>
+                    <ul>
+                        <li><strong>Page Rules</strong> (being phased out, but still active if present)</li>
+                        <li><strong>Redirect Rules</strong> (the modern replacement)</li>
+                        <li><strong>Configuration Rules</strong></li>
+                    </ul>
+                    <p>Delete anything that targets <code>@</code>, <code>www</code>, or the apex/subdomain combination unless you intentionally want to keep it. Legacy rules from a prior setup are invisible from the DNS
+                        panel and will silently override your new configuration &mdash; the classic symptom is <code>ERR_TOO_MANY_REDIRECTS</code> on apex or www after DNS propagates.</p>
                 </div>
 
                 <p><strong>1. Clean up first.</strong> Delete any existing A / AAAA / CNAME records on <code>@</code> or <code>www</code> that would conflict with what's added below. Doing this <em>before</em> adding new
@@ -1913,8 +1922,7 @@ dig +short www.{DOMAIN}</code></pre>
                     <li>GitHub provisions a TLS cert via Let's Encrypt. Usually a few minutes; the docs allow up to <strong>24 hours</strong>. The <strong>Enforce HTTPS</strong> checkbox stays disabled with a status
                         message until ready.</li>
                     <li>Once the checkbox activates, tick <strong>Enforce HTTPS</strong>. GitHub now redirects all <code>http://</code> requests to <code>https://</code>, and redirects whichever of <code>apex</code> or
-                        <code>www</code> is <em>not</em> set as the custom domain to the one that is (server-side, at GitHub).
-                    </li>
+                        <code>www</code> is <em>not</em> set as the custom domain to the one that is (server-side, at GitHub).</li>
                     <li>Quick verify from the terminal:
                         <pre><code>curl -vI https://{DOMAIN} 2&gt;&amp;1 | grep -iE "issuer|subject"</code></pre>
                         Issuer should be <strong>Let's Encrypt</strong> at this stage. After Step 5 it will become Cloudflare Inc &mdash; that's the goal. (Using <code>grep -iE</code> for portability across GNU and BSD
@@ -1980,8 +1988,7 @@ dig +short www.{DOMAIN}</code></pre>
                     <span class="ctitle">&#9888; Auto Minify is gone</span>
                     <p>Cloudflare deprecated Auto Minify on <strong>August 5, 2024</strong>. The toggles for HTML/CSS/JS minification no longer appear in the dashboard. Minify at the <strong>build step</strong> instead
                         &mdash; every modern static-site framework (Astro, Hugo, Eleventy, Next.js export, Vite, etc.) does this by default. For raw HTML/CSS/JS sites, add <code>html-minifier-terser</code>,
-                        <code>esbuild</code>, or similar to the build script.
-                    </p>
+                        <code>esbuild</code>, or similar to the build script.</p>
                 </div>
                 <p><strong>Network:</strong></p>
                 <ul>
@@ -2219,8 +2226,7 @@ jobs:
                 <p><strong>Additional setup beyond 7a:</strong></p>
                 <ul>
                     <li>Repo <strong>variable</strong> (not secret) <code>CUSTOM_DOMAIN</code> &mdash; Settings &rarr; Secrets and variables &rarr; Actions &rarr; <em>Variables</em> tab: set to your apex domain (e.g.
-                        <code>example.com</code>)
-                    </li>
+                        <code>example.com</code>)</li>
                     <li>New repo secret <code>CF_API_TOKEN_DNS</code> &mdash; a <strong>second</strong> Cloudflare token, separate from <code>CF_API_TOKEN</code>:
                         <ul>
                             <li>Cloudflare &rarr; My Profile &rarr; API Tokens &rarr; Create Token</li>
@@ -2241,8 +2247,7 @@ jobs:
                 <div class="callout good">
                     <span class="ctitle">&#10003; Idempotent and crash-safe</span>
                     <p>State lives in Cloudflare itself (proxy on/off). The workflow is stateless &mdash; safe to retry, safe to run manually, and self-recovers if any single run fails. The job uses
-                        <code>concurrency</code> to prevent overlapping runs from racing each other.
-                    </p>
+                        <code>concurrency</code> to prevent overlapping runs from racing each other.</p>
                 </div>
 
                 <div class="callout warn">
@@ -2642,8 +2647,7 @@ COMMON PITFALLS &mdash; WATCH FOR THESE
 
 Begin by asking me for the three variables.</code></pre>
                 <p class="hint"><strong>Tip:</strong> open this file's raw HTML or use the &ldquo;Copy&rdquo; button to grab the prompt without runbook formatting. Substitute <code>{DOMAIN}</code>,
-                    <code>{GITHUB_USER}</code>, and <code>{REPO}</code> when Comet asks for them &mdash; not in the prompt itself.
-                </p>
+                    <code>{GITHUB_USER}</code>, and <code>{REPO}</code> when Comet asks for them &mdash; not in the prompt itself.</p>
             </div>
         </div>
 
@@ -2704,14 +2708,17 @@ Begin by asking me for the three variables.</code></pre>
             <ul>
                 <li><strong>Orange cloud during Steps 3 or 4</strong> &rarr; GitHub's DNS check sees Cloudflare's edge IPs instead of <code>185.199.x.153</code> and fails. Cert provisioning never starts and <em>Enforce
                         HTTPS</em> stays disabled. Records must be <code>DNS only</code> until Step 5 flips the proxy on intentionally.</li>
+                <li><strong>Legacy Page Rules / Redirect Rules</strong> &rarr; pre-existing Cloudflare rules from a prior setup survive across DNS changes, cert reissuance, and proxy flips. They're invisible from the DNS
+                    panel where this runbook spends most of its time, but they still execute. Symptom: <code>ERR_TOO_MANY_REDIRECTS</code> on apex or www despite a correct DNS + cert + Enforce HTTPS setup. Fix:
+                    <strong>Rules &rarr; Overview</strong>, audit Page Rules + Redirect Rules + Configuration Rules, delete anything targeting apex or www unless intentional. The Step 3 pre-flight callout catches this
+                    before it bites.</li>
                 <li><strong>Cloudflare Flexible SSL</strong> + GitHub redirects = <em>infinite redirect loop</em>. SSL mode must be <strong>Full (strict)</strong> by Step 5.</li>
                 <li><strong>Flipping the proxy before Full (strict)</strong> &rarr; broken TLS chain. The SSL mode change in Step 5 must happen <em>before</em> the records go orange.</li>
                 <li><strong>Forgetting the <code>CNAME</code> file</strong> in the repo &rarr; GitHub will overwrite the custom domain setting on the next deploy.</li>
                 <li><strong>Missing <code>CF_ZONE_ID</code> or <code>CF_API_TOKEN</code> secrets</strong> &rarr; the cache-purge workflow fails silently on every deploy and stale content lingers.</li>
                 <li><strong>Missing automation workflows</strong> &rarr; the cert renewal (7b) and heartbeat (7c) workflows must <em>both</em> be deployed. Without 7b, the cert expires at day 90 and Cloudflare returns
                     <code>526</code>. Without 7c, GitHub auto-disables 7b after 60 days of repo inactivity and you're back to the same failure. Verify both workflow files are committed, all three secrets are set, the
-                    <code>CUSTOM_DOMAIN</code> variable is populated, and that both workflows have been manually triggered once each via the Actions tab to confirm they succeed.
-                </li>
+                    <code>CUSTOM_DOMAIN</code> variable is populated, and that both workflows have been manually triggered once each via the Actions tab to confirm they succeed.</li>
                 <li><strong>Apex CNAME flattening</strong> &rarr; don't put a CNAME on <code>@</code>. Use the four A records. Cloudflare supports flattening but GitHub's docs and verification expect A records.</li>
             </ul>
         </div>
