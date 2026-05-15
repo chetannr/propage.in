@@ -1317,7 +1317,8 @@
         }
 
         /* Comet prompt section */
-        .comet {
+        .comet,
+        .cursor {
             margin-top: 64px;
             padding: 40px;
             background: var(--ink-2);
@@ -1326,7 +1327,8 @@
             position: relative;
         }
 
-        .comet .step-tag {
+        .comet .step-tag,
+        .cursor .step-tag {
             display: block;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
@@ -1336,7 +1338,8 @@
             margin-bottom: 8px
         }
 
-        .comet h3 {
+        .comet h3,
+        .cursor h3 {
             font-family: 'Instrument Serif', serif;
             font-weight: 400;
             font-size: 32px;
@@ -1344,7 +1347,8 @@
             color: var(--paper)
         }
 
-        .comet>p {
+        .comet>p,
+        .cursor>p {
             color: var(--paper-dim);
             font-size: 15px;
             margin: 14px 0 24px;
@@ -1431,7 +1435,8 @@
             border-color: var(--good)
         }
 
-        .comet .hint {
+        .comet .hint,
+        .cursor .hint {
             margin-top: 16px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
@@ -1498,7 +1503,8 @@
 
             .pitfalls,
             .checklist,
-            .comet {
+            .comet,
+            .cursor {
                 padding: 28px 24px
             }
 
@@ -2177,6 +2183,280 @@ Begin by asking me for the three variables.</code></pre>
             </div>
         </div>
 
+
+        <!-- CURSOR EDITOR PROMPT -->
+        <div class="cursor">
+            <span class="step-tag">&#x232C; Automation &middot; Cursor Editor</span>
+            <h3>Or &mdash; let Cursor drive the local repo</h3>
+            <p>If your team uses Cursor (or any AI editor with file system + terminal access), paste this prompt into Cursor's chat. It handles everything Cursor is good at &mdash; creating the <code>CNAME</code> file,
+                committing <code>deploy.yml</code>, running <code>git push</code>, executing <code>curl</code>/<code>dig</code> verification &mdash; and clearly delegates the browser-only steps (Pages source toggle,
+                Cloudflare DNS dashboard, custom domain binding) back to you with explicit instructions.</p>
+
+            <div class="prompt-box">
+                <button class="copy-btn" id="copyCursorBtn" type="button">Copy</button>
+                <pre><code id="cursorPrompt">You are a Senior DevOps engineer operating inside Cursor (an AI code editor). You have file system access, terminal access, and Git. Your job: help me publish a low-traffic static website on GitHub Pages with Cloudflare hosting DNS only (no proxy). End state: visitors reach https://{DOMAIN}/ directly, served by GitHub Pages with a Let's Encrypt certificate.
+
+You CAN: read/write files in this workspace, run shell commands (git, gh, curl, dig, openssl, xxd, sed), parse command output, report findings.
+
+You CANNOT: navigate web UIs, click buttons, fill in web forms. For those steps I'll handle them in my browser based on your clear instructions and report back to you when done.
+
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+PRECONDITIONS &mdash; VERIFY BEFORE STARTING
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+Run these in order and confirm:
+  &bull; which git gh curl dig openssl xxd      (all must resolve to paths)
+  &bull; gh auth status                          (must show I'm signed in to github.com)
+  &bull; git rev-parse --is-inside-work-tree     (must print 'true')
+  &bull; git status -sb                          (note any uncommitted changes; ask me before clobbering)
+  &bull; git remote -v                           (verify origin is the target repo)
+
+If any precondition fails, STOP and tell me what's missing.
+
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+VARIABLES &mdash; ASK ME FOR THESE 3 INPUTS
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+Ask me for these 3 inputs in a single message:
+
+  &bull; {GITHUB_URL}     URL of the GitHub repo (any page on it works).
+                      Example: https://github.com/propagetech/deprosupplychain.com/settings/pages
+
+  &bull; {CLOUDFLARE_URL} URL of the Cloudflare zone page for the domain.
+                      Example: https://dash.cloudflare.com/9a13adf00a7720885dcb8e53dc4204f8/deprosupplychain.com
+
+  &bull; {DOMAIN}         The apex domain.
+                      Example: deprosupplychain.com
+
+PARSE the URLs to derive these variables:
+  &bull; {GITHUB_USER}    = 2nd path segment of {GITHUB_URL}
+  &bull; {REPO}           = 3rd path segment of {GITHUB_URL}
+  &bull; {CF_ACCOUNT_ID}  = 2nd path segment of {CLOUDFLARE_URL}
+  &bull; {CF_ZONE_NAME}   = 3rd path segment of {CLOUDFLARE_URL}
+
+VALIDATE: {DOMAIN} should match {CF_ZONE_NAME}. If they differ, STOP and ask
+which is canonical. Also confirm the `git remote -v` origin URL matches
+{GITHUB_USER}/{REPO}.
+
+ECHO parsed values back to me, then ask:
+
+  Reply with your preferred mode to start:
+    &bull; manual &mdash; pause for my approval between each of the 5 steps
+    &bull; auto   &mdash; execute continuously, pause only on safety gates or external waits
+
+Wait for "manual" or "auto".
+
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+SAFETY GATES &mdash; APPLY IN BOTH MODES
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+  S1. File writes &mdash; only modify these without asking: CNAME, sitemap.xml,
+      .github/workflows/deploy.yml. ANY other file write requires "confirm".
+  S2. Destructive git &mdash; before `git push --force`, `git reset --hard`,
+      `git rm`, or `git branch -D`, list what changes and require "confirm".
+  S3. Command failure &mdash; on any non-zero exit code, STOP, paste the full
+      output, ask for guidance. Do NOT retry silently.
+  S4. External waits &mdash; for cert provisioning, DNS propagation, Pages first
+      deploy: tell me what to verify in my browser, wait for my "verified".
+  S5. Never read, print, or copy .env files, secrets, tokens, or 2FA codes.
+  S6. If I say "pause", stop immediately and wait for next instruction.
+
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+OUTPUT FORMAT
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+  Manual mode: narrate each step's actions; end with "Step N complete. Proceed? (yes / no / pause)" and wait.
+  Auto mode: one-line status per completed step:
+    &#10003; Step N: &lt;title&gt; &mdash; &lt;summary&gt;
+    &#9208; Step N: &lt;title&gt; &mdash; PAUSED &mdash; &lt;what you need from me&gt;
+    &#10007; Step N: &lt;title&gt; &mdash; FAILED &mdash; &lt;reason; suggested next action&gt;
+
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+THE 5 STEPS
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+&#9472;&#9472;&#9472;&#9472; STEP 1 &mdash; Create the CNAME file &#9472;&#9472;&#9472;&#9472;
+  1. Check existing state:    ls -la CNAME 2&gt;/dev/null
+  2. If missing, create:       printf "%s" "{DOMAIN}" &gt; CNAME
+     (Note: printf with no trailing newline avoids a hidden \\n that some
+      tooling stumbles on. echo would add one.)
+  3. Verify with xxd to catch any trailing whitespace or hidden chars:
+       xxd CNAME
+       Last byte should match the last char of {DOMAIN}.
+  4. Commit + push:
+       git add CNAME
+       git commit -m "Add CNAME for {DOMAIN}"
+       git push origin main
+  5. Report commit SHA from `git log -1 --oneline`.
+
+&#9472;&#9472;&#9472;&#9472; STEP 2 &mdash; Commit deploy.yml + enable Pages &#9472;&#9472;&#9472;&#9472;
+  1. mkdir -p .github/workflows
+  2. Create .github/workflows/deploy.yml with this EXACT content:
+
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update sitemap lastmod for deploy
+        run: |
+          if [ -f sitemap.xml ]; then
+            ISODATE=$(date +%Y-%m-%d)
+            sed -i "s/&lt;lastmod&gt;.*&lt;\\/lastmod&gt;/&lt;lastmod&gt;${ISODATE}&lt;\\/lastmod&gt;/g" sitemap.xml
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  3. Commit + push:
+       git add .github/workflows/deploy.yml
+       git commit -m "Add Pages deploy workflow"
+       git push origin main
+
+  4. PAUSE here. Tell me:
+
+     "I pushed deploy.yml. Now in your browser:
+       a. Open https://github.com/{GITHUB_USER}/{REPO}/settings/pages
+       b. Under 'Build and deployment > Source', select 'GitHub Actions'
+       c. Watch the workflow at https://github.com/{GITHUB_USER}/{REPO}/actions
+          It should complete in ~30-60 seconds with status 'success'
+       d. Once done, the page_url shown in the deployment output should load
+          your site (something like https://{GITHUB_USER}.github.io)
+       Reply 'pages live' once the github.io URL renders your site."
+
+     Wait for "pages live".
+
+&#9472;&#9472;&#9472;&#9472; STEP 3 &mdash; Cloudflare DNS (manual UI) &#9472;&#9472;&#9472;&#9472;
+  This step requires the Cloudflare dashboard. PAUSE and tell me:
+
+  "Cloudflare DNS setup. Open: {CLOUDFLARE_URL}
+
+   PRE-FLIGHT &mdash; First, check 'Rules' in the left sidebar > 'Overview'.
+   Look at Page Rules, Redirect Rules, and Configuration Rules. Delete any
+   entries targeting @, www, or {DOMAIN} unless you intentionally created
+   them. Legacy rules from prior setups silently cause ERR_TOO_MANY_REDIRECTS.
+
+   Then go to DNS > Records. First, delete any existing A, AAAA, or CNAME
+   records on @ or www that conflict. Then add these &mdash; ALL set to
+   'DNS only' (the cloud icon must be GRAY, not orange):
+
+     A      @     185.199.108.153    DNS only
+     A      @     185.199.109.153    DNS only
+     A      @     185.199.110.153    DNS only
+     A      @     185.199.111.153    DNS only
+     CNAME  www   {GITHUB_USER}.github.io   DNS only
+
+   (Optional IPv6 &mdash; tell me if you want them and I'll list them.)
+
+   Reply 'dns added' once all records are saved and gray-cloud."
+
+  Wait for "dns added". Then verify locally:
+    dig +short {DOMAIN}
+    dig +short www.{DOMAIN}
+
+  Parse the dig output:
+    &bull; Apex should return only 185.199.x.153 IPs (108, 109, 110, 111).
+    &bull; If you see 104.x.x.x or 172.64.x.x, a record is still proxied.
+      Tell me which record to fix and wait for me to do it, then retry dig.
+
+&#9472;&#9472;&#9472;&#9472; STEP 4 &mdash; Bind custom domain + cert (manual UI) &#9472;&#9472;&#9472;&#9472;
+  PAUSE and tell me:
+
+  "Open https://github.com/{GITHUB_USER}/{REPO}/settings/pages
+
+   In 'Custom domain', enter {DOMAIN} and click Save.
+   DNS check should turn green within seconds (proxy is off, fast resolution).
+
+   GitHub now provisions a Let's Encrypt cert &mdash; usually a few minutes,
+   but allow up to 24 hours per docs. The 'Enforce HTTPS' checkbox will be
+   disabled with a status message until the cert is ready.
+
+   Once 'Enforce HTTPS' becomes active, tick it.
+
+   Reply 'cert active' once HTTPS is enforced. If you've waited &gt;30 min
+   and the cert hasn't appeared, reply 'cert stuck' and I'll help diagnose."
+
+  Wait for "cert active" (or handle "cert stuck" with diagnostic steps).
+
+&#9472;&#9472;&#9472;&#9472; STEP 5 &mdash; Verify end-to-end &#9472;&#9472;&#9472;&#9472;
+  Run locally and report all output:
+
+  1. HTTP + cert check:
+       curl -vI https://{DOMAIN} 2&gt;&amp;1 | grep -iE "HTTP/|issuer|subject"
+
+     Look for:
+       &bull; HTTP/2 200 (or 301/302 for canonical redirect) &mdash; site responds
+       &bull; issuer: Let's Encrypt (R3 / R10 / R11 / similar) &mdash; cert valid
+       &bull; subject: CN={DOMAIN} &mdash; cert matches domain
+     If issuer is Cloudflare, a DNS record is still proxied &mdash; back to Step 3.
+
+  2. Cert details via openssl:
+       echo | openssl s_client -connect {DOMAIN}:443 -servername {DOMAIN} 2&gt;/dev/null \\
+         | openssl x509 -noout -issuer -subject -dates
+     Confirm: issuer Let's Encrypt, dates valid (notBefore in past, notAfter ~90 days out).
+
+  3. DNS check:
+       dig +short {DOMAIN}
+     Expected: only 185.199.x.153 IPs.
+
+  4. Test deploy cycle. Tell me:
+     "Edit any small file (README.md, etc.), commit, push to main.
+      Wait ~30-60 sec for the deploy.yml workflow to complete.
+      Reload https://{DOMAIN} in your browser.
+      Reply 'deploy works' if your change appears, or describe the issue."
+
+  5. Final summary:
+       &bull; Step 1 (CNAME):            &#10003; / &#10007;
+       &bull; Step 2 (Pages + deploy):   &#10003; / &#10007;
+       &bull; Step 3 (Cloudflare DNS):   &#10003; / &#10007;
+       &bull; Step 4 (Cert + HTTPS):     &#10003; / &#10007;
+       &bull; Step 5 (Verify):           &#10003; / &#10007;
+       &bull; Live URL: https://{DOMAIN}
+       &bull; Cert issuer: Let's Encrypt (confirmed) | other (problem!)
+       &bull; Any follow-ups required
+
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+COMMON PITFALLS &mdash; read before starting, watch for during
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+  &bull; Orange cloud on ANY DNS record &rarr; cert fails to issue, Enforce HTTPS stays disabled. Gray cloud only.
+  &bull; Legacy Page Rules / Redirect Rules &rarr; ERR_TOO_MANY_REDIRECTS even with correct DNS. Audit Rules > Overview FIRST.
+  &bull; Lowercase 'cname' filename &rarr; GitHub expects 'CNAME' (uppercase, no extension). Case matters.
+  &bull; Trailing newline / whitespace in CNAME file &rarr; can confuse GitHub's verification. Use printf, not echo.
+  &bull; Private repo without paid plan &rarr; Pages won't activate.
+  &bull; Fresh repo without an origin remote &rarr; halt early; instruct me to create the GitHub repo first (`gh repo create` or via browser).
+
+Begin by running the precondition checks, then ask me for the 3 inputs.</code></pre>
+            </div>
+            <p class="hint"><strong>Tip:</strong> open Cursor's chat (Cmd/Ctrl+L) in your repo's working directory. Click <em>Copy</em> above, paste, hit enter. Cursor will run the precondition checks first, then ask for
+                the 3 URLs. You provide them once and walk through the rest.</p>
+        </div>
+
         <!-- DEPLOY TIMELINE — Plan A's simpler shape (no cache purge step) -->
         <section class="brief-timeline">
             <div class="brief-timeline-head">
@@ -2652,28 +2932,40 @@ Begin by asking me for the three variables.</code></pre>
 
         // Copy Comet prompt
         (function () {
-            var btn = document.getElementById('copyBtn');
-            var src = document.getElementById('cometPrompt');
-            if (!btn || !src) return;
-            btn.addEventListener('click', async function () {
-                var text = src.innerText;
-                try {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        await navigator.clipboard.writeText(text);
-                    } else {
-                        var ta = document.createElement('textarea');
-                        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-                        document.body.appendChild(ta); ta.select();
-                        document.execCommand('copy'); document.body.removeChild(ta);
+            function wireCopyButton(btnId, srcId) {
+                var btn = document.getElementById(btnId);
+                var src = document.getElementById(srcId);
+                if (!btn || !src) return;
+                btn.addEventListener('click', async function () {
+                    var text = src.innerText;
+                    try {
+                        if (navigator.clipboard && window.isSecureContext) {
+                            await navigator.clipboard.writeText(text);
+                        } else {
+                            var ta = document.createElement('textarea');
+                            ta.value = text;
+                            ta.style.position = 'fixed';
+                            ta.style.opacity = '0';
+                            document.body.appendChild(ta);
+                            ta.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(ta);
+                        }
+                        var orig = btn.textContent;
+                        btn.textContent = 'Copied';
+                        btn.classList.add('copied');
+                        setTimeout(function () {
+                            btn.textContent = orig;
+                            btn.classList.remove('copied');
+                        }, 1400);
+                    } catch (e) {
+                        btn.textContent = 'Press Ctrl+C';
+                        setTimeout(function () { btn.textContent = 'Copy'; }, 1800);
                     }
-                    btn.textContent = '✓ Copied';
-                    btn.classList.add('copied');
-                    setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-                } catch (e) {
-                    btn.textContent = 'Copy failed';
-                    setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-                }
-            });
+                });
+            }
+            wireCopyButton('copyBtn', 'cometPrompt');
+            wireCopyButton('copyCursorBtn', 'cursorPrompt');
         })();
     </script>
 </body>
