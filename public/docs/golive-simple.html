@@ -762,6 +762,75 @@
             border: 1px solid rgba(226, 85, 42, 0.3);
         }
 
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 22px 0 26px;
+        }
+
+        @media (min-width: 720px) {
+            .input-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .input-field label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--paper-mute);
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            background: var(--ink);
+            color: var(--paper);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .input-wrap input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(226, 85, 42, 0.18);
+        }
+
+        .mini-copy {
+            flex: 0 0 auto;
+            padding: 10px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            background: var(--ink);
+            color: var(--paper);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            transition: all 0.12s ease;
+        }
+
+        .mini-copy:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .mini-copy.copied {
+            border-color: var(--good);
+            color: var(--good);
+        }
+
         /* Principle banner */
         .principle {
             margin: 56px 0 64px;
@@ -1435,6 +1504,37 @@
             border-color: var(--good)
         }
 
+        code.code-click-copy {
+            cursor: pointer;
+            position: relative;
+        }
+
+        code.code-click-copy::after {
+            content: attr(data-copy-status);
+            position: absolute;
+            left: 50%;
+            top: -30px;
+            transform: translateX(-50%) translateY(6px);
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: var(--ink-3);
+            border: 1px solid var(--line);
+            color: var(--paper);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.14s ease, transform 0.14s ease;
+            z-index: 20;
+        }
+
+        code.code-click-copy.copy-status::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         .comet .hint,
         .cursor .hint {
             margin-top: 16px;
@@ -1620,6 +1720,29 @@
             <span class="label">⌗ Inputs</span>
             <h3>Three things to paste &mdash; the runbook derives the rest</h3>
             <p>Before starting, gather these three values from your browser. Comet (or any operator) will parse the URLs to extract everything else automatically.</p>
+            <div class="input-grid" id="runbookInputs">
+                <div class="input-field">
+                    <label for="githubUserInput">GITHUB_USER</label>
+                    <div class="input-wrap">
+                        <input id="githubUserInput" type="text" value="propagetech.github.io" autocomplete="off" spellcheck="false">
+                        <button class="mini-copy" type="button" data-copy-input="githubUserInput">Copy</button>
+                    </div>
+                </div>
+                <div class="input-field">
+                    <label for="repoInput">REPO</label>
+                    <div class="input-wrap">
+                        <input id="repoInput" type="text" placeholder="{REPO}" autocomplete="off" spellcheck="false">
+                        <button class="mini-copy" type="button" data-copy-input="repoInput">Copy</button>
+                    </div>
+                </div>
+                <div class="input-field">
+                    <label for="domainInput">DOMAIN</label>
+                    <div class="input-wrap">
+                        <input id="domainInput" type="text" placeholder="{DOMAIN}" autocomplete="off" spellcheck="false">
+                        <button class="mini-copy" type="button" data-copy-input="domainInput">Copy</button>
+                    </div>
+                </div>
+            </div>
             <dl>
                 <dt><span class="var">{GITHUB_URL}</span></dt>
                 <dd>URL of the GitHub repo &mdash; any page on it works (homepage, <code>/settings/pages</code>, <code>/actions</code>, etc.). <em>e.g.
@@ -1906,7 +2029,7 @@ dig +short www.{DOMAIN}</code></pre>
                 <span class="step-tag">GitHub &middot; Cert + HTTPS</span>
                 <h2>Bind the domain, wait for the cert, enforce HTTPS</h2>
                 <ol>
-                    <li>Repo &rarr; <strong>Settings &rarr; Pages &rarr; Custom domain</strong>: enter <code><span class="var">{DOMAIN}</span></code> and click <strong>Save</strong>. GitHub runs a DNS check &mdash;
+                    <li>Repo &rarr; <strong>Settings &rarr; Pages &rarr; Custom domain</strong>: enter <code><span class="var">www.{DOMAIN}</span></code> and click <strong>Save</strong>. GitHub runs a DNS check &mdash;
                         should turn green within seconds since the proxy is off.</li>
                     <li>GitHub provisions a TLS cert via Let's Encrypt. Usually a few minutes; the docs allow up to <strong>24 hours</strong>. The <strong>Enforce HTTPS</strong> checkbox stays disabled with a status
                         message until ready.</li>
@@ -2966,6 +3089,155 @@ Begin by running the precondition checks, then ask me for the 3 inputs.</code></
             }
             wireCopyButton('copyBtn', 'cometPrompt');
             wireCopyButton('copyCursorBtn', 'cursorPrompt');
+        })();
+
+        (function () {
+            var inputsRoot = document.getElementById('runbookInputs');
+            if (!inputsRoot) return;
+
+            var githubUserInput = document.getElementById('githubUserInput');
+            var repoInput = document.getElementById('repoInput');
+            var domainInput = document.getElementById('domainInput');
+
+            function normalize(val, fallback) {
+                var v = (val || '').trim();
+                return v.length ? v : fallback;
+            }
+
+            var tracked = [];
+            var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+                acceptNode: function (node) {
+                    if (!node || !node.nodeValue) return NodeFilter.FILTER_REJECT;
+                    if (node.nodeValue.indexOf('{') === -1) return NodeFilter.FILTER_REJECT;
+                    var el = node.parentElement;
+                    if (!el) return NodeFilter.FILTER_REJECT;
+                    if (el.closest && el.closest('#runbookInputs')) return NodeFilter.FILTER_REJECT;
+                    var tag = el.tagName;
+                    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') return NodeFilter.FILTER_REJECT;
+                    if (node.nodeValue.indexOf('{DOMAIN}') === -1 && node.nodeValue.indexOf('{REPO}') === -1 && node.nodeValue.indexOf('{GITHUB_USER}') === -1) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            });
+
+            while (walker.nextNode()) {
+                tracked.push({ node: walker.currentNode, template: walker.currentNode.nodeValue });
+            }
+
+            function applyVars() {
+                var values = {
+                    GITHUB_USER: normalize(githubUserInput && githubUserInput.value, '{GITHUB_USER}'),
+                    REPO: normalize(repoInput && repoInput.value, '{REPO}'),
+                    DOMAIN: normalize(domainInput && domainInput.value, '{DOMAIN}')
+                };
+                for (var i = 0; i < tracked.length; i++) {
+                    var t = tracked[i].template;
+                    t = t.split('{GITHUB_USER}').join(values.GITHUB_USER);
+                    t = t.split('{REPO}').join(values.REPO);
+                    t = t.split('{DOMAIN}').join(values.DOMAIN);
+                    tracked[i].node.nodeValue = t;
+                }
+            }
+
+            async function copyText(btn, text) {
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(text);
+                    } else {
+                        var ta = document.createElement('textarea');
+                        ta.value = text;
+                        ta.style.position = 'fixed';
+                        ta.style.opacity = '0';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                    var orig = btn.textContent;
+                    btn.textContent = 'Copied';
+                    btn.classList.add('copied');
+                    setTimeout(function () {
+                        btn.textContent = orig;
+                        btn.classList.remove('copied');
+                    }, 1200);
+                } catch (e) { }
+            }
+
+            inputsRoot.addEventListener('click', function (e) {
+                var btn = e.target && e.target.closest ? e.target.closest('button[data-copy-input]') : null;
+                if (!btn) return;
+                var id = btn.getAttribute('data-copy-input');
+                var el = document.getElementById(id);
+                if (!el) return;
+                copyText(btn, el.value || '');
+            });
+
+            [githubUserInput, repoInput, domainInput].forEach(function (el) {
+                if (!el) return;
+                el.addEventListener('input', applyVars);
+            });
+
+            applyVars();
+        })();
+
+        (function () {
+            var timeouts = new WeakMap();
+
+            function normalizeText(el) {
+                var text = '';
+                if (typeof el.innerText === 'string') text = el.innerText;
+                else text = el.textContent || '';
+                return text;
+            }
+
+            async function writeClipboard(text) {
+                if (navigator.clipboard && window.isSecureContext && typeof navigator.clipboard.writeText === 'function') {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                }
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                var ok = false;
+                try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+                document.body.removeChild(ta);
+                if (!ok) throw new Error('copy-failed');
+            }
+
+            function setStatus(codeEl, status) {
+                codeEl.classList.add('code-click-copy');
+                codeEl.dataset.copyStatus = status;
+                codeEl.classList.add('copy-status');
+                var prev = timeouts.get(codeEl);
+                if (prev) clearTimeout(prev);
+                var t = setTimeout(function () {
+                    codeEl.classList.remove('copy-status');
+                }, 1200);
+                timeouts.set(codeEl, t);
+            }
+
+            document.addEventListener('click', function (e) {
+                var codeEl = e.target && e.target.closest ? e.target.closest('code') : null;
+                if (!codeEl) return;
+                if (codeEl.closest && codeEl.closest('#runbookInputs')) return;
+
+                try {
+                    var sel = window.getSelection ? window.getSelection() : null;
+                    if (sel && !sel.isCollapsed) return;
+                } catch (err) { }
+
+                var text = normalizeText(codeEl);
+                if (!text) return;
+
+                writeClipboard(text).then(function () {
+                    setStatus(codeEl, 'Copied!');
+                }).catch(function () {
+                    setStatus(codeEl, 'Copy blocked');
+                });
+            });
         })();
     </script>
 </body>
